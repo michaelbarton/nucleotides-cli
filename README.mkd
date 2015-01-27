@@ -1,0 +1,24 @@
+## Nucleotid.es command line evaluation (NCLE) suite
+
+This project contains the tools used to evaluate Docker containers in
+Nucleotid.es.
+
+## Tools
+
+### ncle-fetch-data
+
+This tool fetches a set of test reads from S3, and stores as a temporary file.
+The file path is returned.
+
+#### Arguments
+
+  * **--s3-access-key**: The access key for the S3 bucket containing the reads.
+
+  * **--s3-secret-key**: The secret key for the S3 bucket containing the reads.
+
+  * **--s3-url**: The path to the reads on S3. This URL should begin with
+    's3://'.
+
+#### Result
+
+  * A file path to the stored reads.
