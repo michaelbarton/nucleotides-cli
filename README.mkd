@@ -18,12 +18,11 @@ The file path is returned.
       reads.
     * **--s3-url**: The path to the reads on S3. This URL should begin with
       's3://'.
+    * **--output-file**: The path a file where the reads should be downloaded.
 
   * Result:
 
     * Returns a non-zero exit code if any errors are encountered.
-
-    * A file path to the stored reads.
 
 #### ncle-run-image
 
