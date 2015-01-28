@@ -8,6 +8,12 @@ feature: Gemfile.lock $(credentials)
 	AWS_SECRET_KEY=$(call fetch_cred,AWS_SECRET_KEY) \
 	bundle exec cucumber $(ARGS)
 
+test: Gemfile.lock
+	bundle exec rspec 
+
+autotest: Gemfile.lock
+	bundle exec autotest
+
 Gemfile.lock: Gemfile
 	bundle install --path vendor/bundle
 
