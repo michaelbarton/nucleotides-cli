@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 group :default do
-  gem 'configliere', '~> 0.4.0'
+  gem 'slop', '~> 4.0.0'
 end
 
 group :development do
