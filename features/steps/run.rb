@@ -1,7 +1,7 @@
-def get_binary_path(binary)
-  File.join(%W|#{File.dirname(__FILE__)} .. .. bin| << binary)
+Given(/^the ncle directory is available on the path$/) do
+  ENV['PATH'] = ENV['PATH'] + ":" + File.join(%W|#{File.dirname(__FILE__)} .. .. bin|)
 end
 
-When(/^I run the script `(.*)`$/) do |binary|
-  run_simple(unescape(get_binary_path(binary)), false)
+When(/^I run the bash command:$/) do |command|
+  run_simple("bash -c '#{command}'")
 end
