@@ -4,5 +4,12 @@ $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'rubygems'
 require 'ncle/push_event'
 
-exit_value = NCLE::PushEvent.execute!
-exit exit_value
+exit_code, msg = NCLE::PushEvent.execute!
+
+if exit_code == 0
+  STDOUT.puts msg
+  exit(exit_code)
+else
+  STDERR.puts msg
+  exit(exit_code)
+end

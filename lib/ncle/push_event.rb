@@ -4,8 +4,6 @@ require 'curl'
 URL = 'http://api.nucleotid.es/events/update'
 REQUIRED_OPTS = [:benchmark_id, :benchmark_type_code, :status_code, :event_type_code]
 
-
-
 module NCLE
   module PushEvent
     class << self
@@ -14,11 +12,9 @@ module NCLE
         opts = options
         if options_valid?(opts)
           response = post(opts)
-          puts response.body
-          return true
+          [0, response.body]
         else
-          puts "Missing arguments: " + missing_options(opts).map(&:to_s).join(', ')
-          return false
+          [1, "Missing arguments: " + missing_options(opts).map(&:to_s).join(', ')]
         end
       end
 
@@ -27,9 +23,8 @@ module NCLE
       end
 
       def missing_options(opts)
-        REQUIRED_OPTS - opts.keys
+        opts.select{|k,v| v.nil?}.keys
       end
-
 
       def options
         opts = Slop.parse do |o|
