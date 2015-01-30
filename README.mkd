@@ -62,7 +62,7 @@ This tool pushes the result of an event to the nucleotid.es event database.
 
     * **--status-code**: The status code of the event.
 
-    * **--event-code**: The type of event.
+    * **--event-type-code**: The type of event.
 
   * Optional Arguments:
 
