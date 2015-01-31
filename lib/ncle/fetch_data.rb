@@ -1,5 +1,4 @@
 require 'slop'
-require 'fog'
 
 module NCLE
   module FetchData
@@ -7,7 +6,7 @@ module NCLE
 
       def execute!
         opts = options
-        con  = connection(opts)
+        con  = NCLE::S3.connection(opts)
         fetch_file(con, opts)
         true
       end
@@ -23,22 +22,9 @@ module NCLE
         Hash[opts.to_hash.map{|k,v| [k.to_s.gsub('-','_').to_sym, v]}]
       end
 
-      def connection(options)
-        connection = Fog::Storage.new({
-          :provider              => 'AWS',
-          :aws_access_key_id     => options[:s3_access_key],
-          :aws_secret_access_key => options[:s3_secret_key],
-          :region                => options[:s3_region]
-        })
-      end
-
-      def parse_s3_path(s3_url)
-        s3_url.gsub('s3://','').split("/", 2)
-      end
-
       def fetch_file(connection, options)
         src, dst = options[:s3_url], options[:output_file]
-        bucket, file = parse_s3_path(src)
+        bucket, file = NCLE::S3.parse_s3_path(src)
         File.open(dst, 'w') do |out|
           out.write connection.directories.get(bucket).files.get(file).body
         end

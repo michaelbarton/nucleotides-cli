@@ -43,9 +43,13 @@ Feature: Fetching sequence data using ncle-fetch-data
     Then the stderr should not contain anything
      And the exit status should be 0
      And the output should match /^\d+$/
+     And the corresponding event API entry should contain the keys:
+       | key       |
+       | <field_1> |
+       | <field_2> |
 
     Examples:
-      | argument    |
-      | event-file  |
-      | log-file    |
-      | cgroup-file |
+      | argument    | field_1            | field_2            |
+      | event-file  | event_file_s3_url  | event_file_digest  |
+      | log-file    | log_file_s3_url    | log_file_digest    |
+      | cgroup-file | cgroup_file_s3_url | cgroup_file_digest |

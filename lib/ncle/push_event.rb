@@ -14,6 +14,24 @@ module NCLE
         NCLE::Util.missing_options(required, opts)
       end
 
+      def options_valid?(opts)
+        missing_options(opts).empty?
+      end
+
+      def upload_files(opts)
+        file_opts = [:event_file, :log_file, :cgroup_file]
+        con       = NCLE::S3.connection(opts)
+        file_opts.each do |file|
+          if path = opts[file]
+            NCLE::S3.upload_file(con, path, File.join(opts[:s3_url], create_file_name(path)))
+          end
+        end
+      end
+
+      def create_file_name(file_path)
+        "dummy"
+      end
+
       def execute!
         opts = options
         if options_valid?(opts)
@@ -22,10 +40,6 @@ module NCLE
         else
           [1, "Missing arguments: " + missing_options(opts).map(&:to_s).join(', ')]
         end
-      end
-
-      def options_valid?(opts)
-        missing_options(opts).empty?
       end
 
       def options
