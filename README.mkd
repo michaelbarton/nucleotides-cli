@@ -34,12 +34,9 @@ This tools evaluates a Docker image
     * **--docker-image**: The name of the docker image. This should either be
       in the form of 'REPO/NAME' to pull an image from Docker Hub or the name
       of a locally available image.
-
     * **--env**: Environment parameter to pass to the container.
-
     * **--log-file**: The file path to write the STDOUT and STDERR of the
       container.
-
     * **--cgroup-file**: The file path to write the cgroup data of the
       container.
 
@@ -52,29 +49,35 @@ This tools evaluates a Docker image
 
 #### ncle-push-event
 
-This tool pushes the result of an event to the nucleotid.es event database.
+This tool pushes the result of an event to the nucleotid.es event database. If
+file paths are given these will be uploaded to the given S3 directory with the
+file name as SHA256-EPOCH\_TIME\_IN\_SECONDS.
 
   * Required Arguments:
 
     * **--benchmark-id**: The identifier for this benchmark.
-
     * **--benchmark-type-code**: The type of benchmark.
-
     * **--status-code**: The status code of the event.
-
     * **--event-type-code**: The type of event.
 
   * Optional Arguments:
 
     * **--event-file**: A file containing the output of the event.
-
     * **--log-file**: A file containing the output of the event.
-
     * **--cgroup-file**: A file containing the cgroup data of the event.
+
+  * Conditional Arguments:
+
+    * **--s3-access-key**: The access key for the S3 bucket to upload any given
+      files.
+    * **--s3-secret-key**: The secret key for the S3 bucket to upload any given
+      files.
+    * **--s3-region**: The AWS region to upload any given files.
+    * **--s3-url**: The location to upload any given files to. This URL should
+      begin with 's3://'.
 
   * Result:
 
     * Returns a non-zero exit code if any errors are encountered running the
       container.
-
     * Returns the ID of the event.
