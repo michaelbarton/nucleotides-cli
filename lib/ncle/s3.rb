@@ -18,13 +18,15 @@ module NCLE
       end
 
       def upload_file(connection, local_src_path, s3_dst_path)
-        bucket, dst = NCLE::S3.parse_s3_path(s3_dst_path)
+        bucket, dst = parse_s3_path(s3_dst_path)
         dir  = File.dirname(dst)
         file = File.basename(dst)
 
         connection.directories.get(dir).create(
           key: file,
           body: File.read(local_src_path))
+      end
+
     end
   end
 end

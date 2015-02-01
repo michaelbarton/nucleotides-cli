@@ -1,4 +1,5 @@
 require 'slop'
+require 'ncle/s3'
 
 module NCLE
   module FetchData
