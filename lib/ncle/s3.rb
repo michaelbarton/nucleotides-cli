@@ -17,14 +17,19 @@ module NCLE
         s3_url.gsub('s3://','').split("/", 2)
       end
 
-      def upload_file(connection, local_src_path, s3_dst_path)
-        bucket, dst = parse_s3_path(s3_dst_path)
-        dir  = File.dirname(dst)
-        file = File.basename(dst)
+      def get_bucket(connection, s3_url)
+        bucket, _ = parse_s3_path(s3_url)
+        connection.directories.get(bucket)
+      end
 
-        connection.directories.get(dir).create(
-          key: file,
-          body: File.read(local_src_path))
+      def bucket_exists?(connection, s3_url)
+        not get_bucket(connection, s3_url).nil?
+      end
+
+      def upload_file(connection, bucket, src_path, dst_path)
+        get_bucket(connection, bucket).files.create(
+          key: dst_path,
+          body: File.read(src_path))
       end
 
     end

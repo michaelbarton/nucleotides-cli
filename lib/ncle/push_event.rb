@@ -2,6 +2,7 @@ require 'slop'
 require 'curl'
 
 require 'ncle/util'
+require 'ncle/s3'
 
 URL = 'http://api.nucleotid.es/events/update'
 
@@ -10,22 +11,36 @@ module NCLE
     class << self
 
       def missing_options(opts)
-        required = [:benchmark_id, :benchmark_type_code, :status_code, :event_type_code]
-        NCLE::Util.missing_options(required, opts)
+        required_opts = [:benchmark_id,
+                         :benchmark_type_code,
+                         :status_code,
+                         :event_type_code]
+        NCLE::Util.missing_options(required_opts, opts)
       end
 
       def options_valid?(opts)
-        missing_options(opts).empty?
+        if missing_options(opts).empty?
+          [:ok, ""]
+        else
+          [:error, "Missing arguments: " + missing_options(opts).map(&:to_s).join(', ')]
+        end
       end
 
       def upload_files(opts)
         file_opts = [:event_file, :log_file, :cgroup_file]
         con       = NCLE::S3.connection(opts)
         file_opts.each do |file|
-          if path = opts[file]
-            NCLE::S3.upload_file(con, path, File.join(opts[:s3_url], create_file_name(path)))
+          if src = opts[file]
+            bucket, dir = NCLE::S3.parse_s3_path(opts[:s3_url])
+            dst = File.join(dir, create_file_name(src))
+            if NCLE::S3.bucket_exists?(con, bucket)
+              NCLE::S3.upload_file(con, bucket, src, dst)
+            else
+              return [:error, "S3 bucket does not exist: #{bucket}"]
+            end
           end
         end
+        [:ok, ""]
       end
 
       def create_file_name(file_path)
@@ -34,12 +49,20 @@ module NCLE
 
       def execute!
         opts = options
-        if options_valid?(opts)
-          response = post(opts)
-          [0, response.body]
-        else
-          [1, "Missing arguments: " + missing_options(opts).map(&:to_s).join(', ')]
+
+        status, msg = options_valid?(opts)
+        if status == :error
+          return [status, msg]
         end
+
+        status, msg = upload_files(opts)
+        if status == :error
+          return [status, msg]
+        end
+
+
+        response = post(opts)
+        [0, response.body]
       end
 
       def options

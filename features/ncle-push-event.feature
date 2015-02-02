@@ -51,5 +51,3 @@ Feature: Fetching sequence data using ncle-fetch-data
     Examples:
       | argument    | field_1            | field_2            |
       | event-file  | event_file_s3_url  | event_file_digest  |
-      | log-file    | log_file_s3_url    | log_file_digest    |
-      | cgroup-file | cgroup_file_s3_url | cgroup_file_digest |
