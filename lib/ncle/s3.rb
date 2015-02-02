@@ -33,6 +33,12 @@ module NCLE
           body: File.read(src_path))
       end
 
+      def generate_file_path(s3_url, file_path)
+        digest = Digest::SHA2.new(256).file(file_path).hexdigest
+        time = Time.now.to_i
+        File.join(s3_url, "#{digest}-#{time}")
+      end
+
     end
   end
 end

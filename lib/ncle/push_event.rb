@@ -46,14 +46,11 @@ module NCLE
       end
 
       def upload_file(con, src_path, s3_url)
-        destination_url = File.join(s3_url, create_file_name(src_path))
-        NCLE::S3.upload_file(con, src_path, destination_url)
-        destination_url
+        dst = NCLE::S3.generate_file_path(s3_url, src_path)
+        NCLE::S3.upload_file(con, src_path, dst)
+        dst
       end
 
-      def create_file_name(file_path)
-        "dummy"
-      end
 
       def execute!
         opts = options
@@ -67,7 +64,6 @@ module NCLE
         if status == :error
           return [status, msg]
         end
-
 
         response = post(opts)
         [0, response.body]
