@@ -72,7 +72,7 @@ module NCLE
         end
 
         response = post(opts.merge(urls))
-        [0, response.body]
+        [:ok, response.body]
       end
 
       def generate_post_params(opts)

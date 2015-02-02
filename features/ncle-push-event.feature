@@ -4,8 +4,12 @@ Feature: Fetching sequence data using ncle-fetch-data
    Given the ncle directory is available on the path
     When I run `ncle-push-event`
     Then the stdout should not contain anything
-     And the stderr should contain "Missing arguments: "
      And the exit status should be 1
+     And the stderr should contain exactly:
+     """
+     Missing arguments: benchmark_id, benchmark_type_code, status_code, event_type_code
+
+     """
 
   Scenario: Running ncle-push-event without any files
    Given the ncle directory is available on the path

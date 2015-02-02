@@ -7,9 +7,31 @@ module NCLE
 
       def execute!
         opts = options
+
+        status, msg = options_valid?(opts)
+        if status == :error
+          return [status, msg]
+        end
+
         con  = NCLE::S3.connection(opts)
         fetch_file(con, opts)
-        true
+        [:ok, "Downloaded data to: #{opts[:output_file]}"]
+      end
+
+      def missing_options(opts)
+        required_opts = [:s3_access_key,
+                         :s3_secret_key,
+                         :s3_url,
+                         :output_file]
+        NCLE::Util.missing_options(required_opts, opts)
+      end
+
+      def options_valid?(opts)
+        if missing_options(opts).empty?
+          [:ok, ""]
+        else
+          [:error, "Missing arguments: " + missing_options(opts).map(&:to_s).join(', ')]
+        end
       end
 
       def options
