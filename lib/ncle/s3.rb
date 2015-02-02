@@ -26,8 +26,9 @@ module NCLE
         not get_bucket(connection, s3_url).nil?
       end
 
-      def upload_file(connection, bucket, src_path, dst_path)
-        get_bucket(connection, bucket).files.create(
+      def upload_file(connection, src_path, s3_url)
+        _, dst_path = parse_s3_path(s3_url)
+        get_bucket(connection, s3_url).files.create(
           key: dst_path,
           body: File.read(src_path))
       end

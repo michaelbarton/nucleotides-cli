@@ -29,18 +29,26 @@ module NCLE
       def upload_files(opts)
         file_opts = [:event_file, :log_file, :cgroup_file]
         con       = NCLE::S3.connection(opts)
-        file_opts.each do |file|
-          if src = opts[file]
-            bucket, dir = NCLE::S3.parse_s3_path(opts[:s3_url])
-            dst = File.join(dir, create_file_name(src))
-            if NCLE::S3.bucket_exists?(con, bucket)
-              NCLE::S3.upload_file(con, bucket, src, dst)
-            else
-              return [:error, "S3 bucket does not exist: #{bucket}"]
-            end
-          end
+        dst       = opts[:s3_url]
+
+        if not NCLE::S3.bucket_exists?(con, dst)
+          return [:error, "S3 bucket does not exist: #{dst}"]
         end
-        [:ok, ""]
+
+        urls = file_opts.inject(Hash.new) do |hash, key|
+          if src = opts[key]
+            key, created_file_url = upload_file(con, src, dst)
+            hash[key] = created_file_url
+          end
+          hash
+        end
+        [:ok, urls]
+      end
+
+      def upload_file(con, src_path, s3_url)
+        destination_url = File.join(s3_url, create_file_name(src_path))
+        NCLE::S3.upload_file(con, src_path, destination_url)
+        destination_url
       end
 
       def create_file_name(file_path)
@@ -55,7 +63,7 @@ module NCLE
           return [status, msg]
         end
 
-        status, msg = upload_files(opts)
+        status, urls = upload_files(opts)
         if status == :error
           return [status, msg]
         end
