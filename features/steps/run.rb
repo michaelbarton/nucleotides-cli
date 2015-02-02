@@ -11,7 +11,7 @@ When(/^I run the bash command:$/) do |command|
 end
 
 Then(/^the corresponding event API entry should contain the keys:$/) do |table|
-  sleep 0.5 # Allow database entry to be written
+  sleep 1 # Allow database entry to be written
 
   id = all_stdout.strip
   response = Curl.get("http://api.nucleotid.es/events/show.json?id=#{id}").body
