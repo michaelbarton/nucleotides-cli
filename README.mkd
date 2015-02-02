@@ -25,28 +25,6 @@ The file path is returned.
 
     * Returns a non-zero exit code if any errors are encountered.
 
-#### ncle-run-image
-
-This tools evaluates a Docker image
-
-  * Arguments:
-
-    * **--docker-image**: The name of the docker image. This should either be
-      in the form of 'REPO/NAME' to pull an image from Docker Hub or the name
-      of a locally available image.
-    * **--env**: Environment parameter to pass to the container.
-    * **--log-file**: The file path to write the STDOUT and STDERR of the
-      container.
-    * **--cgroup-file**: The file path to write the cgroup data of the
-      container.
-
-  * Result:
-
-    * Returns a non-zero exit code if any errors are encountered running the
-      container.
-
-    * Returns the ID of the container
-
 #### ncle-push-event
 
 This tool pushes the result of an event to the nucleotid.es event database. If
