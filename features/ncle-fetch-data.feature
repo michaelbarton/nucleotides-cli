@@ -4,6 +4,12 @@ Feature: Fetching sequence data using ncle-fetch-data
    Given the ncle directory is available on the path
     When I run `ncle-fetch-data`
     Then the exit status should be 1
+     And the stderr should contain exactly:
+     """
+     Missing arguments: s3_access_key, s3_secret_key, s3_url, output_file
+
+     """
+
 
   Scenario: Running ncle-fetch-data without any file arguments
    Given the ncle directory is available on the path
@@ -17,7 +23,11 @@ Feature: Fetching sequence data using ncle-fetch-data
         --output-file="./reads.fq"
       """
     Then the stderr should not contain anything
-     And the stdout should not contain anything
+     And the stdout should contain:
+     """
+     Downloaded data to: ./reads.fq
+
+     """
      And the exit status should be 0
      And the file "reads.fq" should contain exactly:
       """

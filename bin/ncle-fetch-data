@@ -3,6 +3,7 @@ $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'rubygems'
 require 'ncle/fetch_data'
+require 'ncle/util'
 
-exit_value = NCLE::FetchData.execute!
-exit exit_value
+status, msg = NCLE::FetchData.execute!
+NCLE::Util.finish(status, msg)
