@@ -37,8 +37,10 @@ module NCLE
 
         urls = file_opts.inject(Hash.new) do |hash, key|
           if src = opts[key]
-            key, created_file_url = upload_file(con, src, dst)
-            hash[key] = created_file_url
+            created_file_url = upload_file(con, src, dst)
+            hash["#{key}_s3_url".to_sym] = created_file_url
+            hash["#{key}_digest".to_sym] = \
+              created_file_url.match(/.+\/(.+)-.+/).captures.first
           end
           hash
         end
@@ -62,11 +64,29 @@ module NCLE
 
         status, urls = upload_files(opts)
         if status == :error
-          return [status, msg]
+          return [status, urls]
         end
 
-        response = post(opts)
+        response = post(opts.merge(urls))
         [0, response.body]
+      end
+
+      def generate_post_params(opts)
+        params = [
+          :benchmark_id,
+          :benchmark_type_code,
+          :status_code,
+          :event_type_code,
+
+          :log_file_s3_url,    :log_file_digest,
+          :event_file_s3_url,  :event_file_digest,
+          :cgroup_file_s3_url, :cgroup_file_digest]
+        opts.select{|k, _| params.include? k}
+      end
+
+      def post(options)
+        params = generate_post_params(options)
+        Curl.post(URL, params)
       end
 
       def options
@@ -88,9 +108,6 @@ module NCLE
         Hash[opts.to_hash.map{|k,v| [k.to_s.gsub('-','_').to_sym, v]}]
       end
 
-      def post(options)
-        Curl.post(URL, options)
-      end
     end
   end
 end
