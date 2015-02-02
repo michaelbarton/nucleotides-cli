@@ -5,7 +5,7 @@ Feature: Fetching sequence data using ncle-fetch-data
     When I run `ncle-fetch-data`
     Then the exit status should be 1
 
-  Scenario: Running ncle-fetch-data without any arguments
+  Scenario: Running ncle-fetch-data without any file arguments
    Given the ncle directory is available on the path
     When I run the bash command:
       """
@@ -27,3 +27,4 @@ Feature: Fetching sequence data using ncle-fetch-data
       ((%*
 
       """
+

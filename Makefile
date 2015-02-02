@@ -1,7 +1,7 @@
 credentials = .aws_credentials
 fetch_cred  = $$(./script/get_credential $(credentials) $(1))
 
-bootstrap: Gemfile.lock
+bootstrap: Gemfile.lock $(credentials)
 
 feature: Gemfile.lock $(credentials)
 	AWS_ACCESS_KEY=$(call fetch_cred,AWS_ACCESS_KEY) \
