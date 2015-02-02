@@ -28,6 +28,10 @@ module NCLE
 
       def upload_files(opts)
         file_opts = [:event_file, :log_file, :cgroup_file]
+        if file_opts.all?{|f| opts[f].nil? }
+          return [:ok, {}]
+        end
+
         con       = NCLE::S3.connection(opts)
         dst       = opts[:s3_url]
 
