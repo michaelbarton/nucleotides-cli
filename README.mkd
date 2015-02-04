@@ -40,9 +40,9 @@ file name as SHA256-EPOCH\_TIME\_IN\_SECONDS.
 
   * Optional Arguments:
 
-    * **--event-file**: A file containing the output of the event.
+    * **--event-file**: An xz-compressed file containing the output of the event.
     * **--log-file**: A file containing the output of the event.
-    * **--cgroup-file**: A file containing the cgroup data of the event.
+    * **--cgroup-file**: A xz-compressed tar file containing the cgroup data of the event.
 
   * Conditional Arguments:
 
