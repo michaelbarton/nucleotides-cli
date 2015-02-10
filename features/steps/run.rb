@@ -10,7 +10,7 @@ When(/^I run the bash command:$/) do |command|
   run_simple("bash -c '#{command}'")
 end
 
-Then(/^the corresponding event API entry should contain the keys:$/) do |table|
+Then(/^the corresponding event API entry should match:$/) do |table|
   sleep 1 # Allow database entry to be written
 
   id = all_stdout.strip
@@ -19,8 +19,10 @@ Then(/^the corresponding event API entry should contain the keys:$/) do |table|
 
   table.hashes.each do |row|
     expect(@entry).to include(row['key'])
+    expect(@entry[row['key']]).to match(row['value_re'])
   end
 end
+
 
 Then(/^the S3 file for the API entry "(.*?)" should exist\.$/) do |key|
   url = @entry[key]
@@ -36,3 +38,4 @@ Then(/^the S3 file for the API entry "(.*?)" should exist\.$/) do |key|
   file = connection.directories.get(bucket).files.get(path)
   expect(file).to_not be_nil
 end
+
