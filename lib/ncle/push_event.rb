@@ -26,6 +26,28 @@ module NCLE
         end
       end
 
+      def xz_compressed?(file_path)
+        not (`file #{file_path}` =~ /xz compressed data/).nil?
+      end
+
+      def files_valid?(opts)
+        files = [:event, :log, :cgroup]
+        files.map{|f| [f, opts["#{f}_file".to_sym]]}.each do |(name, file)|
+          if not file.nil?
+            if File.exists?(file)
+              next if name == :log
+              if not xz_compressed?(file)
+                return [:error, "The #{name} file should be xz compressed: #{file}"]
+              end
+            else
+              return [:error, "The #{name} file does not exist: #{file}"]
+            end
+          end
+        end
+        return [:ok, ""]
+      end
+
+
       def upload_files(opts)
         file_opts = [:event_file, :log_file, :cgroup_file]
         if file_opts.all?{|f| opts[f].nil? }
@@ -59,11 +81,16 @@ module NCLE
 
 
       def execute!
-        opts = options
+        opts    = options
 
-        status, msg = options_valid?(opts)
+        status, urls = options_valid?(opts)
         if status == :error
-          return [status, msg]
+          return [status, urls]
+        end
+
+        status, urls = files_valid?(opts)
+        if status == :error
+          return [status, urls]
         end
 
         status, urls = upload_files(opts)
