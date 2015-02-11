@@ -32,6 +32,7 @@ Feature: Fetching sequence data using ncle-fetch-data
      <argument>
 
      """
+     And I run `xz dummy-file`
     When I run the bash command:
       """
       ncle-push-event \
@@ -43,7 +44,7 @@ Feature: Fetching sequence data using ncle-fetch-data
         --s3-secret-key=${AWS_SECRET_KEY} \
         --s3-region="us-west-1" \
         --s3-url="s3://nucleotid-es-dev/ncle-uploads/" \
-        --<argument>=dummy-file
+        --<argument>=dummy-file.xz
       """
     Then the stderr should not contain anything
      And the exit status should be 0
@@ -56,7 +57,7 @@ Feature: Fetching sequence data using ncle-fetch-data
 
     Examples:
       | argument    | field_1            | field_2            | digest                           |
-      | event-file  | event_file_s3_url  | event_file_digest  | c9bf86684fa4d04b21f2a4aeea8328b044bb29d6deb989ffe32bffe40c65d94b |
-      | log-file    | log_file_s3_url    | log_file_digest    | ec1633ab8ac264a5cc8c4d9828527e801fca9b6238e7a3da173fd4a16adccd19 |
-      | cgroup-file | cgroup_file_s3_url | cgroup_file_digest | 7acba5986ce67131a5ca2e94946c7de80759bcf440a4dbb9810f415418727750 |
+      | event-file  | event_file_s3_url  | event_file_digest  | 3039059c171e71be2f205324a540a990c8293f914838eb0c97eae3a3bbe9cbf1 |
+      | log-file    | log_file_s3_url    | log_file_digest    | 3f5150f9d763c4a2c2b99a2c1f057ee197840c11d7b794db042269b3e9c3e091 |
+      | cgroup-file | cgroup_file_s3_url | cgroup_file_digest | 715898daa8948856ecc43f662bb58e130bc360622854de013f4acc86ef50131c |
 
