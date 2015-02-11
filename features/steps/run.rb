@@ -7,7 +7,7 @@ Given(/^the ncle directory is available on the path$/) do
 end
 
 When(/^I run the bash command:$/) do |command|
-  run_simple("bash -c '#{command}'")
+  run_simple("bash -c '#{command}'", false)
 end
 
 Then(/^the corresponding event API entry should match:$/) do |table|
