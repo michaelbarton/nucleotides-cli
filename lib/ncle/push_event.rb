@@ -27,7 +27,7 @@ module NCLE
       end
 
       def xz_compressed?(file_path)
-        not (`file #{file_path}` =~ /xz compressed data/).nil?
+        not (`file #{file_path}` =~ /[Xx][Zz] compressed data/).nil?
       end
 
       def files_valid?(opts)
