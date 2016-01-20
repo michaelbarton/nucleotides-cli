@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 group :default do
   gem 'slop', '~> 4.0.0'
-  gem 'fog',  '~> 1.27.0'
+  gem 'fog',  '~> 1.37.0'
   gem 'curb', '~> 0.8.0'
 end
 
