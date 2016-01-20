@@ -1,6 +1,4 @@
 feature: Gemfile.lock $(credentials)
-	AWS_ACCESS_KEY=$(call fetch_cred,AWS_ACCESS_KEY) \
-	AWS_SECRET_KEY=$(call fetch_cred,AWS_SECRET_KEY) \
 	bundle exec cucumber $(ARGS)
 
 test: Gemfile.lock

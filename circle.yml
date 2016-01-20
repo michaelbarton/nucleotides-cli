@@ -12,3 +12,8 @@ dependencies:
     - mkdir -p $CIRCLE_TEST_REPORTS/cucumber
   pre:
     - sudo apt-get update && sudo apt-get install --no-install-recommends realpath
+
+test:
+  override:
+    - ./script/test
+    - ./script/feature '--format json --out $$CIRCLE_TEST_REPORTS/cucumber/tests.cucumber --format pretty'
