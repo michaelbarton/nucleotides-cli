@@ -2,8 +2,8 @@
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'rubygems'
-require 'ncle/push_event'
+require 'ncle/fetch_data'
 require 'ncle/util'
 
-status, msg = NCLE::PushEvent.execute!
-NCLE::Util.finish(status, msg)
+#status, msg = NCLE::FetchData.execute!
+#NCLE::Util.finish(status, msg)
