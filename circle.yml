@@ -1,7 +1,14 @@
 ---
 machine:
   ruby:
-    version: 2.0.0-p598
+    version: 2.2.3
+  services:
+    - docker
 dependencies:
   cache_directories:
     - "vendor/bundle"
+  override:
+    - ./script/bootstrap
+    - mkdir -p $CIRCLE_TEST_REPORTS/cucumber
+  pre:
+    - sudo apt-get update && sudo apt-get install --no-install-recommends realpath
