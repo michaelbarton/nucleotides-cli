@@ -1,5 +1,8 @@
 Gemfile.lock
 .bundle
 vendor
-.aws_credentials
 tmp
+.api_container
+.api_image
+.rdm_container
+.rdm_image
