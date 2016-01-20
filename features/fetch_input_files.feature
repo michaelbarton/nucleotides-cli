@@ -1,11 +1,11 @@
 Feature: Fetching input data files for benchmarking
 
   Scenario: Fetching input data from given a nucleotides task ID
-    Given the ncle directory is available on the path
+    Given the nucleotides directory is available on the path
     When I run the bash command:
       """
-      AWS_ACCESS_KEY=$(../plumbing/fetch_credential access_key) \
-      AWS_SECRET_KEY=$(../plumbing/fetch_credential secret_key) \
+      AWS_ACCESS_KEY=$(bundle exec ../plumbing/fetch_credential access_key) \
+      AWS_SECRET_KEY=$(bundle exec ../plumbing/fetch_credential secret_key) \
       AWS_REGION='us-west-1' \
       NUCLEOTIDES_API=${DOCKER_HOST} \
         nucleotides fetch-data --task-id=1
@@ -26,3 +26,4 @@ Feature: Fetching input data files for benchmarking
       "input_url": "s3://nucleotid-es/test-data/0001/0001/2000000/1/reads.fq.gz",
       "input_md5": "eaa5305f8d0debbce934975c3ec6c14b"
       }
+      """
