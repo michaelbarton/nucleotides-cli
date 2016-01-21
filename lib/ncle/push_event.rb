@@ -1,8 +1,8 @@
 require 'slop'
 require 'curl'
 
-require 'ncle/util'
-require 'ncle/s3'
+require 'nucleotides/util'
+require 'nucleotides/s3'
 
 URL = 'http://api.nucleotid.es/events/update'
 
@@ -15,7 +15,7 @@ module NCLE
                          :benchmark_type_code,
                          :status_code,
                          :event_type_code]
-        NCLE::Util.missing_options(required_opts, opts)
+        Nucleotides::Util.missing_options(required_opts, opts)
       end
 
       def options_valid?(opts)

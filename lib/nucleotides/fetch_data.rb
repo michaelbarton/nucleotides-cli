@@ -1,5 +1,5 @@
 require 'slop'
-require 'ncle/s3'
+require 'nucleotides/s3'
 
 module Nucleotides
   module FetchData

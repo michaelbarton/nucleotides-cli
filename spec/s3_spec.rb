@@ -1,8 +1,8 @@
 require 'tempfile'
 require 'digest'
-require 'ncle/s3'
+require 'nucleotides/s3'
 
-RSpec.describe NCLE::S3 do
+RSpec.describe Nucleotides::S3 do
 
   describe "#parse_s3_path" do
 
@@ -26,4 +26,17 @@ RSpec.describe NCLE::S3 do
     end
 
   end
+
+  describe "#get_file" do
+
+    it "should fetch a file from s3" do
+      dst = File.join(Dir.mktmpdir, "file")
+      src = 's3://nucleotides-testing/short-read-assembler/reference.fa'
+      described_class.get_file(src, dst)
+      expect(File).to exist(dst)
+      expect(File).to_not be_zero(dst)
+    end
+
+  end
+
 end

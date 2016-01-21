@@ -1,15 +1,16 @@
 require 'fog'
+require 'nucleotides/credentials'
 
-module NCLE
+module Nucleotides
   module S3
     class << self
 
-      def connection(options)
-        connection = Fog::Storage.new({
-          :provider              => 'AWS',
-          :aws_access_key_id     => options[:s3_access_key],
-          :aws_secret_access_key => options[:s3_secret_key],
-          :region                => options[:s3_region]
+      def connection
+        Fog::Storage.new({
+          provider:              'AWS',
+          aws_access_key_id:     Nucleotides::Credentials.credential('access_key'),
+          aws_secret_access_key: Nucleotides::Credentials.credential('secret_key'),
+          region:                Nucleotides::Credentials.credential('region')
         })
       end
 
@@ -37,6 +38,13 @@ module NCLE
         digest = Digest::SHA2.new(256).file(file_path).hexdigest
         time = Time.now.to_i
         File.join(s3_url, "#{digest}-#{time}")
+      end
+
+      def get_file(src, dst)
+        bucket, file = parse_s3_path(src)
+        File.open(dst, 'w') do |out|
+          out.write connection.directories.get(bucket).files.get(file).body
+        end
       end
 
     end
