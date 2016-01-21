@@ -1,4 +1,4 @@
-require 'ncle/fetch_data'
+require 'nucleotides/fetch_data'
 
-RSpec.describe NCLE::FetchData do
+RSpec.describe Nucleotides::FetchData do
 end
