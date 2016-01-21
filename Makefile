@@ -1,11 +1,20 @@
+docker_host := $(shell echo ${DOCKER_HOST} | egrep -o "\d+.\d+.\d+.\d+")
+
+ifndef DOCKER_HOST
+	docker_host := http://localhost
+else
+	docker_host := http://$(shell echo ${DOCKER_HOST} | egrep -o "\d+.\d+.\d+.\d+")
+endif
+
+
 feature: Gemfile.lock $(credentials)
-	bundle exec cucumber $(ARGS)
+	DOCKER_HOST=$(docker_host) bundle exec cucumber $(ARGS)
 
 test: Gemfile.lock
-	bundle exec rspec
+	DOCKER_HOST=$(docker_host) bundle exec rspec
 
 autotest: Gemfile.lock
-	bundle exec autotest
+	DOCKER_HOST=$(docker_host) bundle exec autotest
 
 ################################################
 #
