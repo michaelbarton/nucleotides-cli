@@ -1,6 +1,20 @@
-module NCLE
+require 'nucleotides/fetch_data'
+
+module Nucleotides
   module Util
     class << self
+
+      COMMANDS = {
+        'fetch-data' => Nucleotides::FetchData
+      }
+
+      def subcommand(name)
+        COMMANDS[name]
+      end
+
+      def execute!(args)
+        subcommand(args.shift).execute!(args)
+      end
 
       def missing_options(required, given)
         given.select{|k,v| required.include?(k) and v.nil?}.keys

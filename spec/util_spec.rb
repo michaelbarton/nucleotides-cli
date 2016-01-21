@@ -1,6 +1,14 @@
-require 'ncle/util'
+require 'nucleotides/util'
 
-RSpec.describe NCLE::Util do
+RSpec.describe Nucleotides::Util do
+
+  describe "#subcommand" do
+
+    it "should the expected class when available" do
+      expect(described_class.subcommand("fetch-data")).to eq(Nucleotides::FetchData)
+    end
+
+  end
 
   describe "#missing_arguments" do
 

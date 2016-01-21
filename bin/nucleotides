@@ -2,8 +2,7 @@
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'rubygems'
-require 'ncle/fetch_data'
-require 'ncle/util'
+require 'nucleotides/util'
 
-#status, msg = NCLE::FetchData.execute!
-#NCLE::Util.finish(status, msg)
+status, msg = Nucleotides::Util.execute! ARGV
+Nucleotides::Util.finish(status, msg)
