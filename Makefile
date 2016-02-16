@@ -14,13 +14,13 @@ db_name := POSTGRES_NAME=postgres
 
 params := $(db_user) $(db_pass) $(db_name) $(db_host)
 
-test = DOCKER_HOST=$(docker_host) $(path) nosetests --rednose
-
 #################################################
 #
 # Run tests and features
 #
 #################################################
+
+test = DOCKER_HOST=$(docker_host) $(path) nosetests --rednose
 
 feature: Gemfile.lock $(credentials)
 	$(params) bundle exec cucumber $(ARGS)
@@ -30,7 +30,7 @@ test:
 
 autotest:
 	@clear && $(test) || true # Using true starts tests even on failure
-	@fswatch -o ./src -o ./test | xargs -n 1 -I {} bash -c "clear && $(test)"
+	@fswatch -o ./nucleotides -o ./test | xargs -n 1 -I {} bash -c "clear && $(test)"
 
 ################################################
 #

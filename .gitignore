@@ -2,8 +2,7 @@ Gemfile.lock
 .bundle
 vendor
 tmp
-.api_container
-.api_image
-.rdm_container
-.rdm_image
 log
+.*_container
+.*_image
+*.pyc
