@@ -10,11 +10,11 @@ endif
 feature: Gemfile.lock $(credentials)
 	DOCKER_HOST=$(docker_host) bundle exec cucumber $(ARGS)
 
-test: Gemfile.lock
-	DOCKER_HOST=$(docker_host) bundle exec rspec
+test:
+	DOCKER_HOST=$(docker_host)
 
-autotest: Gemfile.lock
-	DOCKER_HOST=$(docker_host) bundle exec autotest
+autotest:
+	DOCKER_HOST=$(docker_host)
 
 ################################################
 #
