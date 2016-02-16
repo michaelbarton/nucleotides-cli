@@ -1,3 +1,5 @@
+path := PATH=./vendor/python/bin:$(shell echo "${PATH}")
+
 docker_host := $(shell echo ${DOCKER_HOST} | egrep -o "\d+.\d+.\d+.\d+")
 
 ifdef docker_host
@@ -12,14 +14,23 @@ db_name := POSTGRES_NAME=postgres
 
 params := $(db_user) $(db_pass) $(db_name) $(db_host)
 
+test = DOCKER_HOST=$(docker_host) $(path) nosetests --rednose
+
+#################################################
+#
+# Run tests and features
+#
+#################################################
+
 feature: Gemfile.lock $(credentials)
 	$(params) bundle exec cucumber $(ARGS)
 
 test:
-	DOCKER_HOST=$(docker_host)
+	$(test)
 
 autotest:
-	DOCKER_HOST=$(docker_host)
+	@clear && $(test) || true # Using true starts tests even on failure
+	@fswatch -o ./src -o ./test | xargs -n 1 -I {} bash -c "clear && $(test)"
 
 ################################################
 #
@@ -68,3 +79,5 @@ vendor/python: requirements.txt
 Gemfile.lock: Gemfile
 	mkdir -p log
 	bundle install --path vendor/bundle 2>&1 > log/bundle.txt
+
+.PHONY: test autotest bootstrap
