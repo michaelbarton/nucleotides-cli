@@ -1,8 +1,1 @@
-#!/usr/bin/env ruby
-$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
-
-require 'rubygems'
-require 'nucleotides/util'
-
-status, msg = Nucleotides::Util.execute! ARGV
-Nucleotides::Util.finish(status, msg)
+#!/usr/bin/env python

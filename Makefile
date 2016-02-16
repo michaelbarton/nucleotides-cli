@@ -10,11 +10,11 @@ endif
 feature: Gemfile.lock $(credentials)
 	DOCKER_HOST=$(docker_host) bundle exec cucumber $(ARGS)
 
-test: Gemfile.lock
-	DOCKER_HOST=$(docker_host) bundle exec rspec
+test:
+	DOCKER_HOST=$(docker_host)
 
-autotest: Gemfile.lock
-	DOCKER_HOST=$(docker_host) bundle exec autotest
+autotest:
+	DOCKER_HOST=$(docker_host)
 
 ################################################
 #
@@ -22,28 +22,28 @@ autotest: Gemfile.lock
 #
 ################################################
 
-bootstrap: Gemfile.lock .api_container
+bootstrap: Gemfile.lock vendor/python .api_container
 
 .api_container: .rdm_container .api_image
 	docker run \
-	  --detach=true \
-	  --env=POSTGRES_USER=postgres \
-	  --env=POSTGRES_PASSWORD=pass \
-	  --env=POSTGRES_NAME=postgres \
-	  --env=POSTGRES_HOST=//localhost:5433 \
-	  --net=host \
-	  --publish 80:80 \
-	  --volume=$(realpath test/data):/data:ro \
-	  nucleotides/api:staging \
-	  > $@
+		--detach=true \
+		--env=POSTGRES_USER=postgres \
+		--env=POSTGRES_PASSWORD=pass \
+		--env=POSTGRES_NAME=postgres \
+		--env=POSTGRES_HOST=//localhost:5433 \
+		--net=host \
+		--publish 80:80 \
+		--volume=$(realpath test/data):/data:ro \
+		nucleotides/api:staging \
+		> $@
 
 .rdm_container: .rdm_image
 	docker run \
-	  --env=POSTGRES_USER=postgres \
-	  --env=POSTGRES_PASSWORD=pass \
-          --publish=5433:5432 \
-	  --detach=true \
-	  postgres > $@
+		--env=POSTGRES_USER=postgres \
+		--env=POSTGRES_PASSWORD=pass \
+		--publish=5433:5432 \
+		--detach=true \
+		postgres > $@
 	sleep 3
 
 .rdm_image:
@@ -54,5 +54,12 @@ bootstrap: Gemfile.lock .api_container
 	docker pull nucleotides/api:staging
 	touch $@
 
+vendor/python: requirements.txt
+	mkdir -p log
+	virtualenv $@ 2>&1 > log/virtualenv.txt
+	$(path) pip install -r $< 2>&1 > log/pip.txt
+	touch $@
+
 Gemfile.lock: Gemfile
-	bundle install --path vendor/bundle
+	mkdir -p log
+	bundle install --path vendor/bundle 2>&1 > log/bundle.txt
