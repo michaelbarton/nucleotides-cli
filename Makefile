@@ -1,14 +1,19 @@
 docker_host := $(shell echo ${DOCKER_HOST} | egrep -o "\d+.\d+.\d+.\d+")
 
-ifndef DOCKER_HOST
-	docker_host := http://localhost
+ifdef docker_host
+       db_host  := POSTGRES_HOST=//$(docker_host):5433
 else
-	docker_host := http://$(shell echo ${DOCKER_HOST} | egrep -o "\d+.\d+.\d+.\d+")
+       db_host  := POSTGRES_HOST=//localhost:5433
 endif
 
+db_user := POSTGRES_USER=postgres
+db_pass := POSTGRES_PASSWORD=pass
+db_name := POSTGRES_NAME=postgres
+
+params := $(db_user) $(db_pass) $(db_name) $(db_host)
 
 feature: Gemfile.lock $(credentials)
-	DOCKER_HOST=$(docker_host) bundle exec cucumber $(ARGS)
+	$(params) bundle exec cucumber $(ARGS)
 
 test:
 	DOCKER_HOST=$(docker_host)
@@ -25,22 +30,22 @@ autotest:
 bootstrap: Gemfile.lock vendor/python .api_container
 
 .api_container: .rdm_container .api_image
-	docker run \
-		--detach=true \
-		--env=POSTGRES_USER=postgres \
-		--env=POSTGRES_PASSWORD=pass \
-		--env=POSTGRES_NAME=postgres \
-		--env=POSTGRES_HOST=//localhost:5433 \
-		--net=host \
-		--publish 80:80 \
-		--volume=$(realpath test/data):/data:ro \
-		nucleotides/api:staging \
-		> $@
+	@docker run \
+	  --detach=true \
+	  --env="$(db_user)" \
+	  --env="$(db_pass)" \
+	  --env="$(db_name)" \
+	  --env=POSTGRES_HOST=//localhost:5433 \
+	  --net=host \
+	  --publish 80:80 \
+	  nucleotides/api:staging \
+	  server > $@
+
 
 .rdm_container: .rdm_image
 	docker run \
-		--env=POSTGRES_USER=postgres \
-		--env=POSTGRES_PASSWORD=pass \
+		--env="$(db_user)" \
+		--env="$(db_pass)" \
 		--publish=5433:5432 \
 		--detach=true \
 		postgres > $@
