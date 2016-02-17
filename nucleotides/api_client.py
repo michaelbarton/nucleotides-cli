@@ -1,8 +1,14 @@
-import os
-import json
-import requests as req
+import os, re, json, requests
 
-def fetch_task(id_):
-    url = "/".join(["http:/", os.environ["NUCLEOTIDES_API"], "tasks", id_])
-    response = req.get(url=url).text
-    return json.loads(response)
+def task_url(host, id_):
+    url = "/".join([host, "tasks", id_])
+    if not re.match('(?:http|ftp|https)://', url):
+        url = "http://" + url
+    return url
+
+def fetch_task(host, id_):
+    url = task_url(host, id_)
+    response = requests.get(url = url)
+    if not response.status_code == 200:
+        raise IOError("Received {} status code from '{}'".format(response.status_code, url))
+    return json.loads(response.text)

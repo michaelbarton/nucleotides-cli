@@ -12,7 +12,7 @@ db_user := POSTGRES_USER=postgres
 db_pass := POSTGRES_PASSWORD=pass
 db_name := POSTGRES_NAME=postgres
 
-params := $(db_user) $(db_pass) $(db_name) $(db_host)
+params := DOCKER_HOST=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_host)
 
 #################################################
 #

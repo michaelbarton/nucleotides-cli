@@ -5,6 +5,8 @@ Usage:
     nucleotides fetch-data <task>
 """
 
+import os
+
 import nucleotides.util        as util
 import nucleotides.api_client  as api
 import biobox_cli.util.misc    as bbx_util
@@ -21,5 +23,5 @@ def create_metadata_file(metadata):
         f.write(json.dumps(metadata))
 
 def create_benchmark_dir(id_):
-    metadata = api.fetch_task(id_)
+    metadata = api.fetch_task(os.environ["NUCLEOTIDES_API"], id_)
     create_metadata_file(metadata)
