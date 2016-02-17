@@ -2,7 +2,7 @@
 nucleotides fetch-data - Download all data necessary to perform a benchmarking task
 
 Usage:
-    nucleotides fetch-data [<args>...]
+    nucleotides fetch-data <task>
 """
 
 import nucleotides.util as util
