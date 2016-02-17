@@ -11,13 +11,13 @@ Feature: Fetching input data files for benchmarking
       AWS_SECRET_ACCESS_KEY=$(bundle exec ../plumbing/fetch_credential secret_key) \
       AWS_DEFAULT_REGION='us-west-1' \
       NUCLEOTIDES_API=${DOCKER_HOST} \
-        nucleotides fetch-data --task-id=1
+        nucleotides fetch-data 1
       """
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
-    And the file "nucleotides-task/1/metadata.json" should exist
-    And the file "nucleotides-task/1/metadata.json" should be a valid JSON document
+    And the file "nucleotides/1/metadata.json" should exist
+    And the file "nucleotides/1/metadata.json" should be a valid JSON document
     And the JSON should have the following:
       | id              | 1                                                                  |
       | complete        | false                                                              |
