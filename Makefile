@@ -64,11 +64,12 @@ bootstrap: Gemfile.lock vendor/python .api_container
 		--env="$(db_pass)" \
 		--publish=5433:5432 \
 		--detach=true \
-		postgres > $@
+		kiasaki/alpine-postgres:9.4 \
+		> $@
 	sleep 3
 
 .rdm_image:
-	docker pull postgres
+	docker pull kiasaki/alpine-postgres:9.4
 	touch $@
 
 .api_image:
