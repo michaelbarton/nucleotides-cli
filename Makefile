@@ -1,11 +1,41 @@
+path := PATH=./vendor/python/bin:$(shell echo "${PATH}")
+
+docker_host := $(shell echo ${DOCKER_HOST} | egrep -o "\d+.\d+.\d+.\d+")
+
+ifdef docker_host
+       db_host  := POSTGRES_HOST=//$(docker_host):5433
+else
+       db_host     := POSTGRES_HOST=//localhost:5433
+       docker_host := localhost
+endif
+
+db_user := POSTGRES_USER=postgres
+db_pass := POSTGRES_PASSWORD=pass
+db_name := POSTGRES_NAME=postgres
+
+aws_pass   := AWS_SECRET_ACCESS_KEY=$(shell bundle exec ./plumbing/fetch_credential secret_key)
+aws_key    := AWS_ACCESS_KEY_ID=$(shell bundle exec ./plumbing/fetch_credential access_key)
+aws_region := AWS_DEFAULT_REGION=us-west-1
+
+params := DOCKER_HOST=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_host) $(aws_pass) $(aws_key) $(aws_region)
+
+#################################################
+#
+# Run tests and features
+#
+#################################################
+
+test = $(params) $(path) nosetests --rednose
+
 feature: Gemfile.lock $(credentials)
-	bundle exec cucumber $(ARGS)
+	@$(params) bundle exec cucumber $(ARGS)
 
-test: Gemfile.lock
-	bundle exec rspec
+test:
+	@$(test)
 
-autotest: Gemfile.lock
-	bundle exec autotest
+autotest:
+	@clear && $(test) || true # Using true starts tests even on failure
+	@fswatch -o ./nucleotides -o ./test | xargs -n 1 -I {} bash -c "clear && $(test)"
 
 ################################################
 #
@@ -13,37 +43,47 @@ autotest: Gemfile.lock
 #
 ################################################
 
-bootstrap: Gemfile.lock .api_container
+bootstrap: Gemfile.lock vendor/python .api_container
 
 .api_container: .rdm_container .api_image
-	docker run \
+	@docker run \
 	  --detach=true \
-	  --env=POSTGRES_USER=postgres \
-	  --env=POSTGRES_PASSWORD=pass \
-	  --env=POSTGRES_NAME=postgres \
+	  --env="$(db_user)" \
+	  --env="$(db_pass)" \
+	  --env="$(db_name)" \
 	  --env=POSTGRES_HOST=//localhost:5433 \
 	  --net=host \
 	  --publish 80:80 \
-	  --volume=$(realpath test/data):/data:ro \
 	  nucleotides/api:staging \
-	  > $@
+	  server > $@
+
 
 .rdm_container: .rdm_image
 	docker run \
-	  --env=POSTGRES_USER=postgres \
-	  --env=POSTGRES_PASSWORD=pass \
-          --publish=5433:5432 \
-	  --detach=true \
-	  postgres > $@
+		--env="$(db_user)" \
+		--env="$(db_pass)" \
+		--publish=5433:5432 \
+		--detach=true \
+		kiasaki/alpine-postgres:9.4 \
+		> $@
 	sleep 3
 
 .rdm_image:
-	docker pull postgres
+	docker pull kiasaki/alpine-postgres:9.4
 	touch $@
 
 .api_image:
 	docker pull nucleotides/api:staging
 	touch $@
 
+vendor/python: requirements.txt
+	mkdir -p log
+	virtualenv $@ 2>&1 > log/virtualenv.txt
+	$(path) pip install -r $< 2>&1 > log/pip.txt
+	touch $@
+
 Gemfile.lock: Gemfile
-	bundle install --path vendor/bundle
+	mkdir -p log
+	bundle install --path vendor/bundle 2>&1 > log/bundle.txt
+
+.PHONY: test autotest bootstrap

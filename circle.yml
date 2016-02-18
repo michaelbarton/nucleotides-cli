@@ -7,11 +7,10 @@ machine:
 dependencies:
   cache_directories:
     - "vendor/bundle"
+    - "vendor/python"
   override:
     - ./script/bootstrap
     - mkdir -p $CIRCLE_TEST_REPORTS/cucumber
-  pre:
-    - sudo apt-get update && sudo apt-get install --no-install-recommends realpath
 
 test:
   override:
