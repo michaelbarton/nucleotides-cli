@@ -518,7 +518,7 @@ SELECT pg_catalog.setval('event_file_instance_id_seq', 1, false);
 SELECT pg_catalog.setval('event_id_seq', 1, false);
 INSERT INTO file_instance VALUES (1, '2016-02-16 19:25:19.764867', 3, 'd421a4', 's3://ref');
 INSERT INTO file_instance VALUES (2, '2016-02-16 19:25:19.768323', 2, '7673a', 's3://reads');
-INSERT INTO file_instance VALUES (3, '2016-02-16 19:25:19.768323', 2, '11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533', 's3://nucleotides-testing/short-read-assembler/reads.fq.gz');
+INSERT INTO file_instance VALUES (3, '2016-02-16 19:25:19.768323', 2, '24b5b01b08482053d7d13acd514e359fb0b726f1e8ae36aa194b6ddc07335298', 's3://nucleotides-testing/short-read-assembler/dummy.reads.fq.gz');
 SELECT pg_catalog.setval('file_instance_id_seq', 3, true);
 INSERT INTO file_type VALUES (1, '2016-02-16 19:25:19.761868', 'log', 'Free form text output from benchmarking tools', true);
 INSERT INTO file_type VALUES (2, '2016-02-16 19:25:19.761868', 'short_read_fastq', 'Short read sequences in FASTQ format', true);

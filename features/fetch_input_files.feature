@@ -23,7 +23,7 @@ Feature: Fetching input data files for benchmarking
       | image/name      | "bioboxes/ray"                                                     |
       | image/type      | "short_read_assembler"                                             |
       | image/sha256    | "digest_2"                                                         |
-      | inputs/0/url    | "s3://nucleotides-testing/short-read-assembler/reads.fq.gz"        |
-      | inputs/0/sha256 | "11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533" |
+      | inputs/0/url    | "s3://nucleotides-testing/short-read-assembler/dummy.reads.fq.gz"  |
+      | inputs/0/sha256 | "24b5b01b08482053d7d13acd514e359fb0b726f1e8ae36aa194b6ddc07335298" |
       | inputs/0/type   | "short_read_fastq"                                                 |
-    And the file "nucleotides/1/inputs/0/reads.fq.gz" should exist
+    And the file "nucleotides/1/inputs/0/dummy.reads.fq.gz" should exist

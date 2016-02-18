@@ -13,8 +13,8 @@ def sample_benchmark_task():
             "benchmark": "453e406dcee4d18174d4ff623f52dcd8",
             "inputs": [
                 {
-                    "sha256": "11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533",
-                    "url": "s3://nucleotides-testing/short-read-assembler/reads.fq.gz",
+                    "sha256": "24b5b01b08482053d7d13acd514e359fb0b726f1e8ae36aa194b6ddc07335298",
+                    "url": "s3://nucleotides-testing/short-read-assembler/dummy.reads.fq.gz",
                     "type": "short_read_fastq"
                     }
                 ],
