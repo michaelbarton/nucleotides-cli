@@ -5,7 +5,8 @@ docker_host := $(shell echo ${DOCKER_HOST} | egrep -o "\d+.\d+.\d+.\d+")
 ifdef docker_host
        db_host  := POSTGRES_HOST=//$(docker_host):5433
 else
-       db_host  := POSTGRES_HOST=//localhost:5433
+       db_host     := POSTGRES_HOST=//localhost:5433
+       docker_host := localhost
 endif
 
 db_user := POSTGRES_USER=postgres
