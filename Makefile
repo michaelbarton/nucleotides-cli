@@ -12,7 +12,11 @@ db_user := POSTGRES_USER=postgres
 db_pass := POSTGRES_PASSWORD=pass
 db_name := POSTGRES_NAME=postgres
 
-params := DOCKER_HOST=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_host)
+aws_pass   := AWS_SECRET_ACCESS_KEY=$(shell bundle exec ./plumbing/fetch_credential secret_key)
+aws_key    := AWS_ACCESS_KEY_ID=$(shell bundle exec ./plumbing/fetch_credential access_key)
+aws_region := AWS_DEFAULT_REGION=us-west-1
+
+params := DOCKER_HOST=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_host) $(aws_pass) $(aws_key) $(aws_region)
 
 #################################################
 #
@@ -20,13 +24,13 @@ params := DOCKER_HOST=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_host)
 #
 #################################################
 
-test = DOCKER_HOST=$(docker_host) $(path) nosetests --rednose
+test = $(params) $(path) nosetests --rednose
 
 feature: Gemfile.lock $(credentials)
-	$(params) bundle exec cucumber $(ARGS)
+	@$(params) bundle exec cucumber $(ARGS)
 
 test:
-	$(test)
+	@$(test)
 
 autotest:
 	@clear && $(test) || true # Using true starts tests even on failure
