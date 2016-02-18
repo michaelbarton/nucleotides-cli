@@ -16,6 +16,8 @@ def reset_database():
     with open("test/fixtures/benchmarks.sql", "r") as f:
         cursor.execute(f.read())
     conn.commit()
+    cursor.close()
+    conn.close()
 
 
 def test_application_state():
