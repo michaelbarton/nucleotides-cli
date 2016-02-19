@@ -27,13 +27,13 @@ CREATE FUNCTION create_metadata_table(metadata_name character varying) RETURNS v
     AS $$
 BEGIN
 EXECUTE format('
-  CREATE TABLE IF NOT EXISTS %I (
-    id		serial		PRIMARY KEY,
-    created_at	timestamp	DEFAULT current_timestamp,
-    name	text		UNIQUE NOT NULL,
-    description	text		NOT NULL,
-    active	bool		NOT NULL DEFAULT true
-  );', metadata_name || '_type');
+CREATE TABLE IF NOT EXISTS %I (
+id		serial		PRIMARY KEY,
+created_at	timestamp	DEFAULT current_timestamp,
+name	text		UNIQUE NOT NULL,
+description	text		NOT NULL,
+active	bool		NOT NULL DEFAULT true
+);', metadata_name || '_type');
 END
 $$;
 ALTER FUNCTION public.create_metadata_table(metadata_name character varying) OWNER TO postgres;
@@ -149,6 +149,10 @@ CREATE SEQUENCE benchmark_type_id_seq
     CACHE 1;
 ALTER TABLE benchmark_type_id_seq OWNER TO postgres;
 ALTER SEQUENCE benchmark_type_id_seq OWNED BY benchmark_type.id;
+CREATE TABLE db_version (
+    id bigint NOT NULL
+);
+ALTER TABLE db_version OWNER TO postgres;
 CREATE TABLE event (
     id integer NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
@@ -501,82 +505,94 @@ ALTER TABLE ONLY protocol_type ALTER COLUMN id SET DEFAULT nextval('protocol_typ
 ALTER TABLE ONLY run_mode_type ALTER COLUMN id SET DEFAULT nextval('run_mode_type_id_seq'::regclass);
 ALTER TABLE ONLY source_type ALTER COLUMN id SET DEFAULT nextval('source_type_id_seq'::regclass);
 ALTER TABLE ONLY task ALTER COLUMN id SET DEFAULT nextval('task_id_seq'::regclass);
-INSERT INTO benchmark_data VALUES (1, '2016-02-16 19:25:19.771188', 1, 1, true);
-INSERT INTO benchmark_data VALUES (2, '2016-02-16 19:25:19.771188', 1, 2, true);
+INSERT INTO benchmark_data VALUES (1, '2016-02-19 22:33:48.645191', 1, 1, true);
+INSERT INTO benchmark_data VALUES (2, '2016-02-19 22:33:48.652617', 1, 2, true);
 SELECT pg_catalog.setval('benchmark_data_id_seq', 2, true);
-INSERT INTO benchmark_instance VALUES (1, '2016-02-16 19:25:19.773218', '453e406dcee4d18174d4ff623f52dcd8', 1, 2, 2, 3, 3);
-INSERT INTO benchmark_instance VALUES (2, '2016-02-16 19:25:19.773218', 'e61730e6717b1787cf09d44914ffb920', 1, 2, 1, 2, 3);
-INSERT INTO benchmark_instance VALUES (3, '2016-02-16 19:25:19.773218', '6151f5ab282d90e4cee404433b271dda', 1, 2, 1, 1, 3);
-INSERT INTO benchmark_instance VALUES (4, '2016-02-16 19:25:19.773218', '98c1d2a9d58ce748c08cf65dd3354676', 1, 1, 2, 3, 2);
-INSERT INTO benchmark_instance VALUES (5, '2016-02-16 19:25:19.773218', '4f57d0ecf9622a0bd8a6e3f79c71a09d', 1, 1, 1, 2, 2);
-INSERT INTO benchmark_instance VALUES (6, '2016-02-16 19:25:19.773218', '2f221a18eb86380369570b2ed147d8b4', 1, 1, 1, 1, 2);
-SELECT pg_catalog.setval('benchmark_instance_id_seq', 6, true);
-INSERT INTO benchmark_type VALUES (1, '2016-02-16 19:25:19.771188', 'illumina_isolate_reference_assembly', 'desc', 1, 3, true);
-INSERT INTO benchmark_type VALUES (2, '2016-02-16 19:25:19.771188', 'short_read_preprocessing_reference_evaluation', 'desc', 2, 4, true);
+INSERT INTO benchmark_instance VALUES (1, '2016-02-19 22:33:48.655816', '453e406dcee4d18174d4ff623f52dcd8', 1, 2, 2, 3, 3);
+INSERT INTO benchmark_instance VALUES (2, '2016-02-19 22:33:48.655816', 'e61730e6717b1787cf09d44914ffb920', 1, 2, 1, 2, 3);
+INSERT INTO benchmark_instance VALUES (3, '2016-02-19 22:33:48.655816', '6151f5ab282d90e4cee404433b271dda', 1, 2, 1, 1, 3);
+INSERT INTO benchmark_instance VALUES (4, '2016-02-19 22:33:48.655816', '98c1d2a9d58ce748c08cf65dd3354676', 1, 1, 2, 3, 2);
+INSERT INTO benchmark_instance VALUES (5, '2016-02-19 22:33:48.655816', '4f57d0ecf9622a0bd8a6e3f79c71a09d', 1, 1, 1, 2, 2);
+INSERT INTO benchmark_instance VALUES (6, '2016-02-19 22:33:48.655816', '2f221a18eb86380369570b2ed147d8b4', 1, 1, 1, 1, 2);
+INSERT INTO benchmark_instance VALUES (7, '2016-02-19 22:33:48.655816', '0eafe866d98c59ca39715e936cfa401e', 2, 2, 3, 4, 3);
+INSERT INTO benchmark_instance VALUES (8, '2016-02-19 22:33:48.655816', 'ec76099293f5798b57b7a6d6f1c300c4', 2, 1, 3, 4, 2);
+SELECT pg_catalog.setval('benchmark_instance_id_seq', 8, true);
+INSERT INTO benchmark_type VALUES (1, '2016-02-19 22:33:48.642602', 'illumina_isolate_reference_assembly', 'Evaluate genome assemblers using reads and reference genome', 1, 3, true);
+INSERT INTO benchmark_type VALUES (2, '2016-02-19 22:33:48.650132', 'short_read_preprocessing_reference_evaluation', 'Evaluate short read preprocessors using reads and reference genome', 2, 4, true);
 SELECT pg_catalog.setval('benchmark_type_id_seq', 2, true);
+INSERT INTO db_version VALUES (2015101019150000);
 SELECT pg_catalog.setval('event_file_instance_id_seq', 1, false);
 SELECT pg_catalog.setval('event_id_seq', 1, false);
-INSERT INTO file_instance VALUES (1, '2016-02-16 19:25:19.764867', 3, 'd421a4', 's3://ref');
-INSERT INTO file_instance VALUES (2, '2016-02-16 19:25:19.768323', 2, '7673a', 's3://reads');
-INSERT INTO file_instance VALUES (3, '2016-02-16 19:25:19.768323', 2, '24b5b01b08482053d7d13acd514e359fb0b726f1e8ae36aa194b6ddc07335298', 's3://nucleotides-testing/short-read-assembler/dummy.reads.fq.gz');
+INSERT INTO file_instance VALUES (1, '2016-02-19 22:33:48.59428', 2, '6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414', 's3://nucleotides-testing/short-read-assembler/reference.fa');
+INSERT INTO file_instance VALUES (2, '2016-02-19 22:33:48.606331', 1, '24b5b01b08482053d7d13acd514e359fb0b726f1e8ae36aa194b6ddc07335298', 's3://nucleotides-testing/short-read-assembler/dummy.reads.fq.gz');
+INSERT INTO file_instance VALUES (3, '2016-02-19 22:33:48.611134', 1, '11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533', 's3://nucleotides-testing/short-read-assembler/reads.fq.gz');
 SELECT pg_catalog.setval('file_instance_id_seq', 3, true);
-INSERT INTO file_type VALUES (1, '2016-02-16 19:25:19.761868', 'log', 'Free form text output from benchmarking tools', true);
-INSERT INTO file_type VALUES (2, '2016-02-16 19:25:19.761868', 'short_read_fastq', 'Short read sequences in FASTQ format', true);
-INSERT INTO file_type VALUES (3, '2016-02-16 19:25:19.761868', 'reference_fasta', 'Reference sequence in FASTA format', true);
-INSERT INTO file_type VALUES (4, '2016-02-16 19:25:19.761868', 'contig_fasta', 'contigs', true);
+INSERT INTO file_type VALUES (1, '2016-02-19 22:33:48.521765', 'short_read_fastq', 'Short read sequences in FASTQ format', true);
+INSERT INTO file_type VALUES (2, '2016-02-19 22:33:48.524201', 'reference_fasta', 'Reference sequence in FASTA format', true);
+INSERT INTO file_type VALUES (3, '2016-02-19 22:33:48.525964', 'log', 'Free form text output from benchmarking tools', true);
+INSERT INTO file_type VALUES (4, '2016-02-19 22:33:48.527302', 'contig_fasta', 'Reads assembled into larger contiguous sequences in FASTA format', true);
 SELECT pg_catalog.setval('file_type_id_seq', 4, true);
-INSERT INTO image_instance VALUES (1, '2016-02-16 19:25:19.769647', 1, 'bioboxes/velvet', 'digest_1', true);
-INSERT INTO image_instance VALUES (2, '2016-02-16 19:25:19.769647', 1, 'bioboxes/ray', 'digest_2', true);
-INSERT INTO image_instance VALUES (3, '2016-02-16 19:25:19.769647', 3, 'bioboxes/quast', 'digest_4', true);
-SELECT pg_catalog.setval('image_instance_id_seq', 3, true);
-INSERT INTO image_instance_task VALUES (1, '2016-02-16 19:25:19.769647', 1, 'default', true);
-INSERT INTO image_instance_task VALUES (2, '2016-02-16 19:25:19.769647', 1, 'careful', true);
-INSERT INTO image_instance_task VALUES (3, '2016-02-16 19:25:19.769647', 2, 'default', true);
-INSERT INTO image_instance_task VALUES (4, '2016-02-16 19:25:19.769647', 3, 'default', true);
-SELECT pg_catalog.setval('image_instance_task_id_seq', 4, true);
-INSERT INTO image_type VALUES (1, '2016-02-16 19:25:19.761868', 'short_read_assembler', 'desc', true);
-INSERT INTO image_type VALUES (2, '2016-02-16 19:25:19.761868', 'short_read_preprocessor', 'desc', true);
-INSERT INTO image_type VALUES (3, '2016-02-16 19:25:19.761868', 'reference_assembly_evaluation', 'desc', true);
-INSERT INTO image_type VALUES (4, '2016-02-16 19:25:19.761868', 'short_read_preprocessing_reference_evaluation', 'desc', true);
+INSERT INTO image_instance VALUES (1, '2016-02-19 22:33:48.615538', 1, 'bioboxes/velvet', 'digest_1', true);
+INSERT INTO image_instance VALUES (2, '2016-02-19 22:33:48.623037', 1, 'bioboxes/ray', 'digest_2', true);
+INSERT INTO image_instance VALUES (3, '2016-02-19 22:33:48.634066', 2, 'bioboxes/my-filterer', 'digest_3', true);
+INSERT INTO image_instance VALUES (4, '2016-02-19 22:33:48.637208', 3, 'bioboxes/quast', 'digest_4', true);
+INSERT INTO image_instance VALUES (5, '2016-02-19 22:33:48.63953', 4, 'bioboxes/velvet-then-quast', 'digest_4', true);
+SELECT pg_catalog.setval('image_instance_id_seq', 5, true);
+INSERT INTO image_instance_task VALUES (1, '2016-02-19 22:33:48.615538', 1, 'default', true);
+INSERT INTO image_instance_task VALUES (2, '2016-02-19 22:33:48.62013', 1, 'careful', true);
+INSERT INTO image_instance_task VALUES (3, '2016-02-19 22:33:48.623037', 2, 'default', true);
+INSERT INTO image_instance_task VALUES (4, '2016-02-19 22:33:48.634066', 3, 'default', true);
+INSERT INTO image_instance_task VALUES (5, '2016-02-19 22:33:48.637208', 4, 'default', true);
+INSERT INTO image_instance_task VALUES (6, '2016-02-19 22:33:48.63953', 5, 'default', true);
+SELECT pg_catalog.setval('image_instance_task_id_seq', 6, true);
+INSERT INTO image_type VALUES (1, '2016-02-19 22:33:48.55021', 'short_read_assembler', 'null', true);
+INSERT INTO image_type VALUES (2, '2016-02-19 22:33:48.55155', 'short_read_preprocessor', 'null', true);
+INSERT INTO image_type VALUES (3, '2016-02-19 22:33:48.552586', 'reference_assembly_evaluation', 'null', true);
+INSERT INTO image_type VALUES (4, '2016-02-19 22:33:48.553488', 'short_read_preprocessing_reference_evaluation', 'null', true);
 SELECT pg_catalog.setval('image_type_id_seq', 4, true);
-INSERT INTO input_data_file VALUES (1, '2016-02-16 19:25:19.768323', true, 1, 2);
-INSERT INTO input_data_file VALUES (2, '2016-02-16 19:25:19.768323', true, 1, 3);
+INSERT INTO input_data_file VALUES (1, '2016-02-19 22:33:48.606331', true, 1, 2);
+INSERT INTO input_data_file VALUES (2, '2016-02-19 22:33:48.611134', true, 1, 3);
 SELECT pg_catalog.setval('input_data_file_id_seq', 2, true);
-INSERT INTO input_data_file_set VALUES (1, '2016-02-16 19:25:19.766949', true, 'jgi_isolate_microbe_2x150_1', 'desc', 2, 1, 1, 1, 1);
+INSERT INTO input_data_file_set VALUES (1, '2016-02-19 22:33:48.601239', true, 'jgi_isolate_microbe_2x150_1', 'A plain text description of where these reads came from and how they were produced.
+', 1, 1, 1, 1, 1);
 SELECT pg_catalog.setval('input_data_file_set_id_seq', 1, true);
-INSERT INTO input_data_source VALUES (1, '2016-02-16 19:25:19.764867', 'kansas_farm_soil', 'desc', true, 1);
-INSERT INTO input_data_source VALUES (2, '2016-02-16 19:25:19.764867', 'ecoli_k12', 'desc', true, 2);
+INSERT INTO input_data_source VALUES (1, '2016-02-19 22:33:48.568449', 'ecoli_k12', 'A laboratory strain with a well-described genome', true, 2);
+INSERT INTO input_data_source VALUES (2, '2016-02-19 22:33:48.577134', 'kansas_farm_soil', 'A soil sample from a kansas farm', true, 1);
 SELECT pg_catalog.setval('input_data_source_id_seq', 2, true);
-INSERT INTO input_data_source_reference_file VALUES (1, '2016-02-16 19:25:19.764867', true, 2, 1);
+INSERT INTO input_data_source_reference_file VALUES (1, '2016-02-19 22:33:48.59428', true, 1, 1);
 SELECT pg_catalog.setval('input_data_source_reference_file_id_seq', 1, true);
 SELECT pg_catalog.setval('metric_instance_id_seq', 1, false);
-INSERT INTO metric_type VALUES (1, '2016-02-16 19:25:19.761868', 'ng50', 'desc', true);
-INSERT INTO metric_type VALUES (2, '2016-02-16 19:25:19.761868', 'lg50', 'desc', true);
+INSERT INTO metric_type VALUES (1, '2016-02-19 22:33:48.528957', 'ng50', 'N50 normalised by reference genome length', true);
+INSERT INTO metric_type VALUES (2, '2016-02-19 22:33:48.538032', 'lg50', 'L50 normalised by reference genome length', true);
 SELECT pg_catalog.setval('metric_type_id_seq', 2, true);
-INSERT INTO platform_type VALUES (1, '2016-02-16 19:25:19.761868', 'illumina', 'Illumina sequencing platform', true);
+INSERT INTO platform_type VALUES (1, '2016-02-19 22:33:48.502655', 'illumina', 'Illumina sequencing platform', true);
 SELECT pg_catalog.setval('platform_type_id_seq', 1, true);
-INSERT INTO product_type VALUES (1, '2016-02-16 19:25:19.761868', 'random', 'DNA extraction followed by random DNA sequencing', true);
+INSERT INTO product_type VALUES (1, '2016-02-19 22:33:48.541492', 'random', 'DNA extraction followed by random DNA sequencing', true);
 SELECT pg_catalog.setval('product_type_id_seq', 1, true);
-INSERT INTO protocol_type VALUES (1, '2016-02-16 19:25:19.761868', 'nextera', 'Illumina nextera protocol', true);
+INSERT INTO protocol_type VALUES (1, '2016-02-19 22:33:48.539508', 'nextera', 'Illumina nextera protocol', true);
 SELECT pg_catalog.setval('protocol_type_id_seq', 1, true);
-INSERT INTO run_mode_type VALUES (1, '2016-02-16 19:25:19.761868', '2x150_270', 'An insert size of 270bp sequenced with 2x150bp reads', true);
+INSERT INTO run_mode_type VALUES (1, '2016-02-19 22:33:48.543861', '2x150_270', 'An insert size of 270bp sequenced with 2x150bp reads', true);
 SELECT pg_catalog.setval('run_mode_type_id_seq', 1, true);
-INSERT INTO source_type VALUES (1, '2016-02-16 19:25:19.761868', 'metagenome', 'A mixture of multiple genomes', true);
-INSERT INTO source_type VALUES (2, '2016-02-16 19:25:19.761868', 'microbe', 'A single isolated microbe', true);
+INSERT INTO source_type VALUES (1, '2016-02-19 22:33:48.546072', 'metagenome', 'A mixture of multiple genomes', true);
+INSERT INTO source_type VALUES (2, '2016-02-19 22:33:48.547486', 'microbe', 'A single isolated microbe', true);
 SELECT pg_catalog.setval('source_type_id_seq', 2, true);
-INSERT INTO task VALUES (1, '2016-02-16 19:25:19.773218', 1, 3, 'produce');
-INSERT INTO task VALUES (2, '2016-02-16 19:25:19.773218', 1, 4, 'evaluate');
-INSERT INTO task VALUES (3, '2016-02-16 19:25:19.773218', 2, 2, 'produce');
-INSERT INTO task VALUES (4, '2016-02-16 19:25:19.773218', 2, 4, 'evaluate');
-INSERT INTO task VALUES (5, '2016-02-16 19:25:19.773218', 3, 1, 'produce');
-INSERT INTO task VALUES (6, '2016-02-16 19:25:19.773218', 3, 4, 'evaluate');
-INSERT INTO task VALUES (7, '2016-02-16 19:25:19.773218', 4, 3, 'produce');
-INSERT INTO task VALUES (8, '2016-02-16 19:25:19.773218', 4, 4, 'evaluate');
-INSERT INTO task VALUES (9, '2016-02-16 19:25:19.773218', 5, 2, 'produce');
-INSERT INTO task VALUES (10, '2016-02-16 19:25:19.773218', 5, 4, 'evaluate');
-INSERT INTO task VALUES (11, '2016-02-16 19:25:19.773218', 6, 1, 'produce');
-INSERT INTO task VALUES (12, '2016-02-16 19:25:19.773218', 6, 4, 'evaluate');
-SELECT pg_catalog.setval('task_id_seq', 12, true);
+INSERT INTO task VALUES (1, '2016-02-19 22:33:48.655816', 1, 3, 'produce');
+INSERT INTO task VALUES (2, '2016-02-19 22:33:48.655816', 1, 5, 'evaluate');
+INSERT INTO task VALUES (3, '2016-02-19 22:33:48.655816', 2, 2, 'produce');
+INSERT INTO task VALUES (4, '2016-02-19 22:33:48.655816', 2, 5, 'evaluate');
+INSERT INTO task VALUES (5, '2016-02-19 22:33:48.655816', 3, 1, 'produce');
+INSERT INTO task VALUES (6, '2016-02-19 22:33:48.655816', 3, 5, 'evaluate');
+INSERT INTO task VALUES (7, '2016-02-19 22:33:48.655816', 4, 3, 'produce');
+INSERT INTO task VALUES (8, '2016-02-19 22:33:48.655816', 4, 5, 'evaluate');
+INSERT INTO task VALUES (9, '2016-02-19 22:33:48.655816', 5, 2, 'produce');
+INSERT INTO task VALUES (10, '2016-02-19 22:33:48.655816', 5, 5, 'evaluate');
+INSERT INTO task VALUES (11, '2016-02-19 22:33:48.655816', 6, 1, 'produce');
+INSERT INTO task VALUES (12, '2016-02-19 22:33:48.655816', 6, 5, 'evaluate');
+INSERT INTO task VALUES (13, '2016-02-19 22:33:48.655816', 7, 4, 'produce');
+INSERT INTO task VALUES (14, '2016-02-19 22:33:48.655816', 7, 6, 'evaluate');
+INSERT INTO task VALUES (15, '2016-02-19 22:33:48.655816', 8, 4, 'produce');
+INSERT INTO task VALUES (16, '2016-02-19 22:33:48.655816', 8, 6, 'evaluate');
+SELECT pg_catalog.setval('task_id_seq', 16, true);
 ALTER TABLE ONLY benchmark_data
     ADD CONSTRAINT benchmark_data_idx UNIQUE (input_data_file_set_id, benchmark_type_id);
 ALTER TABLE ONLY benchmark_data
@@ -591,6 +607,8 @@ ALTER TABLE ONLY benchmark_type
     ADD CONSTRAINT benchmark_type_name_key UNIQUE (name);
 ALTER TABLE ONLY benchmark_type
     ADD CONSTRAINT benchmark_type_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY db_version
+    ADD CONSTRAINT db_version_id_key UNIQUE (id);
 ALTER TABLE ONLY event_file_instance
     ADD CONSTRAINT event_file_idx UNIQUE (event_id, file_instance_id);
 ALTER TABLE ONLY event_file_instance

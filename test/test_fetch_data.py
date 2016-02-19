@@ -12,7 +12,7 @@ def test_docstring_parse():
 def test_create_benchmark_dir():
     helper.reset_database()
     app = helper.test_application_state()
-    fetch.create_benchmark_dir("1", app)
+    fetch.create_benchmark_dir("7", app)
     nose.assert_true(os.path.isfile(app["path"] + "/metadata.json"))
     nose.assert_true(os.path.isfile(app["path"] + "/inputs/0/dummy.reads.fq.gz"))
 
