@@ -26,6 +26,12 @@ def test_application_state():
             'logger' : log.create_logger(os.path.join(path, "benchmark.log")),
             'path'   : path}
 
+def test_existing_application_state():
+    import json
+    app = test_application_state()
+    with open(app['path'] + '/metadata.json', 'w') as f:
+        f.write(json.dumps(sample_benchmark_task()))
+
 def sample_benchmark_task():
     return {
             "type": "produce",
