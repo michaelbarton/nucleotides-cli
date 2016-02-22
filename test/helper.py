@@ -1,5 +1,6 @@
 import os, tempfile
-import nucleotides.log as log
+import nucleotides.log      as log
+import biobox_cli.util.misc as bbx_util
 
 def reset_database():
     import psycopg2
@@ -19,18 +20,27 @@ def reset_database():
     cursor.close()
     conn.close()
 
+def test_dir():
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'tmp', 'tests')
+    bbx_util.mkdir_p(path)
+    return tempfile.mkdtemp(dir = path)
 
 def test_application_state():
-    path = tempfile.mkdtemp()
+    path = test_dir()
     return {'api'    : os.environ["DOCKER_HOST"],
             'logger' : log.create_logger(os.path.join(path, "benchmark.log")),
             'path'   : path}
 
 def test_existing_application_state():
-    import json
+    import json, shutil
+
     app = test_application_state()
+    app["task"] = sample_benchmark_task()
     with open(app['path'] + '/metadata.json', 'w') as f:
-        f.write(json.dumps(sample_benchmark_task()))
+        f.write(json.dumps(app["task"]))
+    bbx_util.mkdir_p(app['path'] + '/inputs/short_read_fastq/')
+    shutil.copy('tmp/data/reads.fq.gz', app['path'] + '/inputs/short_read_fastq/')
+    return app
 
 def sample_benchmark_task():
     return {
