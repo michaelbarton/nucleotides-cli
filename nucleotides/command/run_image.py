@@ -28,7 +28,7 @@ def create_biobox_args(app):
             "--task={}".format(app["task"]["image"]["task"])]
 
 def execute_image(app):
-    None
+    image_runner.run(create_biobox_args(app))
 
 def run(args):
     opts = util.parse(__doc__, args)

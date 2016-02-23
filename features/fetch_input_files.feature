@@ -7,7 +7,7 @@ Feature: Fetching input data files for benchmarking
     Given the nucleotides directory is available on the path
     When I run the bash command:
       """
-      NUCLEOTIDES_API=${DOCKER_HOST} nucleotides fetch-data 9
+      nucleotides fetch-data 9
       """
     Then the stderr should not contain anything
     And the stdout should not contain anything

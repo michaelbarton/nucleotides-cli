@@ -27,7 +27,7 @@ def test_dir():
 
 def test_application_state():
     path = test_dir()
-    return {'api'    : os.environ["DOCKER_HOST"],
+    return {'api'    : os.environ["NUCLEOTIDES_API"],
             'logger' : log.create_logger(os.path.join(path, "benchmark.log")),
             'path'   : path}
 
@@ -39,7 +39,7 @@ def test_existing_application_state():
     with open(app['path'] + '/metadata.json', 'w') as f:
         f.write(json.dumps(app["task"]))
     bbx_util.mkdir_p(app['path'] + '/inputs/short_read_fastq/')
-    shutil.copy('tmp/data/reads.fq.gz', app['path'] + '/inputs/short_read_fastq/')
+    shutil.copy('tmp/data/dummy.reads.fq.gz', app['path'] + '/inputs/short_read_fastq/')
     return app
 
 def sample_benchmark_task():
@@ -55,7 +55,7 @@ def sample_benchmark_task():
                 ],
             "id": 1,
             "image": {
-                "name": "bioboxes/ray",
+                "name": "bioboxes/velvet",
                 "sha256": "digest_2",
                 "task": "default",
                 "type": "short_read_assembler"
