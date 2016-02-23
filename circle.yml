@@ -10,6 +10,7 @@ dependencies:
     - "vendor/python"
   override:
     - ./script/bootstrap
+    - docker pull bioboxes/velvet
     - mkdir -p $CIRCLE_TEST_REPORTS/cucumber
 
 test:
