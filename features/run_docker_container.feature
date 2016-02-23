@@ -32,3 +32,4 @@ Feature: Running a docker container benchmark
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
+    And the file "nucleotides/5/outputs/contig_fasta/7e9f760161" should exist
