@@ -15,4 +15,5 @@ dependencies:
 test:
   override:
     - ./script/test
-    - ./script/feature '--format json --out $$CIRCLE_TEST_REPORTS/cucumber/tests.cucumber --format pretty'
+    - ./script/feature '--format json --out $$CIRCLE_TEST_REPORTS/cucumber/tests.cucumber --format pretty':
+        timeout: 300
