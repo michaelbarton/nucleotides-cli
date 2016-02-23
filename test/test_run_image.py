@@ -19,6 +19,7 @@ def test_create_biobox_args():
     nose.assert_equal("--input={}/inputs/short_read_fastq/dummy.reads.fq.gz".format(app["path"]), args[3])
     nose.assert_equal("--output={}/tmp/contig_fasta".format(app["path"]), args[4])
     nose.assert_equal("--task=default", args[5])
+    nose.assert_equal("--no-rm", args[6])
 
 def test_copy_output_files():
     app  = helper.test_existing_application_state()

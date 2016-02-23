@@ -34,7 +34,9 @@ def create_biobox_args(app):
             app["task"]["image"]["name"],
             "--input={}".format(get_input_file_path('short_read_fastq', app)),
             "--output={}".format(get_output_file_path('contig_fasta', app)),
-            "--task={}".format(app["task"]["image"]["task"])]
+            "--task={}".format(app["task"]["image"]["task"]),
+            "--no-rm"
+            ]
 
 def copy_output_files(app):
     import shutil
