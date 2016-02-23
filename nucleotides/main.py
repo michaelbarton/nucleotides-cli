@@ -10,13 +10,16 @@ Commands:
 
 import biobox_cli.main  as bbx_main
 import nucleotides.util as util
+
 import nucleotides.command.fetch_data
 import nucleotides.command.run_image
+import nucleotides.command.post_data
 
 def select_command(c):
     return {
             'fetch-data' : nucleotides.command.fetch_data,
-            'run-image'  : nucleotides.command.run_image
+            'run-image'  : nucleotides.command.run_image,
+            'post-data'  : nucleotides.command.post_data
             }[c]
 
 def run():
