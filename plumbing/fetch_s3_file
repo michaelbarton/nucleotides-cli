@@ -1,10 +1,30 @@
-#!/usr/bin/env python
+#!/usr/bin/env ruby
 
-import os, sys, pkg_resources
-path = os.path.abspath(pkg_resources.resource_filename(__name__, '..'))
-sys.path.insert(1, path)
+require 'inifile'
+require 'fog'
 
-import nucleotides.s3 as s3
+def fetch_s3_file(src, dst)
+  cred_file = File.join(ENV['HOME'], '.aws', 'credentials')
+  if not File.exists?(cred_file)
+    STDERR.puts "No credential file found at: #{cred_file}"
+    exit 1
+  end
+  credentials =  Hash[IniFile.load(cred_file)['default'].map{|(k,v)| [k.to_sym,v]}]
+  credentials.merge!({region: 'us-west-1', provider: 'AWS'})
 
-src, dst = sys.argv[1:]
-s3.fetch_file(src, dst)
+  _, _, bucket, path = src.split('/', 4)
+  directory =
+
+  s3_file = Fog::Storage.
+    new(credentials).
+    directories.
+    get(bucket).
+    files.
+    get(path)
+
+  File.open(dst, 'w') do |out|
+    out.write(s3_file.body)
+  end
+end
+
+fetch_s3_file(*ARGV)
