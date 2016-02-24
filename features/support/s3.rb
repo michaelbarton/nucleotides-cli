@@ -14,15 +14,18 @@ def get_credentials
   credentials.merge!({region: 'us-west-1', provider: 'AWS'})
 end
 
-def delete_all_files(path)
-  _, _, bucket, path = path.split('/', 4)
+def list_all_files(bucket)
   s3 = Fog::Storage.new(get_credentials)
-
   files = s3.directories.
     get(bucket).
     files.
-    map(&:key).
-    select{|f| f.include?(path) && f != path}
+    map(&:key)
+end
 
+def delete_all_files(path)
+  _, _, bucket, path = path.split('/', 4)
+  s3 = Fog::Storage.new(get_credentials)
+  files = list_all_files(bucket).select{|f| f.include?(path) && f != path}
   s3.delete_multiple_objects(bucket, files) unless files.empty?
 end
+
