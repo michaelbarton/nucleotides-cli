@@ -10,8 +10,9 @@ Options:
 """
 
 import os, functools
-import nucleotides.util as util
-import nucleotides.s3   as s3
+import nucleotides.util       as util
+import nucleotides.api_client as api
+import nucleotides.s3         as s3
 
 def output_file_metadata(s3_path, path):
     digest = util.sha_digest(path)
@@ -19,23 +20,35 @@ def output_file_metadata(s3_path, path):
         "location" : path,
         "type"     : os.path.dirname(path).split("/")[-1],
         "sha256"   : digest,
-        "s3_url"   : os.path.join(s3_path, digest[0:2], digest)}
+        "url"      : os.path.join(s3_path, digest[0:2], digest)}
 
 def upload_output_file(f):
-    s3.post_file(f["location"], f["s3_url"])
+    s3.post_file(f["location"], f["url"])
 
 def create_output_file_metadata(app):
     import glob
     return map(functools.partial(output_file_metadata, app["s3-upload"]),
                glob.glob(app["path"] + "/outputs/*/*"))
 
+def create_event_request(app, outputs):
+
+    def remove_loc(d):
+        d.pop("location")
+        return d
+
+    return {
+        "task"    : app["task"]["id"],
+        "success" : True,
+        "files"   : map(remove_loc, outputs)}
+
 def post(app):
     outputs = create_output_file_metadata(app)
     map(upload_output_file, outputs)
+    api.post_event(create_event_request(app, outputs), app)
 
 def run(args):
     opts = util.parse(__doc__, args)
     task = opts["<task>"]
-    app = util.create_application_state(task)
+    app = util.application_state(task)
     app["s3-upload"] = opts["--s3-upload"]
     post(app)

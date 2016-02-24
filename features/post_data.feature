@@ -40,8 +40,11 @@ Feature: Post generated data back to nucleotides API
       """
       nucleotides post-data 5 --s3-upload=s3://nucleotides-testing/uploads/
       """
+    And I get the url "/tasks/5"
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
     And the S3 bucket "nucleotides-testing" should contain the files:
       | uploads/58/5887df363024aea48765075ea9bdb232a0f9f206b80324e7c8b18ed764dde529 |
+    And the JSON should have the following:
+      | complete | true |
