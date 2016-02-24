@@ -2,6 +2,7 @@ Feature: Post generated data back to nucleotides API
 
   Background:
     Given a clean set of benchmarks
+    And no files in the S3 directory "s3://nucleotides-testing/upload/"
 
   Scenario: Posting generated data
     Given the nucleotides directory is available on the path
@@ -42,3 +43,5 @@ Feature: Post generated data back to nucleotides API
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
+    And the S3 files should exist:
+      | s3://nucleotides-testing/upload/58/5887df363024aea48765075ea9bdb232a0f9f206b80324e7c8b18ed764dde529 |
