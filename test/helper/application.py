@@ -1,32 +1,10 @@
-import os, tempfile
-import nucleotides.log      as log
-import biobox_cli.util.misc as bbx_util
-
-def reset_database():
-    import psycopg2
-    host, port = os.environ['POSTGRES_HOST'].split(':')
-    conf = "dbname={} user={} password={} host={} port={}".format(
-            os.environ['POSTGRES_NAME'],
-            os.environ['POSTGRES_USER'],
-            os.environ['POSTGRES_PASSWORD'],
-            host.replace("//", ""),
-            port)
-    conn   = psycopg2.connect(conf)
-    cursor = conn.cursor()
-    cursor.execute("drop schema public cascade; create schema public;")
-    with open("test/fixtures/benchmarks.sql", "r") as f:
-        cursor.execute(f.read())
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-def test_dir():
-    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', 'tmp', 'tests')
-    bbx_util.mkdir_p(path)
-    return tempfile.mkdtemp(dir = path)
+import os
+import helper.file           as file_helper
+import biobox_cli.util.misc  as bbx_util
+import nucleotides.log       as log
 
 def test_application_state():
-    path = test_dir()
+    path = file_helper.test_dir()
     return {'api'    : os.environ["NUCLEOTIDES_API"],
             'logger' : log.create_logger(os.path.join(path, "benchmark.log")),
             'path'   : path}

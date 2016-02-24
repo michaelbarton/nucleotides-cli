@@ -1,6 +1,6 @@
 import os.path
 import nose.tools as nose
-import helper
+import helper.application as app_helper
 
 import nucleotides.util              as util
 import nucleotides.command.run_image as image
@@ -11,7 +11,7 @@ def test_docstring_parse():
             {'<task>': '1', 'run-image': True})
 
 def test_create_biobox_args():
-    app  = helper.test_existing_application_state()
+    app  = app_helper.test_existing_application_state()
     args = image.create_biobox_args(app)
     nose.assert_equal("run", args[0])
     nose.assert_equal("short_read_assembler", args[1])
@@ -22,7 +22,7 @@ def test_create_biobox_args():
     nose.assert_equal("--no-rm", args[6])
 
 def test_copy_output_files():
-    app  = helper.test_existing_application_state()
+    app  = app_helper.test_existing_application_state()
     path = os.path.join(app['path'], 'tmp', 'contig_fasta')
     bbx_util.mkdir_p(os.path.dirname(path))
     with open(path, 'w') as f:

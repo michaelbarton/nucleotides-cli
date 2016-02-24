@@ -1,22 +1,15 @@
 #!/usr/bin/env ruby
 
-require 'inifile'
+$:.unshift File.dirname(__FILE__) + "/../"
+
+require 'features/support/s3'
 require 'fog'
 
 def fetch_s3_file(src, dst)
-  cred_file = File.join(ENV['HOME'], '.aws', 'credentials')
-  if not File.exists?(cred_file)
-    STDERR.puts "No credential file found at: #{cred_file}"
-    exit 1
-  end
-  credentials =  Hash[IniFile.load(cred_file)['default'].map{|(k,v)| [k.to_sym,v]}]
-  credentials.merge!({region: 'us-west-1', provider: 'AWS'})
-
   _, _, bucket, path = src.split('/', 4)
-  directory =
 
   s3_file = Fog::Storage.
-    new(credentials).
+    new(get_credentials).
     directories.
     get(bucket).
     files.
