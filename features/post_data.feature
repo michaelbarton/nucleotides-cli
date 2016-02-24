@@ -38,7 +38,7 @@ Feature: Post generated data back to nucleotides API
       """
     When I run the bash command:
       """
-      nucleotides post-data 5 --s3-upload=s3://nucleotides-testing/upload/
+      nucleotides post-data 5 --s3-upload=s3://nucleotides-testing/uploads/
       """
     Then the stderr should not contain anything
     And the stdout should not contain anything

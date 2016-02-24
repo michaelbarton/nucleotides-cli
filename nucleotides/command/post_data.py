@@ -26,11 +26,16 @@ def upload_output_file(f):
 
 def create_output_file_metadata(app):
     import glob
-    app["outputs"] = map(
-            functools.partial(output_file_metadata, app["s3-upload"]),
-            glob.glob(app["path"] + "/outputs/*/*"))
-    return app
+    return map(functools.partial(output_file_metadata, app["s3-upload"]),
+               glob.glob(app["path"] + "/outputs/*/*"))
+
+def post(app):
+    outputs = create_output_file_metadata(app)
+    map(upload_output_file, outputs)
 
 def run(args):
     opts = util.parse(__doc__, args)
     task = opts["<task>"]
+    app = util.create_application_state(task)
+    app["s3-upload"] = opts["--s3-upload"]
+    post(app)

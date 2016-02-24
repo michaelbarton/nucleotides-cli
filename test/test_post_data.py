@@ -16,10 +16,7 @@ def test_create_output_file_metadata():
     app  = app_helper.test_existing_application_state()
     app["s3-upload"] = "s3://url/"
     path = file_helper.create_benchmark_file(app, "/outputs/contig_fasta/d1b2a59fbe", 'contents')
-
-    new_state = post.create_output_file_metadata(app)
-    nose.assert_in("outputs", new_state)
-    nose.assert_equal(new_state["outputs"], [{
+    nose.assert_equal(post.create_output_file_metadata(app), [{
         "type"     : "contig_fasta",
         "location" : path,
         "sha256"   : "d1b2a59fbea7e20077af9f91b27e95e865061b270be03ff539ab3b73587882e8",
