@@ -2,7 +2,7 @@
 nucleotides - Command line interface for running nucleotides benchmarks
 
 Usage:
-    nucleotides <command> [<args>...]
+    nucleotides <command> <task> [<args>...]
 
 Commands:
     fetch-data       Download all data necessary to perform a benchmarking task
@@ -24,5 +24,5 @@ def select_command(c):
 
 def run():
     args    = bbx_main.input_args()
-    command = util.parse(__doc__, args)['<command>']
+    command = util.parse(__doc__, args, True)['<command>']
     select_command(command).run(args)
