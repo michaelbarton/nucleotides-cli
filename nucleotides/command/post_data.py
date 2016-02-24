@@ -9,7 +9,27 @@ Options:
     --s3-upload=<url>    S3 location to upload generated files to.
 """
 
+import os, functools
 import nucleotides.util as util
+import nucleotides.s3   as s3
+
+def output_file_metadata(s3_path, path):
+    digest = util.sha_digest(path)
+    return {
+        "location" : path,
+        "type"     : os.path.dirname(path).split("/")[-1],
+        "sha256"   : digest,
+        "s3_url"   : os.path.join(s3_path, digest[0:2], digest)}
+
+def upload_output_file(f):
+    s3.post_file(f["location"], f["s3_url"])
+
+def create_output_file_metadata(app):
+    import glob
+    app["outputs"] = map(
+            functools.partial(output_file_metadata, app["s3-upload"]),
+            glob.glob(app["path"] + "/outputs/*/*"))
+    return app
 
 def run(args):
     opts = util.parse(__doc__, args)

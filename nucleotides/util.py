@@ -35,3 +35,12 @@ def application_state(task):
     app = create_application_state(task)
     app['task'] = get_task_metadata(task, app)
     return app
+
+# http://stackoverflow.com/a/4213255/91144
+def sha_digest(filename):
+    import hashlib
+    sha = hashlib.sha256()
+    with open(filename,'rb') as f:
+        for chunk in iter(lambda: f.read(sha.block_size), b''):
+            sha.update(chunk)
+    return sha.hexdigest()
