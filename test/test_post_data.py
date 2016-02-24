@@ -31,7 +31,7 @@ def test_upload_output_file():
     s3_helper.assert_s3_file_exists("nucleotides-testing", expected_path)
     s3_helper.delete_s3_file("nucleotides-testing", expected_path)
 
-def test_create_event_request_with_successful_event():
+def test_create_event_request_with_a_successful_event():
     app = app_helper.test_existing_application_state()
     outputs = [{
         "type"     : "contig_fasta",
@@ -46,3 +46,9 @@ def test_create_event_request_with_successful_event():
             {"url"    : "s3://url/dir/file",
              "sha256" : "digest_1",
              "type"   : "contig_fasta"}]})
+
+def test_create_event_request_with_an_unsuccessful_event():
+    app = app_helper.test_existing_application_state()
+    outputs = []
+    event = post.create_event_request(app, outputs)
+    nose.assert_equal(event, {"task" : 1, "success" : False, "files" : []})

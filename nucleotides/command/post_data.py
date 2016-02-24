@@ -30,6 +30,9 @@ def create_output_file_metadata(app):
     return map(functools.partial(output_file_metadata, app["s3-upload"]),
                glob.glob(app["path"] + "/outputs/*/*"))
 
+def event_successful(outputs):
+    return "contig_fasta" in map(lambda x: x["type"], outputs)
+
 def create_event_request(app, outputs):
 
     def remove_loc(d):
@@ -38,7 +41,7 @@ def create_event_request(app, outputs):
 
     return {
         "task"    : app["task"]["id"],
-        "success" : True,
+        "success" : event_successful(outputs),
         "files"   : map(remove_loc, outputs)}
 
 def post(app):

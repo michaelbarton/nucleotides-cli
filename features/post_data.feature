@@ -3,9 +3,7 @@ Feature: Post generated data back to nucleotides API
   Background:
     Given a clean set of benchmarks
     And no files in the S3 directory "s3://nucleotides-testing/upload/"
-
-  Scenario: Posting generated data
-    Given the nucleotides directory is available on the path
+    And the nucleotides directory is available on the path
     And the file named "nucleotides/5/metadata.json" with:
       """
       {
@@ -28,6 +26,8 @@ Feature: Post generated data back to nucleotides API
           "type": "produce"
       }
       """
+
+  Scenario: Posting a successful benchmark
     And the file "nucleotides/5/outputs/contig_fasta/5887df3630" with:
       """
       >NODE_1_length_240_cov_20
@@ -48,3 +48,15 @@ Feature: Post generated data back to nucleotides API
       | uploads/58/5887df363024aea48765075ea9bdb232a0f9f206b80324e7c8b18ed764dde529 |
     And the JSON should have the following:
       | complete | true |
+
+  Scenario: Posting a failed benchmark
+    When I run the bash command:
+      """
+      nucleotides post-data 5 --s3-upload=s3://nucleotides-testing/uploads/
+      """
+    And I get the url "/tasks/5"
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the JSON should have the following:
+      | complete | false |
