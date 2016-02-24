@@ -15,3 +15,13 @@ def test_fetch_task_from_invalid_url():
     app = app_helper.test_application_state()
     app["api"] = "localhost:98765"
     response = api.fetch_task("1", app)
+
+def test_post_event():
+    db_helper.reset_database()
+    event = {"task" : 1,
+             "success" : False,
+             "files" : [
+                 {"url"    : "s3://url",
+                  "sha256" : "adef5c",
+                  "type"   : "log" } ] }
+    api.post_event(event, app_helper.test_application_state())
