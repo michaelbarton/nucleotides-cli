@@ -27,7 +27,7 @@ Feature: Running a docker container benchmark
     And I copy the file "../data/reads.fq.gz" to "nucleotides/5/inputs/short_read_fastq/11948b41d4.fq.gz"
     When I run the bash command:
       """
-      TMPDIR=$(pwd) nucleotides run-image 5
+      export TMPDIR=$(pwd) && nucleotides run-image 5
       """
     Then the stderr should not contain anything
     And the stdout should not contain anything
