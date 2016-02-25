@@ -26,4 +26,4 @@ Feature: Fetching input data files for benchmarking
       | inputs/0/url    | "s3://nucleotides-testing/short-read-assembler/dummy.reads.fq.gz"  |
       | inputs/0/sha256 | "24b5b01b08482053d7d13acd514e359fb0b726f1e8ae36aa194b6ddc07335298" |
       | inputs/0/type   | "short_read_fastq"                                                 |
-    And the file "nucleotides/9/inputs/0/dummy.reads.fq.gz" should exist
+    And the file "nucleotides/9/inputs/short_read_fastq/dummy.reads.fq.gz" should exist

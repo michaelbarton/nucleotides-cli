@@ -15,4 +15,4 @@ def test_fetch_input_files():
     app = app_helper.test_application_state()
     app['task'] = app_helper.sample_benchmark_task()
     fetch.create_input_files(app)
-    nose.assert_true(os.path.isfile(app["path"] + "/inputs/0/dummy.reads.fq.gz"))
+    nose.assert_true(os.path.isfile(app["path"] + "/inputs/short_read_fastq/dummy.reads.fq.gz"))
