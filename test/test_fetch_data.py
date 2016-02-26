@@ -12,7 +12,6 @@ def test_docstring_parse():
 
 def test_fetch_input_files():
     db_helper.reset_database()
-    app = app_helper.test_application_state()
-    app['task'] = app_helper.sample_benchmark_task()
+    app = app_helper.mock_application_state()
     fetch.create_input_files(app)
     nose.assert_true(os.path.isfile(app["path"] + "/inputs/short_read_fastq/dummy.reads.fq.gz"))

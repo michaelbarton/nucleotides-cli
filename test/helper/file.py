@@ -2,7 +2,7 @@ import os, tempfile
 import biobox_cli.util.misc as bbx_util
 
 def create_benchmark_file(app, path, contents = ''):
-    loc = os.path.join(app["path"] + "/outputs/contig_fasta/d1b2a59fbe")
+    loc = os.path.join(app["path"] + path)
     bbx_util.mkdir_p(os.path.dirname(loc))
     with open(loc, 'w+') as f:
         f.write(contents)

@@ -13,7 +13,7 @@ def test_docstring_parse():
         {'<task>': '1', 'post-data': True, "--s3-upload" : "loc"})
 
 def test_create_output_file_metadata():
-    app  = app_helper.test_existing_application_state()
+    app  = app_helper.mock_application_state()
     app["s3-upload"] = "s3://url/"
     path = file_helper.create_benchmark_file(app, "/outputs/contig_fasta/d1b2a59fbe", 'contents')
     nose.assert_equal(post.create_output_file_metadata(app), [{
@@ -23,7 +23,7 @@ def test_create_output_file_metadata():
         "url"      : "s3://url/d1/d1b2a59fbea7e20077af9f91b27e95e865061b270be03ff539ab3b73587882e8"}])
 
 def test_upload_output_file():
-    app  = app_helper.test_existing_application_state()
+    app  = app_helper.mock_application_state()
     url  = "s3://nucleotides-testing/upload/"
     path = file_helper.create_benchmark_file(app, '/outputs/contig_fasta/d1b2a59fbe', 'contents')
     post.upload_output_file(post.output_file_metadata(url, path))
@@ -32,7 +32,7 @@ def test_upload_output_file():
     s3_helper.delete_s3_file("nucleotides-testing", expected_path)
 
 def test_create_event_request_with_a_successful_event():
-    app = app_helper.test_existing_application_state()
+    app = app_helper.mock_application_state()
     outputs = [{
         "type"     : "contig_fasta",
         "location" : "/local/path",
@@ -48,7 +48,7 @@ def test_create_event_request_with_a_successful_event():
              "type"   : "contig_fasta"}]})
 
 def test_create_event_request_with_an_unsuccessful_event():
-    app = app_helper.test_existing_application_state()
+    app = app_helper.mock_application_state()
     outputs = []
     event = post.create_event_request(app, outputs)
     nose.assert_equal(event, {"task" : 1, "success" : False, "files" : []})
