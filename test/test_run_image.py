@@ -28,16 +28,12 @@ def test_copy_output_files():
     app  = app_helper.mock_application_state()
     file_helper.create_benchmark_file(app, "/tmp/contig_fasta", 'contents')
     image.copy_output_files(app)
-    nose.assert_true(os.path.isfile(app["path"] + "/outputs/contig_fasta/d1b2a59fbe"))
+    file_helper.assert_is_file(app["path"] + "/outputs/contig_fasta/d1b2a59fbe")
 
 @attr('slow')
 def test_execute_image():
     import json, shutil
     app = app_helper.mock_application_state(reads = True)
-    app["task"] = app_helper.sample_benchmark_task()
-    with open(app['path'] + '/metadata.json', 'w') as f:
-        f.write(json.dumps(app["task"]))
-    bbx_util.mkdir_p(app['path'] + '/inputs/short_read_fastq/')
-    shutil.copy('tmp/data/reads.fq.gz', app['path'] + '/inputs/short_read_fastq/')
     os.environ['TMPDIR'] = file_helper.test_dir()
     image.execute_image(app)
+    file_helper.assert_is_file(app["path"] + "/tmp/contig_fasta")
