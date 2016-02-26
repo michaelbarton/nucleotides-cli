@@ -37,7 +37,11 @@ def copy_output_files(app):
     shutil.copy(src, dst)
 
 def execute_image(app):
-    image_runner.run(create_biobox_args(app))
+    from threading import Thread
+    from functools import partial
+    container = Thread(target = partial(image_runner.run, create_biobox_args(app)))
+    container.start()
+    container.join()
     copy_output_files(app)
 
 def run(args):
