@@ -33,3 +33,4 @@ Feature: Running a docker container benchmark
     And the stdout should not contain anything
     And the exit status should be 0
     And the file "nucleotides/5/outputs/contig_fasta/7e9f760161" should exist
+    And the file "nucleotides/5/outputs/container_runtime_metrics/metrics.json" should exist
