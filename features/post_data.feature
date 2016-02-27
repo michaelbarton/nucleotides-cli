@@ -36,6 +36,10 @@ Feature: Post generated data back to nucleotides API
       CAGGCCTCCCTGAAAACTGCCTGTGAACCGAAAAAACCCGAGTTCCAGTCTGCACTAAAA
       CTCGGGTTATCCTTATCTGCTAACCAAGTTCATCGCGCACCCCTGCGCAACAAACGAAAC
       """
+    And the file "nucleotides/5/outputs/container_runtime_metrics/metrics.json" with:
+      """
+      {}
+      """
     When I run the bash command:
       """
       nucleotides post-data 5 --s3-upload=s3://nucleotides-testing/uploads/
