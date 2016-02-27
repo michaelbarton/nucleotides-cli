@@ -37,3 +37,4 @@ def test_execute_image():
     os.environ['TMPDIR'] = file_helper.test_dir()
     image.execute_image(app)
     file_helper.assert_is_file(app["path"] + "/tmp/contig_fasta")
+    file_helper.assert_is_file(app["path"] + "/outputs/container_runtime_metrics/metrics.json")
