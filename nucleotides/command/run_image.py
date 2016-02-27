@@ -41,14 +41,14 @@ def create_runtime_metric_file(app, metrics):
     with open(dst, 'w') as f:
         f.write(json.dumps(metrics))
 
-def collect_metrics(name):
+def collect_metrics(name, container):
     import docker, docker.utils, time
     time.sleep(1)
     client = docker.Client(**docker.utils.kwargs_from_env(assert_hostname = False))
-    container = filter(lambda x: x['Image'] == name, client.containers())[0]['Id']
+    id_ = filter(lambda x: x['Image'] == name, client.containers())[0]['Id']
     stats = []
-    while client.inspect_container(container)["State"]["Status"] == "running":
-        stats.append(next(client.stats(container)))
+    while container.isAlive():
+        stats.append(next(client.stats(id_)))
         time.sleep(15)
     return map(json.loads, stats)
 
@@ -56,10 +56,11 @@ def execute_image(app):
     from threading import Thread
     from functools import partial
 
-    Thread(target = partial(image_runner.run, create_biobox_args(app))).start()
+    container = Thread(target = partial(image_runner.run, create_biobox_args(app)))
+    container.start()
 
     image = app["task"]["image"]["name"]
-    metrics = collect_metrics(image)
+    metrics = collect_metrics(image, container)
     create_runtime_metric_file(app, metrics)
     copy_output_files(app)
 
