@@ -33,6 +33,18 @@ def create_output_file_metadata(app):
 def event_successful(outputs):
     return "contig_fasta" in map(lambda x: x["type"], outputs)
 
+def parse_runtime_metrics(metrics):
+
+    def map_f(a):
+        return {"max_resident_set_size" : a["memory_stats"]["stats"]["rss"],
+                "max_cpu_usage"         : a["cpu_stats"]["cpu_usage"]["total_usage"]}
+
+    # http://stackoverflow.com/a/25658642/91144
+    def red_f(a, b):
+        return {key:max(value,b[key]) for key, value in a.iteritems() }
+
+    return reduce(red_f, map(map_f, metrics), {"max_cpu_usage" : 0, "max_resident_set_size" : 0})
+
 def create_event_request(app, outputs):
 
     def remove_loc(d):
