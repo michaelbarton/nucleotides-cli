@@ -29,8 +29,8 @@ Feature: Post generated data back to nucleotides API
     And the file named "nucleotides/5/outputs/container_runtime_metrics/metrics.json" with:
       """
       [
-        {"memory_stats": {"stats" : {"rss" : 10}}, "cpu_stats" : {"cpu_usage" : {"total_usage" : 40}}},
-        {"memory_stats": {"stats" : {"rss" : 20}}, "cpu_stats" : {"cpu_usage" : {"total_usage" : 80}}}
+        {"memory_stats": {"max_usage" : 10}, "cpu_stats" : {"cpu_usage" : {"total_usage" : 40}}},
+        {"memory_stats": {"max_usage" : 20}, "cpu_stats" : {"cpu_usage" : {"total_usage" : 80}}}
       ]
       """
 
@@ -54,9 +54,9 @@ Feature: Post generated data back to nucleotides API
     And the S3 bucket "nucleotides-testing" should contain the files:
       | uploads/58/5887df363024aea48765075ea9bdb232a0f9f206b80324e7c8b18ed764dde529 |
     And the JSON should have the following:
-      | complete                               | true |
-      | events/0/metrics/max_resident_set_size | 20.0 |
-      | events/0/metrics/max_cpu_usage         | 80.0 |
+      | complete                           | true |
+      | events/0/metrics/max_memory_usage  | 20.0 |
+      | events/0/metrics/max_cpu_usage     | 80.0 |
 
   Scenario: Posting a failed benchmark
     When I run the bash command:
@@ -68,6 +68,6 @@ Feature: Post generated data back to nucleotides API
     And the stdout should not contain anything
     And the exit status should be 0
     And the JSON should have the following:
-      | complete                               | false |
-      | events/0/metrics/max_resident_set_size | 20.0  |
-      | events/0/metrics/max_cpu_usage         | 80.0  |
+      | complete                           | false |
+      | events/0/metrics/max_memory_usage  | 20.0  |
+      | events/0/metrics/max_cpu_usage     | 80.0  |
