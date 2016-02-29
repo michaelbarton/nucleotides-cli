@@ -53,6 +53,10 @@ tmp/data/dummy.reads.fq.gz: ./plumbing/fetch_s3_file
 	$(shell mkdir -p $(dir $@))
 	bundle exec $^ s3://nucleotides-testing/short-read-assembler/dummy.reads.fq.gz $@
 
+tmp/data/nucleotides:
+	git clone git@github.com:nucleotides/nucleotides-data.git $@
+	cd ./$@ && git checkout feature/new-nucleotides-api
+
 .api_container: .rdm_container .api_image
 	@docker run \
 	  --detach=true \
@@ -64,7 +68,6 @@ tmp/data/dummy.reads.fq.gz: ./plumbing/fetch_s3_file
 	  --publish 80:80 \
 	  nucleotides/api:staging \
 	  server > $@
-
 
 .rdm_container: .rdm_image
 	docker run \
