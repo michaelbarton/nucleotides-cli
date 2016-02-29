@@ -34,8 +34,8 @@ test:
 	@$(test)
 
 autotest:
-	@clear && $(test) || true # Using true starts tests even on failure
-	@fswatch -o ./nucleotides -o ./test | xargs -n 1 -I {} bash -c "clear && $(test)"
+	@clear && $(test) -a '!slow' || true # Using true starts tests even on failure
+	@fswatch -o ./nucleotides -o ./test | xargs -n 1 -I {} bash -c "clear && $(test) -a '!slow'"
 
 ################################################
 #

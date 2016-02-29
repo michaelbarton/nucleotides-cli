@@ -531,6 +531,7 @@ INSERT INTO file_type VALUES (1, '2016-02-19 22:33:48.521765', 'short_read_fastq
 INSERT INTO file_type VALUES (2, '2016-02-19 22:33:48.524201', 'reference_fasta', 'Reference sequence in FASTA format', true);
 INSERT INTO file_type VALUES (3, '2016-02-19 22:33:48.525964', 'log', 'Free form text output from benchmarking tools', true);
 INSERT INTO file_type VALUES (4, '2016-02-19 22:33:48.527302', 'contig_fasta', 'Reads assembled into larger contiguous sequences in FASTA format', true);
+INSERT INTO file_type VALUES (5, '2016-02-19 22:33:48.529000', 'container_runtime_metrics', 'Cgroup metrics from the running Docker container', true);
 SELECT pg_catalog.setval('file_type_id_seq', 4, true);
 INSERT INTO image_instance VALUES (1, '2016-02-19 22:33:48.615538', 1, 'bioboxes/velvet', 'digest_1', true);
 INSERT INTO image_instance VALUES (2, '2016-02-19 22:33:48.623037', 1, 'bioboxes/ray', 'digest_2', true);
