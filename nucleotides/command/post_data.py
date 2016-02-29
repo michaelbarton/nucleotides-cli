@@ -11,6 +11,7 @@ Options:
 
 import os, functools
 import nucleotides.util       as util
+import nucleotides.metrics    as met
 import nucleotides.api_client as api
 import nucleotides.s3         as s3
 
@@ -33,19 +34,12 @@ def create_output_file_metadata(app):
 def event_successful(outputs):
     return "contig_fasta" in map(lambda x: x["type"], outputs)
 
-def parse_runtime_metrics(metrics):
+def collect_metrics(app):
+    import json
+    with open(app['path'] + "/outputs/container_runtime_metrics/metrics.json") as f:
+        return met.parse_runtime_metrics(json.loads(f.read()))
 
-    def map_f(a):
-        return {"max_resident_set_size" : a["memory_stats"]["stats"]["rss"],
-                "max_cpu_usage"         : a["cpu_stats"]["cpu_usage"]["total_usage"]}
-
-    # http://stackoverflow.com/a/25658642/91144
-    def red_f(a, b):
-        return {key:max(value,b[key]) for key, value in a.iteritems() }
-
-    return reduce(red_f, map(map_f, metrics), {"max_cpu_usage" : 0, "max_resident_set_size" : 0})
-
-def create_event_request(app, outputs):
+def create_event_request(app, outputs, metrics):
 
     def remove_loc(d):
         d.pop("location")
@@ -54,12 +48,14 @@ def create_event_request(app, outputs):
     return {
         "task"    : app["task"]["id"],
         "success" : event_successful(outputs),
-        "files"   : map(remove_loc, outputs)}
+        "files"   : map(remove_loc, outputs),
+        "metrics" : metrics}
 
 def post(app):
     outputs = create_output_file_metadata(app)
+    metrics = collect_metrics(app)
     map(upload_output_file, outputs)
-    api.post_event(create_event_request(app, outputs), app)
+    api.post_event(create_event_request(app, outputs, metrics), app)
 
 def run(args):
     opts = util.parse(__doc__, args)

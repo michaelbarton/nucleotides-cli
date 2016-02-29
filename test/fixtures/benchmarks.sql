@@ -565,6 +565,8 @@ SELECT pg_catalog.setval('input_data_source_reference_file_id_seq', 1, true);
 SELECT pg_catalog.setval('metric_instance_id_seq', 1, false);
 INSERT INTO metric_type VALUES (1, '2016-02-19 22:33:48.528957', 'ng50', 'N50 normalised by reference genome length', true);
 INSERT INTO metric_type VALUES (2, '2016-02-19 22:33:48.538032', 'lg50', 'L50 normalised by reference genome length', true);
+INSERT INTO metric_type VALUES (3, '2016-02-19 22:33:48.540000', 'max_resident_set_size', 'Memory usage', true);
+INSERT INTO metric_type VALUES (4, '2016-02-19 22:33:48.550000', 'max_cpu_usage', 'CPU usage', true);
 SELECT pg_catalog.setval('metric_type_id_seq', 2, true);
 INSERT INTO platform_type VALUES (1, '2016-02-19 22:33:48.502655', 'illumina', 'Illumina sequencing platform', true);
 SELECT pg_catalog.setval('platform_type_id_seq', 1, true);

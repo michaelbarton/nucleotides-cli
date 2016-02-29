@@ -38,10 +38,11 @@ def test_create_event_request_with_a_successful_event():
         "location" : "/local/path",
         "sha256"   : "digest_1",
         "url"      : "s3://url/dir/file"}]
-    event = post.create_event_request(app, outputs)
+    event = post.create_event_request(app, outputs, {"a" : 1})
     nose.assert_equal(event, {
         "task" : 1,
         "success" : True,
+        "metrics" : {"a" : 1},
         "files" : [
             {"url"    : "s3://url/dir/file",
              "sha256" : "digest_1",
@@ -50,13 +51,5 @@ def test_create_event_request_with_a_successful_event():
 def test_create_event_request_with_an_unsuccessful_event():
     app = app_helper.mock_application_state()
     outputs = []
-    event = post.create_event_request(app, outputs)
-    nose.assert_equal(event, {"task" : 1, "success" : False, "files" : []})
-
-def test_parse_runtime_metrics():
-    inputs = [{"memory_stats": {"stats" : {"rss" : 10}}, "cpu_stats" : {"cpu_usage" : {"total_usage" : 40}}},
-              {"memory_stats": {"stats" : {"rss" : 20}}, "cpu_stats" : {"cpu_usage" : {"total_usage" : 80}}}]
-    outputs = {"max_resident_set_size" : 20, "max_cpu_usage" : 80}
-    nose.assert_equal(post.parse_runtime_metrics(inputs), outputs)
-
-
+    event = post.create_event_request(app, outputs, {})
+    nose.assert_equal(event, {"task" : 1, "success" : False, "files" : [], "metrics" : {}})
