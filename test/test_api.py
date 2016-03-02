@@ -6,13 +6,13 @@ import nucleotides.api_client as api
 
 def test_fetch_task_from_valid_url():
     db_helper.reset_database()
-    response = api.fetch_task("1", app_helper.mock_application_state(task = False))
+    response = api.fetch_task("1", app_helper.mock_short_read_assembler_state(task = False))
     nose.assert_in("id", response)
     nose.assert_equal(response["id"], 1)
 
 @nose.raises(IOError)
 def test_fetch_task_from_invalid_url():
-    app = app_helper.mock_application_state(task = False)
+    app = app_helper.mock_short_read_assembler_state(task = False)
     app["api"] = "localhost:98765"
     response = api.fetch_task("1", app)
 
@@ -24,4 +24,4 @@ def test_post_event():
                  {"url"    : "s3://url",
                   "sha256" : "adef5c",
                   "type"   : "log" } ] }
-    api.post_event(event, app_helper.mock_application_state(task = False))
+    api.post_event(event, app_helper.mock_short_read_assembler_state(task = False))
