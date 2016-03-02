@@ -43,15 +43,19 @@ autotest:
 #
 ################################################
 
-bootstrap: Gemfile.lock vendor/python .api_container tmp/data/reads.fq.gz tmp/data/dummy.reads.fq.gz
+bootstrap: \
+	Gemfile.lock \
+	vendor/python \
+	.api_container \
+	tmp/data/reads.fq.gz \
+	tmp/data/dummy.reads.fq.gz \
+	tmp/data/reference.fa \
+	tmp/data/contigs.fa
 
-tmp/data/reads.fq.gz: ./plumbing/fetch_s3_file
-	$(shell mkdir -p $(dir $@))
-	bundle exec $^ s3://nucleotides-testing/short-read-assembler/reads.fq.gz $@
 
-tmp/data/dummy.reads.fq.gz: ./plumbing/fetch_s3_file
+tmp/data/%: ./plumbing/fetch_s3_file
 	$(shell mkdir -p $(dir $@))
-	bundle exec $^ s3://nucleotides-testing/short-read-assembler/dummy.reads.fq.gz $@
+	bundle exec $^ s3://nucleotides-testing/short-read-assembler/$* $@
 
 tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
 	docker run \
