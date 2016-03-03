@@ -20,3 +20,12 @@ def test_execute_assembler_image():
     image.execute_image(app)
     file_helper.assert_is_file(app["path"] + "/tmp/contig_fasta")
     file_helper.assert_is_file(app["path"] + "/outputs/container_runtime_metrics/metrics.json")
+
+@attr('slow')
+def test_execute_reference_evaluation_image():
+    import json, shutil
+    app = app_helper.mock_reference_evaluator_state()
+    os.environ['TMPDIR'] = file_helper.test_dir()
+    image.execute_image(app)
+    file_helper.assert_is_file(app["path"] + "/tmp/assembly_metrics")
+    file_helper.assert_is_file(app["path"] + "/outputs/container_runtime_metrics/metrics.json")

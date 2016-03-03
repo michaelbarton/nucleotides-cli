@@ -16,8 +16,11 @@ def select_task(c):
             'short_read_assembler' : nucleotides.task.short_read_assembler
             }[c]
 
+def get_input_dir_path(name, app):
+    return os.path.join(app['path'], 'inputs', name)
+
 def get_input_file_path(name, app):
-    path = os.path.join(app['path'], 'inputs', name)
+    path = get_input_dir_path(name, app)
     return os.path.join(path, os.listdir(path)[0])
 
 def get_output_file_path(name, app):

@@ -34,6 +34,8 @@ def mock_reference_evaluator_state():
     app = mock_app()
 
     shutil.copy('data/reference_assembly_evaluation.json', app['path'] + '/metadata.json')
+    with open(app['path'] + '/metadata.json', 'r') as f:
+        app["task"] = json.loads(f.read())
 
     bbx_util.mkdir_p(app['path'] + '/inputs/reference_fasta/')
     shutil.copy('tmp/data/reference.fa', app['path'] + '/inputs/reference_fasta/6bac51cc35.fa')
