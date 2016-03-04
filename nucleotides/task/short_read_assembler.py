@@ -4,6 +4,9 @@ import biobox_cli.util.misc          as bbx_util
 import nucleotides.util              as util
 import nucleotides.command.run_image as image
 
+def setup(app):
+    None
+
 def create_biobox_args(app):
     return ["run",
             app["task"]["image"]["type"],

@@ -1,4 +1,8 @@
 import nucleotides.command.run_image as image
+import biobox_cli.util.misc          as bbx_util
+
+def setup(app):
+    bbx_util.mkdir_p(image.get_output_file_path('assembly_metrics', app))
 
 def create_biobox_args(app):
     return ["run",
@@ -9,3 +13,6 @@ def create_biobox_args(app):
             "--output={}".format(image.get_output_file_path('assembly_metrics', app)),
             "--task={}".format(app["task"]["image"]["task"]),
             "--no-rm"]
+
+def copy_output_files(app):
+    None
