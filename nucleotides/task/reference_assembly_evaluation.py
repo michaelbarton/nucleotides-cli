@@ -15,4 +15,4 @@ def create_biobox_args(app):
             "--no-rm"]
 
 def copy_output_files(app):
-    None
+    image.copy_tmp_file_to_outputs(app, 'assembly_metrics/combined_quast_output/report.tsv', 'assembly_metrics')

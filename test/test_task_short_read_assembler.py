@@ -21,4 +21,3 @@ def test_copy_output_files():
     file_helper.create_benchmark_file(app, "/tmp/contig_fasta", 'contents')
     task.copy_output_files(app)
     file_helper.assert_is_file(app["path"] + "/outputs/contig_fasta/d1b2a59fbe")
-

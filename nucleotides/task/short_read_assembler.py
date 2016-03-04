@@ -17,7 +17,4 @@ def create_biobox_args(app):
             "--no-rm"]
 
 def copy_output_files(app):
-    src = os.path.join(app['path'], 'tmp', 'contig_fasta')
-    dst = os.path.join(app['path'], 'outputs', 'contig_fasta', util.sha_digest(src)[:10])
-    bbx_util.mkdir_p(os.path.dirname(dst))
-    shutil.copy(src, dst)
+    image.copy_tmp_file_to_outputs(app, 'contig_fasta', 'contig_fasta')

@@ -16,3 +16,9 @@ def test_create_biobox_args():
     nose.assert_equal("--output={}/tmp/assembly_metrics".format(app["path"]), args[5])
     nose.assert_equal("--task=default", args[6])
     nose.assert_equal("--no-rm", args[7])
+
+def test_copy_output_files():
+    app = app_helper.mock_reference_evaluator_state()
+    file_helper.create_benchmark_file(app, "/tmp/assembly_metrics/combined_quast_output/report.tsv", 'contents')
+    task.copy_output_files(app)
+    file_helper.assert_is_file(app["path"] + "/outputs/assembly_metrics/d1b2a59fbe")

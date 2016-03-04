@@ -30,6 +30,12 @@ def get_output_file_path(name, app):
     bbx_util.mkdir_p(dir_)
     return os.path.join(dir_, name)
 
+def copy_tmp_file_to_outputs(app, src_file, dst_dir):
+    src = os.path.join(app['path'], 'tmp', src_file)
+    dst = os.path.join(app['path'], 'outputs', dst_dir, util.sha_digest(src)[:10])
+    bbx_util.mkdir_p(os.path.dirname(dst))
+    shutil.copy(src, dst)
+
 def create_runtime_metric_file(app, metrics):
     dst = os.path.join(app['path'], 'outputs', 'container_runtime_metrics', 'metrics.json')
     bbx_util.mkdir_p(os.path.dirname(dst))
