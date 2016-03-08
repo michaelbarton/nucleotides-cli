@@ -50,7 +50,9 @@ bootstrap: \
 	tmp/data/reads.fq.gz \
 	tmp/data/dummy.reads.fq.gz \
 	tmp/data/reference.fa \
-	tmp/data/contigs.fa
+	tmp/data/assembly_metrics.tsv \
+	tmp/data/contigs.fa \
+	tmp/data/container_runtime.json
 
 
 tmp/data/%: ./plumbing/fetch_s3_file

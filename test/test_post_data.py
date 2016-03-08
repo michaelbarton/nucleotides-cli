@@ -6,6 +6,7 @@ import helper.s3          as s3_helper
 
 import nucleotides.util              as util
 import nucleotides.command.post_data as post
+import biobox_cli.util.misc          as bbx_util
 
 def test_docstring_parse():
     nose.assert_equal(
@@ -31,25 +32,9 @@ def test_upload_output_file():
     s3_helper.assert_s3_file_exists("nucleotides-testing", expected_path)
     s3_helper.delete_s3_file("nucleotides-testing", expected_path)
 
-def test_create_event_request_with_a_successful_event():
-    app = app_helper.mock_short_read_assembler_state()
-    outputs = [{
-        "type"     : "contig_fasta",
-        "location" : "/local/path",
-        "sha256"   : "digest_1",
-        "url"      : "s3://url/dir/file"}]
-    event = post.create_event_request(app, outputs, {"a" : 1})
-    nose.assert_equal(event, {
-        "task" : 1,
-        "success" : True,
-        "metrics" : {"a" : 1},
-        "files" : [
-            {"url"    : "s3://url/dir/file",
-             "sha256" : "digest_1",
-             "type"   : "contig_fasta"}]})
-
-def test_create_event_request_with_an_unsuccessful_event():
-    app = app_helper.mock_short_read_assembler_state()
-    outputs = []
-    event = post.create_event_request(app, outputs, {})
-    nose.assert_equal(event, {"task" : 1, "success" : False, "files" : [], "metrics" : {}})
+def test_list_outputs():
+    app = app_helper.mock_short_read_assembler_state(outputs = True)
+    bbx_util.mkdir_p(app["path"] + "/outputs/dummy")
+    outputs = post.list_outputs(app)
+    nose.assert_in('contig_fasta', outputs)
+    nose.assert_not_in('dummy', outputs)

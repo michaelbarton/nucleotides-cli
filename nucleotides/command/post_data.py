@@ -9,9 +9,8 @@ Options:
     --s3-upload=<url>    S3 location to upload generated files to.
 """
 
-import os, functools
+import os, functools, glob
 import nucleotides.util       as util
-import nucleotides.metrics    as met
 import nucleotides.api_client as api
 import nucleotides.s3         as s3
 
@@ -27,35 +26,29 @@ def upload_output_file(f):
     s3.post_file(f["location"], f["url"])
 
 def create_output_file_metadata(app):
-    import glob
     return map(functools.partial(output_file_metadata, app["s3-upload"]),
                glob.glob(app["path"] + "/outputs/*/*"))
 
-def event_successful(outputs):
-    return "contig_fasta" in map(lambda x: x["type"], outputs)
+def list_outputs(app):
+    return map(lambda x: x.split("/")[-2], glob.glob(app["path"] + "/outputs/*/*"))
 
-def collect_metrics(app):
-    import json
-    with open(app['path'] + "/outputs/container_runtime_metrics/metrics.json") as f:
-        return met.parse_runtime_metrics(json.loads(f.read()))
-
-def create_event_request(app, outputs, metrics):
-
+def create_event_request(app, outputs):
     def remove_loc(d):
         d.pop("location")
         return d
 
+    task = util.select_task(app["task"]["image"]["type"])
+
     return {
         "task"    : app["task"]["id"],
-        "success" : event_successful(outputs),
+        "success" : task.successful_event_outputs().issubset(list_outputs(app)),
         "files"   : map(remove_loc, outputs),
-        "metrics" : metrics}
+        "metrics" : task.collect_metrics(app) }
 
 def post(app):
     outputs = create_output_file_metadata(app)
-    metrics = collect_metrics(app)
     map(upload_output_file, outputs)
-    api.post_event(create_event_request(app, outputs, metrics), app)
+    api.post_event(create_event_request(app, outputs), app)
 
 def run(args):
     opts = util.parse(__doc__, args)

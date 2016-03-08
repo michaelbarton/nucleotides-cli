@@ -3,6 +3,14 @@ import os, os.path
 import nucleotides.log      as log
 import biobox_cli.util.misc as bbx_util
 
+def select_task(c):
+    import nucleotides.task.short_read_assembler
+    import nucleotides.task.reference_assembly_evaluation
+    return {
+            'short_read_assembler'          : nucleotides.task.short_read_assembler,
+            'reference_assembly_evaluation' : nucleotides.task.reference_assembly_evaluation
+            }[c]
+
 def parse(doc, argv, opts = False):
     from docopt              import docopt
     from nucleotides.version import __version__

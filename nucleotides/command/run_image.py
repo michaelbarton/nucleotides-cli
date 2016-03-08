@@ -10,14 +10,6 @@ import nucleotides.util       as util
 import biobox_cli.command.run as image_runner
 import biobox_cli.util.misc   as bbx_util
 
-def select_task(c):
-    import nucleotides.task.short_read_assembler
-    import nucleotides.task.reference_assembly_evaluation
-    return {
-            'short_read_assembler'          : nucleotides.task.short_read_assembler,
-            'reference_assembly_evaluation' : nucleotides.task.reference_assembly_evaluation
-            }[c]
-
 def get_input_dir_path(name, app):
     return os.path.join(app['path'], 'inputs', name)
 
@@ -25,9 +17,13 @@ def get_input_file_path(name, app):
     path = get_input_dir_path(name, app)
     return os.path.join(path, os.listdir(path)[0])
 
-def get_output_file_path(name, app):
+def get_tmp_file_path(name, app):
     dir_ = os.path.join(app['path'], 'tmp')
     bbx_util.mkdir_p(dir_)
+    return os.path.join(dir_, name)
+
+def get_output_file_path(name, app):
+    dir_ = os.path.join(app['path'], 'outputs')
     return os.path.join(dir_, name)
 
 def copy_tmp_file_to_outputs(app, src_file, dst_dir):
@@ -57,7 +53,7 @@ def execute_image(app):
     from threading import Thread
     from functools import partial
 
-    task = select_task(app["task"]["image"]["type"])
+    task = util.select_task(app["task"]["image"]["type"])
     task.setup(app)
 
     container = Thread(target = partial(image_runner.run, task.create_biobox_args(app)))
