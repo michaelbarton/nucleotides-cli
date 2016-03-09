@@ -42,7 +42,7 @@ Feature: Processing a short read assembly benchmark
 
 
   Scenario: Posting a successful benchmark
-    Given I copy the file "../data/container_runtime.json" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json"
+    Given I copy the file "../data/container_runtime.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
     And I copy the file "../data/contigs.fa" to "nucleotides/5/outputs/contig_fasta/5887df3630"
     When I run the bash command:
       """
@@ -53,7 +53,8 @@ Feature: Processing a short read assembly benchmark
     And the stdout should not contain anything
     And the exit status should be 0
     And the S3 bucket "nucleotides-testing" should contain the files:
-      | uploads/58/5887df363024aea48765075ea9bdb232a0f9f206b80324e7c8b18ed764dde529 |
+      | uploads/7e/7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092 |
+      | uploads/20/202313628063e33c1ba8320927357be02660f0b0b6b02a63cd5f256337a7e408 |
     And the JSON should have the following:
       | complete                           | true |
       | events/0/metrics/max_memory_usage  | 20.0 |
@@ -61,13 +62,7 @@ Feature: Processing a short read assembly benchmark
 
 
   Scenario: Posting a failed benchmark
-    Given the file named "nucleotides/5/outputs/container_runtime_metrics/metrics.json" with:
-      """
-      [
-        {"memory_stats": {"max_usage" : 10}, "cpu_stats" : {"cpu_usage" : {"total_usage" : 40}}},
-        {"memory_stats": {"max_usage" : 20}, "cpu_stats" : {"cpu_usage" : {"total_usage" : 80}}}
-      ]
-      """
+    Given I copy the file "../data/container_runtime.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
     When I run the bash command:
       """
       nucleotides post-data 5 --s3-upload=s3://nucleotides-testing/uploads/
@@ -76,6 +71,8 @@ Feature: Processing a short read assembly benchmark
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
+    And the S3 bucket "nucleotides-testing" should contain the files:
+      | uploads/20/202313628063e33c1ba8320927357be02660f0b0b6b02a63cd5f256337a7e408 |
     And the JSON should have the following:
       | complete                           | false |
       | events/0/metrics/max_memory_usage  | 20.0  |
