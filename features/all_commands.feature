@@ -2,7 +2,7 @@ Feature: Running the all the nucleotides commands in order to execute a benchmar
 
   Background:
     Given a clean set of benchmarks
-    And no files in the S3 directory "s3://nucleotides-testing/upload/"
+    And no files in the S3 directory "s3://nucleotides-testing/uploads/"
 
   Scenario: completing a benchmark
     Given the nucleotides directory is available on the path
