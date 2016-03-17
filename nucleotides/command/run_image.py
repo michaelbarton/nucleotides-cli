@@ -40,9 +40,10 @@ def create_runtime_metric_file(app, metrics):
         f.write(json.dumps(metrics))
 
 def collect_metrics(name, container):
-    import docker, docker.utils, time
+    import time
     time.sleep(1)
-    client = docker.Client(**docker.utils.kwargs_from_env(assert_hostname = False))
+    client = bbx_image.client()
+
     id_ = filter(lambda x: x['Image'] == name, client.containers())[0]['Id']
     stats = []
     while container.isAlive():
