@@ -51,6 +51,21 @@ Feature: Running a reference assembly benchmark task
     And the file "nucleotides/6/outputs/assembly_metrics/67ba437ffa" should exist
 
 
+  Scenario: Executing a benchmark task when the image has not been pulled
+    Given I copy the file "../data/reference.fa" to "nucleotides/6/inputs/reference_fasta/6bac51cc35"
+    And I copy the file "../data/contigs.fa" to "nucleotides/6/inputs/contig_fasta/7e9f760161"
+    And the image "bioboxes/quast" is not installed
+    When I run the bash command:
+      """
+      export TMPDIR=$(pwd) && nucleotides run-image 6
+      """
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the file "nucleotides/6/outputs/container_runtime_metrics/metrics.json" should exist
+    And the file "nucleotides/6/outputs/assembly_metrics/67ba437ffa" should exist
+    And the exit status should be 0
+
+
   Scenario: Posting a successful benchmark
     Given I copy the file "../data/container_runtime.json" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json"
     And I copy the file "../data/assembly_metrics.tsv" to "nucleotides/6/outputs/assembly_metrics/67ba437ffa"

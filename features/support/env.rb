@@ -4,5 +4,5 @@ require 'aruba/cucumber'
 require 'json_spec/cucumber'
 
 Aruba.configure do |config|
-  config.exit_timeout = 60
+  config.exit_timeout = 75
 end
