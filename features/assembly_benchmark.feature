@@ -55,6 +55,7 @@ Feature: Running a reference assembly benchmark task
     Given I copy the file "../data/reference.fa" to "nucleotides/6/inputs/reference_fasta/6bac51cc35"
     And I copy the file "../data/contigs.fa" to "nucleotides/6/inputs/contig_fasta/7e9f760161"
     And the image "bioboxes/quast" is not installed
+    And the default aruba exit timeout is 180 seconds
     When I run the bash command:
       """
       export TMPDIR=$(pwd) && nucleotides run-image 6
