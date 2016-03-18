@@ -1,0 +1,12 @@
+---
+- name: jgi_isolate_2x150
+  description: Example data set for testing purposes
+  entries:
+    - reads: 2000000
+      entry_id: 1
+      replicates:
+        - md5sum: 82163f24b8dfc9cde4f99c1e1dbf38da
+          url: s3://nucleotides-testing/short-read-assembler/reads.fq.gz
+      reference:
+        md5sum: 5faac0aafb1eeecbf76a5a08ee53603e
+        url: s3://nucleotides-testing/short-read-assembler/reference.fa

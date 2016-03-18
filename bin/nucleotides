@@ -1,0 +1,11 @@
+#!/usr/bin/env python
+
+import os, sys, pkg_resources
+path = os.path.abspath(pkg_resources.resource_filename(__name__, '..'))
+sys.path.insert(1, path)
+
+import nucleotides.env  as env
+env.virtual_env(path)
+
+import nucleotides.main as nuc
+nuc.run()

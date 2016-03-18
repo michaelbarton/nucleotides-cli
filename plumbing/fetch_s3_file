@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.dirname(__FILE__) + "/../"
+
+require 'features/support/s3'
+require 'fog'
+
+def fetch_s3_file(src, dst)
+  _, _, bucket, path = src.split('/', 4)
+
+  s3_file = Fog::Storage.
+    new(get_credentials).
+    directories.
+    get(bucket).
+    files.
+    get(path)
+
+  File.open(dst, 'w') do |out|
+    out.write(s3_file.body)
+  end
+end
+
+fetch_s3_file(*ARGV)

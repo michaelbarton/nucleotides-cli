@@ -1,0 +1,35 @@
+# Nucleotid.es benchmarking client
+
+The nucleotides benchmarking client fetches input data from the nucleotides
+API, executes Docker containers, then posts benchmakring metrics and output
+files back to the nucleotides API. This takes place as a three step process,
+where each step is subcommand given to the client:
+
+  * **fetch-data**: Fetch benchmarking task metadata from the nucleotides API,
+    then download the input data files their locations specified in this input
+    data.
+
+  * **run-image**: Run the Docker image specified in the benchmarking task on
+    with the input files. Generated output files and metrics are then collected
+    and collated.
+
+  * **post-data**: Push generated output files to S3. Post output file URLs and
+    and collected metrics to the nucleotid.es API.
+
+## Directory structure
+
+Each benchmarking tasked is run in a directory with the same structure. The
+following files and sub-directories are created and used during benchmarking.
+
+  * **metadata.json**: A JSON document describing the input files and Docker
+    image to be used for benchmarking.
+
+  * **inputs**: A list of directories with all the input files.
+
+  * **outputs**: A list of directories corresponding to nucleotid.es file
+    types.
+
+  * **outputs/container_runtime_metrics/metrics.json**: A JSON document listing
+    all the metrics created during the processing of the current benchmarking
+    task. This is created for each benchmarking task these metrics are recorded
+    in the API.

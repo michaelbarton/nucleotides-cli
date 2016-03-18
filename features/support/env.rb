@@ -1,6 +1,8 @@
 Bundler.require(:default, :development)
-require 'aruba/cucumber'
 
-Before do
-  @aruba_timeout_seconds = 5
+require 'aruba/cucumber'
+require 'json_spec/cucumber'
+
+Aruba.configure do |config|
+  config.exit_timeout = 60
 end

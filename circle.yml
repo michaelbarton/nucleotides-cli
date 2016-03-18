@@ -1,7 +1,23 @@
 ---
 machine:
+  pre:
+    - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.1-circleci'
+    - sudo chmod 0755 /usr/bin/docker
   ruby:
-    version: 2.0.0-p598
+    version: 2.2.3
+  services:
+    - docker
 dependencies:
   cache_directories:
     - "vendor/bundle"
+    - "vendor/python"
+  override:
+    - ./script/bootstrap
+    - docker pull bioboxes/velvet
+    - mkdir -p $CIRCLE_TEST_REPORTS/cucumber
+
+test:
+  override:
+    - ./script/test
+    - ./script/feature '--format json --out $$CIRCLE_TEST_REPORTS/cucumber/tests.cucumber --format pretty':
+        timeout: 300

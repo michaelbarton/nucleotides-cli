@@ -1,61 +1,41 @@
-## Nucleotid.es command line evaluation (NCLE) suite
+# Nucleotid.es benchmarking client
 
-This project contains the tools used to evaluate Docker containers in
-Nucleotid.es.
+This project contains the tools used to evaluate [biobox Docker containers][bioboxes] in
+Nucleotid.es. [Documentation is available][doc] for using the command line
+interface.
 
-### Tools
+[doc]: https://github.com/nucleotides/nucleotides-client/blob/master/doc/interface.mkd
+[bioboxes]: http://bioboxes.org
 
-#### ncle-fetch-data
+### Development Scripts
 
-This tool fetches a set of test reads from S3, and stores as a temporary file.
-The file path is returned.
+The folder `script` provides a series of scripts to help developers and also
+used by the continuous integration server. These scripts should be used in the
+following order:
 
-  * Arguments:
+  * `script/bootstrap`: Install required python libraries using virtualenv and
+    pull Docker images necessary for testing.
+  * `script/test`: Runs python unit tests. These can be found in the `test`
+    directory.
+  * `script/feature`: Tests the tool against several different user scenarios.
+    These scenarios are described in `features` and are run using the ruby
+    cucumber framework.
 
-    * **--s3-access-key**: The access key for the S3 bucket containing the
-      reads.
-    * **--s3-secret-key**: The secret key for the S3 bucket containing the
-      reads.
-    * **--s3-region**: The AWS region the file is located.
-    * **--s3-url**: The path to the reads on S3. This URL should begin with
-      's3://'.
-    * **--output-file**: The path a file where the reads should be downloaded.
+### Submitting pull requests
 
-  * Result:
+Contributing fixes or new features is welcome. For anything more than small bug
+fixes please [open an issue on github][ghi] beforehand to discuss what you
+intend to implement. This can help prevent time being wasted should the
+situation occur that your pull request is not immediately accepted.
 
-    * Returns a non-zero exit code if any errors are encountered.
+To contribute changes to this project, fork the repository and create a feature
+branch. Once you have pushed your git commits to you forked repository, submit
+a pull request. A pull request should include the following:
 
-#### ncle-push-event
+  * Update the documentation in `doc` if the interface is changed.
+  * Add new feature tests in `feature` if new functionality is added. This will
+    prevent them being broken in future development.
+  * Ensure the following scripts pass: `script/test` and `script/feature`
 
-This tool pushes the result of an event to the nucleotid.es event database. If
-file paths are given these will be uploaded to the given S3 directory with the
-file name as SHA256-EPOCH\_TIME\_IN\_SECONDS.
-
-  * Required Arguments:
-
-    * **--benchmark-id**: The identifier for this benchmark.
-    * **--benchmark-type-code**: The type of benchmark.
-    * **--status-code**: The status code of the event.
-    * **--event-type-code**: The type of event.
-
-  * Optional Arguments:
-
-    * **--event-file**: An xz-compressed file containing the output of the event.
-    * **--log-file**: A file containing the output of the event.
-    * **--cgroup-file**: A xz-compressed tar file containing the cgroup data of the event.
-
-  * Conditional Arguments:
-
-    * **--s3-access-key**: The access key for the S3 bucket to upload any given
-      files.
-    * **--s3-secret-key**: The secret key for the S3 bucket to upload any given
-      files.
-    * **--s3-region**: The AWS region to upload any given files.
-    * **--s3-url**: The location to upload any given files to. This URL should
-      begin with 's3://'.
-
-  * Result:
-
-    * Returns a non-zero exit code if any errors are encountered running the
-      container.
-    * Returns the ID of the event.
+[ghi]: https://github.com/nucleotides/nucleotides-client/issues
+[semver]: http://semver.org

@@ -1,9 +1,0 @@
-#!/usr/bin/env ruby
-$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
-
-require 'rubygems'
-require 'ncle/push_event'
-require 'ncle/util'
-
-status, msg = NCLE::PushEvent.execute!
-NCLE::Util.finish(status, msg)
