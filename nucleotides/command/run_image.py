@@ -9,6 +9,7 @@ import os, shutil, json
 import nucleotides.util       as util
 import biobox_cli.command.run as image_runner
 import biobox_cli.util.misc   as bbx_util
+import biobox_cli.container   as bbx_image
 
 def get_input_dir_path(name, app):
     return os.path.join(app['path'], 'inputs', name)
@@ -39,9 +40,10 @@ def create_runtime_metric_file(app, metrics):
         f.write(json.dumps(metrics))
 
 def collect_metrics(name, container):
-    import docker, docker.utils, time
+    import time
     time.sleep(1)
-    client = docker.Client(**docker.utils.kwargs_from_env(assert_hostname = False))
+    client = bbx_image.client()
+
     id_ = filter(lambda x: x['Image'] == name, client.containers())[0]['Id']
     stats = []
     while container.isAlive():
@@ -55,6 +57,8 @@ def execute_image(app):
 
     task = util.select_task(app["task"]["image"]["type"])
     task.setup(app)
+
+    bbx_image.exit_if_no_image_available(app["task"]["image"]["name"])
 
     container = Thread(target = partial(image_runner.run, task.create_biobox_args(app)))
     container.start()
