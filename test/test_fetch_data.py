@@ -13,6 +13,6 @@ def test_docstring_parse():
 
 def test_fetch_input_files():
     db_helper.reset_database()
-    app = app_helper.mock_application_state()
+    app = app_helper.mock_short_read_assembler_state()
     fetch.create_input_files(app)
     file_helper.assert_is_file(app["path"] + "/inputs/short_read_fastq/dummy.reads.fq.gz")

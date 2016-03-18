@@ -3,39 +3,21 @@ import helper.file           as file_helper
 import biobox_cli.util.misc  as bbx_util
 import nucleotides.log       as log
 
-def sample_benchmark_task():
-    return {
-            "type": "produce",
-            "benchmark": "453e406dcee4d18174d4ff623f52dcd8",
-            "inputs": [
-                {
-                    "sha256": "24b5b01b08482053d7d13acd514e359fb0b726f1e8ae36aa194b6ddc07335298",
-                    "url": "s3://nucleotides-testing/short-read-assembler/dummy.reads.fq.gz",
-                    "type": "short_read_fastq"
-                    }
-                ],
-            "id": 1,
-            "image": {
-                "name": "bioboxes/velvet",
-                "sha256": "digest_2",
-                "task": "default",
-                "type": "short_read_assembler"
-                },
-            "complete": False
-            }
-
-def mock_application_state(task = True, dummy_reads = False, reads = False):
-    import json, shutil
-
+def mock_app():
     path = file_helper.test_dir()
     app = {'api'    : os.environ["NUCLEOTIDES_API"],
            'logger' : log.create_logger(os.path.join(path, "benchmark.log")),
            'path'   : path}
+    return app
+
+def mock_short_read_assembler_state(task = True, dummy_reads = False, reads = False, outputs = False):
+    import json, shutil
+    app = mock_app()
 
     if task:
-        app["task"] = sample_benchmark_task()
-        with open(app['path'] + '/metadata.json', 'w') as f:
-            f.write(json.dumps(app["task"]))
+        shutil.copy('data/short_read_assembler.json', app['path'] + '/metadata.json')
+        with open(app['path'] + '/metadata.json', 'r') as f:
+            app["task"] = json.loads(f.read())
 
     if dummy_reads:
         bbx_util.mkdir_p(app['path'] + '/inputs/short_read_fastq/')
@@ -45,5 +27,34 @@ def mock_application_state(task = True, dummy_reads = False, reads = False):
         bbx_util.mkdir_p(app['path'] + '/inputs/short_read_fastq/')
         shutil.copy('tmp/data/reads.fq.gz', app['path'] + '/inputs/short_read_fastq/')
 
+    if outputs:
+        bbx_util.mkdir_p(app['path'] + '/outputs/contig_fasta/')
+        shutil.copy('tmp/data/contigs.fa', app['path'] + '/outputs/contig_fasta/contigs')
+        bbx_util.mkdir_p(app['path'] + '/outputs/container_runtime_metrics/')
+        shutil.copy('tmp/data/container_runtime.json', app['path'] + '/outputs/container_runtime_metrics/metrics.json')
+
     return app
 
+def mock_reference_evaluator_state(outputs = False):
+    import json, shutil
+    app = mock_app()
+
+    shutil.copy('data/reference_assembly_evaluation.json', app['path'] + '/metadata.json')
+    with open(app['path'] + '/metadata.json', 'r') as f:
+        app["task"] = json.loads(f.read())
+
+    app["s3-upload"] = "s3://"
+
+    bbx_util.mkdir_p(app['path'] + '/inputs/reference_fasta/')
+    shutil.copy('tmp/data/reference.fa', app['path'] + '/inputs/reference_fasta/6bac51cc35.fa')
+
+    bbx_util.mkdir_p(app['path'] + '/inputs/contig_fasta/')
+    shutil.copy('tmp/data/contigs.fa', app['path'] + '/inputs/contig_fasta/7e9f760161.fa')
+
+    if outputs:
+        bbx_util.mkdir_p(app['path'] + '/outputs/assembly_metrics/')
+        shutil.copy('tmp/data/assembly_metrics.tsv', app['path'] + '/outputs/assembly_metrics/outputs.csv')
+        bbx_util.mkdir_p(app['path'] + '/outputs/container_runtime_metrics/')
+        shutil.copy('tmp/data/container_runtime.json', app['path'] + '/outputs/container_runtime_metrics/metrics.json')
+
+    return app

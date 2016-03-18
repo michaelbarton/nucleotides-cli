@@ -2,6 +2,7 @@ Feature: Fetching input data files for benchmarking
 
   Background:
     Given a clean set of benchmarks
+    And no files in the S3 directory "s3://nucleotides-testing/uploads/"
 
   Scenario: Fetching input data from given a nucleotides task ID
     Given the nucleotides directory is available on the path

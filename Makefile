@@ -43,15 +43,36 @@ autotest:
 #
 ################################################
 
-bootstrap: Gemfile.lock vendor/python .api_container tmp/data/reads.fq.gz tmp/data/dummy.reads.fq.gz
+bootstrap: \
+	Gemfile.lock \
+	vendor/python \
+	.api_container \
+	tmp/data/reads.fq.gz \
+	tmp/data/dummy.reads.fq.gz \
+	tmp/data/reference.fa \
+	tmp/data/assembly_metrics.tsv \
+	tmp/data/contigs.fa \
+	tmp/data/container_runtime.json
 
-tmp/data/reads.fq.gz: ./plumbing/fetch_s3_file
-	$(shell mkdir -p $(dir $@))
-	bundle exec $^ s3://nucleotides-testing/short-read-assembler/reads.fq.gz $@
 
-tmp/data/dummy.reads.fq.gz: ./plumbing/fetch_s3_file
+tmp/data/%: ./plumbing/fetch_s3_file
 	$(shell mkdir -p $(dir $@))
-	bundle exec $^ s3://nucleotides-testing/short-read-assembler/dummy.reads.fq.gz $@
+	bundle exec $^ s3://nucleotides-testing/short-read-assembler/$* $@
+
+tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
+	docker run \
+	  --env="$(db_user)" \
+	  --env="$(db_pass)" \
+	  --env="$(db_name)" \
+	  --env=POSTGRES_HOST=//localhost:5433 \
+          --volume=$(abspath $</data):/data:ro \
+	  nucleotides/api:staging \
+	  migrate
+	PGPASSWORD=pass pg_dump -d postgres -h $(docker_host) -U postgres -p 5433 --inserts > $@
+
+tmp/data/nucleotides:
+	git clone git@github.com:nucleotides/nucleotides-data.git $@
+	cd ./$@ && git checkout feature/new-nucleotides-api
 
 .api_container: .rdm_container .api_image
 	@docker run \
@@ -64,7 +85,6 @@ tmp/data/dummy.reads.fq.gz: ./plumbing/fetch_s3_file
 	  --publish 80:80 \
 	  nucleotides/api:staging \
 	  server > $@
-
 
 .rdm_container: .rdm_image
 	docker run \
