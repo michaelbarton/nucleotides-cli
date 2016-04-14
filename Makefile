@@ -61,6 +61,8 @@ tmp/data/%: ./plumbing/fetch_s3_file
 	bundle exec $^ s3://nucleotides-testing/short-read-assembler/$* $@
 
 tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
+	@echo "drop schema public cascade;\ncreate schema public;" |\
+		PGPASSWORD=pass psql -d postgres -h $(docker_host) -U postgres -p 5433
 	@docker run \
 	  --env="$(db_user)" \
 	  --env="$(db_pass)" \
@@ -76,7 +78,9 @@ tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
 tmp/data/nucleotides:
 	mkdir -p $(dir $@)
 	git clone https://github.com/nucleotides/nucleotides-data.git $@
-	cd ./$@ && git reset --hard 96abff94
+	rm $@/inputs/data/*
+	cp data/test_organism.yml $@/inputs/data/
+	cp data/benchmark.yml $@/inputs/
 
 .api_container: .rdm_container .api_image
 	@docker run \
