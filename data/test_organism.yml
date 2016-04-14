@@ -1,0 +1,22 @@
+---
+source:
+  desc: >
+    A short section of a microbial genome for testing nucleotides.
+  source_type: microbe
+  references:
+    - file_type: reference_fasta
+      sha256: 6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414
+      url: s3://nucleotides-testing/short-read-assembler/reference.fa
+data:
+  - name: regular_fragment_1
+    extraction_method_type: cultured_colony_isolate
+    platform_type: miseq
+    protocol_type: unamplified_regular_fragment
+    run_mode_type: 2x150_300
+    material_type: dna
+    desc: >
+      Small number of reads data set for testing nucleotides.
+    files:
+      - sha256: 11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533
+        file_type: short_read_fastq
+        url: s3://nucleotides-testing/short-read-assembler/reads.fq.gz

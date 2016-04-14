@@ -34,5 +34,5 @@ def drop_all_tables
 end
 
 def create_benchmarks
-  execute_sql_fixture("benchmarks")
+  execute_sql_file("tmp/data/fixtures.sql")
 end

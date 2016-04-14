@@ -52,7 +52,8 @@ bootstrap: \
 	tmp/data/reference.fa \
 	tmp/data/assembly_metrics.tsv \
 	tmp/data/contigs.fa \
-	tmp/data/container_runtime.json
+	tmp/data/container_runtime.json \
+	tmp/data/fixtures.sql
 
 
 tmp/data/%: ./plumbing/fetch_s3_file
@@ -60,19 +61,27 @@ tmp/data/%: ./plumbing/fetch_s3_file
 	bundle exec $^ s3://nucleotides-testing/short-read-assembler/$* $@
 
 tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
-	docker run \
+	@echo "drop schema public cascade;\ncreate schema public;" |\
+		PGPASSWORD=pass psql -d postgres -h $(docker_host) -U postgres -p 5433
+	@docker run \
 	  --env="$(db_user)" \
 	  --env="$(db_pass)" \
 	  --env="$(db_name)" \
 	  --env=POSTGRES_HOST=//localhost:5433 \
-          --volume=$(abspath $</data):/data:ro \
+          --volume=$(abspath $<):/data:ro \
+	  --net=host \
 	  nucleotides/api:staging \
 	  migrate
-	PGPASSWORD=pass pg_dump -d postgres -h $(docker_host) -U postgres -p 5433 --inserts > $@
+	@PGPASSWORD=pass pg_dump -d postgres -h $(docker_host) -U postgres -p 5433 --inserts \
+		   | grep -v 'SET row_security = off;' > $@
 
 tmp/data/nucleotides:
-	git clone git@github.com:nucleotides/nucleotides-data.git $@
-	cd ./$@ && git checkout feature/new-nucleotides-api
+	mkdir -p $(dir $@)
+	git clone https://github.com/nucleotides/nucleotides-data.git $@
+	cd ./$@ && git reset --hard 1a137e5
+	rm $@/inputs/data/*
+	cp data/test_organism.yml $@/inputs/data/
+	cp data/benchmark.yml $@/inputs/
 
 .api_container: .rdm_container .api_image
 	@docker run \
