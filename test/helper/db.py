@@ -11,7 +11,7 @@ def reset_database():
     conn   = psycopg2.connect(conf)
     cursor = conn.cursor()
     cursor.execute("drop schema public cascade; create schema public;")
-    with open("test/fixtures/benchmarks.sql", "r") as f:
+    with open("tmp/data/fixtures.sql", "r") as f:
         cursor.execute(f.read())
     conn.commit()
     cursor.close()
