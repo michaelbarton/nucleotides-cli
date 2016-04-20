@@ -4,6 +4,8 @@ version := $(shell $(path) python setup.py --version)
 name    := $(shell $(path) python setup.py --name)
 dist    := dist/$(name)-$(version).tar.gz
 
+installer-image := test-install
+
 docker_host := $(shell echo ${DOCKER_HOST} | egrep -o "\d+.\d+.\d+.\d+")
 
 ifdef docker_host
@@ -29,10 +31,25 @@ params := NUCLEOTIDES_API=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_h
 #
 #################################################
 
-build: $(dist)
+build: $(dist) test-build
 
+test-build: $(dist) .installer_image
+	docker run \
+		--tty \
+		--volume=$(abspath $(dir $<)):/dist:ro \
+		$(installer-image) \
+		/bin/bash -c "pip install --user /$< && clear && /root/.local/bin/nucleotides -h"
 
-$(dist): $(shell find nucleotides) requirements.txt setup.py
+ssh: $(dist)
+	docker run \
+		--interactive \
+		--tty \
+		--volume=$(abspath $(dir $^)):/dist:ro \
+		$(installer-image) \
+		/bin/bash
+
+$(dist): $(shell find nucleotides) requirements.txt setup.py MANIFEST.in
+	rm -rf $@ nucleotides_client.egg-info
 	@$(path) python setup.py sdist
 	@touch $@
 
@@ -64,6 +81,7 @@ bootstrap: \
 	Gemfile.lock \
 	vendor/python \
 	.api_container \
+	.installer_image \
 	tmp/data/reads.fq.gz \
 	tmp/data/dummy.reads.fq.gz \
 	tmp/data/reference.fa \
@@ -128,6 +146,10 @@ tmp/data/nucleotides:
 
 .api_image:
 	docker pull nucleotides/api:staging
+	touch $@
+
+.installer_image: $(shell find images/test-install -type f)
+	docker build --tag $(installer-image) images/$(installer-image)
 	touch $@
 
 vendor/python: requirements.txt
