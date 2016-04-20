@@ -1,5 +1,9 @@
 path := PATH=./vendor/python/bin:$(shell echo "${PATH}")
 
+version := $(shell $(path) python setup.py --version)
+name    := $(shell $(path) python setup.py --name)
+dist    := dist/$(name)-$(version).tar.gz
+
 docker_host := $(shell echo ${DOCKER_HOST} | egrep -o "\d+.\d+.\d+.\d+")
 
 ifdef docker_host
@@ -18,6 +22,19 @@ aws_key    := AWS_ACCESS_KEY_ID=$(shell bundle exec ./plumbing/fetch_credential 
 aws_region := AWS_DEFAULT_REGION=us-west-1
 
 params := NUCLEOTIDES_API=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_host) $(aws_pass) $(aws_key) $(aws_region)
+
+#################################################
+#
+# Build and upload python package
+#
+#################################################
+
+build: $(dist)
+
+
+$(dist): $(shell find nucleotides) requirements.txt setup.py
+	@$(path) python setup.py sdist
+	@touch $@
 
 #################################################
 #
