@@ -32,8 +32,8 @@ params := NUCLEOTIDES_API=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_h
 #################################################
 
 publish: $(dist)
-	cp $< $(dir $<)/nucleotides-client.tar.gz
-	docker run \
+	@cp $< $(dir $<)/nucleotides-client.tar.gz
+	@docker run \
 		--tty \
 		--volume=$(abspath $(dir $<)):/dist:ro \
 		--env=AWS_ACCESS_KEY=$(shell bundle exec ./plumbing/fetch_credential access_key) \
@@ -45,14 +45,14 @@ publish: $(dist)
 build: $(dist) test-build
 
 test-build: $(dist) .installer_image
-	docker run \
+	@docker run \
 		--tty \
 		--volume=$(abspath $(dir $<)):/dist:ro \
 		$(installer-image) \
 		/bin/bash -c "pip install --user /$< && clear && /root/.local/bin/nucleotides -h"
 
 ssh: $(dist)
-	docker run \
+	@docker run \
 		--interactive \
 		--tty \
 		--volume=$(abspath $(dir $^)):/dist:ro \
