@@ -1,4 +1,4 @@
-path := PATH=./vendor/python/bin:$(shell echo "${PATH}")
+path := PATH=$(abspath ./vendor/python/bin):$(shell echo "${PATH}")
 
 version := $(shell $(path) python setup.py --version)
 name    := $(shell $(path) python setup.py --name)
@@ -45,11 +45,10 @@ ssh: $(dist)
 		--interactive \
 		--tty \
 		--volume=$(abspath $(dir $^)):/dist:ro \
-		$(installer-image) \
+		ubuntu \
 		/bin/bash
 
-$(dist): $(shell find nucleotides) requirements.txt setup.py MANIFEST.in
-	rm -rf $@ nucleotides_client.egg-info
+$(dist): $(shell find bin nucleotides) requirements.txt setup.py MANIFEST.in
 	@$(path) python setup.py sdist
 	@touch $@
 
@@ -62,7 +61,7 @@ $(dist): $(shell find nucleotides) requirements.txt setup.py MANIFEST.in
 test = $(params) $(path) nosetests --rednose
 
 feature: Gemfile.lock $(credentials)
-	@$(params) bundle exec cucumber $(ARGS)
+	@$(params) $(path) bundle exec cucumber $(ARGS)
 
 test:
 	@$(test)
@@ -149,7 +148,7 @@ tmp/data/nucleotides:
 	touch $@
 
 .installer_image: $(shell find images/test-install -type f)
-	docker build --tag $(installer-image) images/$(installer-image)
+	cd ./images/$(installer-image) && docker build --tag $(installer-image) .
 	touch $@
 
 vendor/python: requirements.txt
