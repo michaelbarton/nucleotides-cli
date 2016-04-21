@@ -45,7 +45,7 @@ ssh: $(dist)
 		--interactive \
 		--tty \
 		--volume=$(abspath $(dir $^)):/dist:ro \
-		ubuntu \
+		$(installer-image) \
 		/bin/bash
 
 $(dist): $(shell find bin nucleotides) requirements.txt setup.py MANIFEST.in
