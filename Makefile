@@ -1,4 +1,10 @@
-path := PATH=./vendor/python/bin:$(shell echo "${PATH}")
+path := PATH=$(abspath ./vendor/python/bin):$(shell echo "${PATH}")
+
+version := $(shell $(path) python setup.py --version)
+name    := $(shell $(path) python setup.py --name)
+dist    := dist/$(name)-$(version).tar.gz
+
+installer-image := test-install
 
 docker_host := $(shell echo ${DOCKER_HOST} | egrep -o "\d+.\d+.\d+.\d+")
 
@@ -21,6 +27,44 @@ params := NUCLEOTIDES_API=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_h
 
 #################################################
 #
+# Build and upload python package
+#
+#################################################
+
+publish: $(dist)
+	@cp $< $(dir $<)/nucleotides-client.tar.gz
+	@docker run \
+		--tty \
+		--volume=$(abspath $(dir $<)):/dist:ro \
+		--env=AWS_ACCESS_KEY=$(shell bundle exec ./plumbing/fetch_credential access_key) \
+		--env=AWS_SECRET_KEY=$(shell bundle exec ./plumbing/fetch_credential secret_key) \
+		--entrypoint=/push-to-s3 \
+		bioboxes/file-deployer \
+		nucleotides-tools client $(version) /$(dir $<)/nucleotides-client.tar.gz
+
+build: $(dist) test-build
+
+test-build: $(dist) .installer_image
+	@docker run \
+		--tty \
+		--volume=$(abspath $(dir $<)):/dist:ro \
+		$(installer-image) \
+		/bin/bash -c "pip install --user /$< && clear && /root/.local/bin/nucleotides -h"
+
+ssh: $(dist)
+	@docker run \
+		--interactive \
+		--tty \
+		--volume=$(abspath $(dir $^)):/dist:ro \
+		$(installer-image) \
+		/bin/bash
+
+$(dist): $(shell find bin nucleotides) requirements.txt setup.py MANIFEST.in
+	@$(path) python setup.py sdist
+	@touch $@
+
+#################################################
+#
 # Run tests and features
 #
 #################################################
@@ -28,7 +72,7 @@ params := NUCLEOTIDES_API=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_h
 test = $(params) $(path) nosetests --rednose
 
 feature: Gemfile.lock $(credentials)
-	@$(params) bundle exec cucumber $(ARGS)
+	@$(params) $(path) bundle exec cucumber $(ARGS)
 
 test:
 	@$(test)
@@ -47,6 +91,8 @@ bootstrap: \
 	Gemfile.lock \
 	vendor/python \
 	.api_container \
+	.installer_image \
+	.depoy_image \
 	tmp/data/reads.fq.gz \
 	tmp/data/dummy.reads.fq.gz \
 	tmp/data/reference.fa \
@@ -112,6 +158,13 @@ tmp/data/nucleotides:
 .api_image:
 	docker pull nucleotides/api:staging
 	touch $@
+
+.installer_image: $(shell find images/test-install -type f)
+	cd ./images/$(installer-image) && docker build --tag $(installer-image) .
+	touch $@
+
+.depoy_image:
+	docker pull bioboxes/file-deployer
 
 vendor/python: requirements.txt
 	mkdir -p log

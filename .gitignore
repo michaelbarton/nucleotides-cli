@@ -6,3 +6,5 @@ log
 .*_container
 .*_image
 *.pyc
+dist
+*.egg-info
