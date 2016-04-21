@@ -31,6 +31,17 @@ params := NUCLEOTIDES_API=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_h
 #
 #################################################
 
+publish: $(dist)
+	cp $< $(dir $<)/nucleotides-client.tar.gz
+	docker run \
+		--tty \
+		--volume=$(abspath $(dir $<)):/dist:ro \
+		--env=AWS_ACCESS_KEY=$(shell bundle exec ./plumbing/fetch_credential access_key) \
+		--env=AWS_SECRET_KEY=$(shell bundle exec ./plumbing/fetch_credential secret_key) \
+		--entrypoint=/push-to-s3 \
+		bioboxes/file-deployer \
+		nucleotides-tools client $(version) /$(dir $<)/nucleotides-client.tar.gz
+
 build: $(dist) test-build
 
 test-build: $(dist) .installer_image
@@ -81,6 +92,7 @@ bootstrap: \
 	vendor/python \
 	.api_container \
 	.installer_image \
+	.depoy_image \
 	tmp/data/reads.fq.gz \
 	tmp/data/dummy.reads.fq.gz \
 	tmp/data/reference.fa \
@@ -150,6 +162,9 @@ tmp/data/nucleotides:
 .installer_image: $(shell find images/test-install -type f)
 	cd ./images/$(installer-image) && docker build --tag $(installer-image) .
 	touch $@
+
+.depoy_image:
+	docker pull bioboxes/file-deployer
 
 vendor/python: requirements.txt
 	mkdir -p log
