@@ -147,12 +147,12 @@ tmp/data/nucleotides:
 		--env="$(db_pass)" \
 		--publish=5433:5432 \
 		--detach=true \
-		kiasaki/alpine-postgres:9.4 \
+		kiasaki/alpine-postgres:9.5 \
 		> $@
 	sleep 3
 
 .rdm_image:
-	docker pull kiasaki/alpine-postgres:9.4
+	docker pull kiasaki/alpine-postgres:9.5
 	touch $@
 
 .api_image:
