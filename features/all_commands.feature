@@ -1,4 +1,4 @@
-Feature: Running the all the nucleotides commands in order to execute a benchmark
+Feature: Use the `all` sub-command to execute all steps in benchmarking
 
   Background:
     Given a clean set of benchmarks
@@ -12,13 +12,7 @@ Feature: Running the all the nucleotides commands in order to execute a benchmar
     And the default aruba exit timeout is 300 seconds
     When I run the bash command:
       """
-      export TMPDIR=$(pwd) && \
-      nucleotides fetch-data 1 && \
-      nucleotides run-image  1 && \
-      nucleotides post-data  1
-      nucleotides fetch-data 2 && \
-      nucleotides run-image  2 && \
-      nucleotides post-data  2
+      export TMPDIR=$(pwd) && nucleotides all 1 && nucleotides all 2
       """
     And I get the url "/benchmarks/2f221a18eb86380369570b2ed147d8b4"
     Then the stderr should not contain anything

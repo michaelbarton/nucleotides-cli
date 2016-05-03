@@ -8,11 +8,6 @@ import nucleotides.util              as util
 import nucleotides.command.post_data as post
 import biobox_cli.util.misc          as bbx_util
 
-def test_docstring_parse():
-    nose.assert_equal(
-        util.parse(post.__doc__, ["post-data", "1"]),
-        {'<task>': '1', 'post-data': True})
-
 def test_create_output_file_metadata():
     app  = app_helper.mock_short_read_assembler_state()
     app["s3-upload"] = "s3://url/"

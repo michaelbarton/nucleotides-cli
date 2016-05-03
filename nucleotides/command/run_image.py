@@ -1,10 +1,3 @@
-"""
-nucleotides run-image - Execute Docker image for benchmarking
-
-Usage:
-    nucleotides run-image <task>
-"""
-
 import os, shutil, json
 import nucleotides.util       as util
 import biobox_cli.command.run as image_runner
@@ -68,7 +61,5 @@ def execute_image(app):
     create_runtime_metric_file(app, metrics)
     task.copy_output_files(app)
 
-def run(args):
-    opts = util.parse(__doc__, args)
-    task = opts["<task>"]
+def run(task):
     execute_image(util.application_state(task))

@@ -7,10 +7,6 @@ import helper.file        as file_helper
 import nucleotides.util               as util
 import nucleotides.command.fetch_data as fetch
 
-def test_docstring_parse():
-    nose.assert_equal(util.parse(fetch.__doc__, ["fetch-data", "1"]),
-            {'<task>': '1', 'fetch-data': True})
-
 def test_fetch_input_files():
     db_helper.reset_database()
     app = app_helper.mock_short_read_assembler_state()

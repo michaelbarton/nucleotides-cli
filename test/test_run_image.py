@@ -8,10 +8,6 @@ import nucleotides.command.run_image as image
 
 from nose.plugins.attrib import attr
 
-def test_docstring_parse():
-    nose.assert_equal(util.parse(image.__doc__, ["run-image", "1"]),
-            {'<task>': '1', 'run-image': True})
-
 @attr('slow')
 def test_execute_assembler_image():
     import json, shutil
