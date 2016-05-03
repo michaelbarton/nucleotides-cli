@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 0.2.0
 
+### Added
+
+  * Returns a useful error message and exits non-zero when required environment
+    variables are missing.
+
 ### Changed
 
   * The S3 location to upload files is now specified in the environment
