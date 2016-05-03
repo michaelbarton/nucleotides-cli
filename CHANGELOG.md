@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 0.2.0
 
+### Added
+
+  * Added the subcommand `all` to execute all the benchmarking tasks in order.
+    This can be used instead of running each subcommand one after another.
+
 ### Changed
 
   * The S3 location to upload files is now specified in the environment
