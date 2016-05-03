@@ -124,7 +124,7 @@ tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
 tmp/data/nucleotides:
 	mkdir -p $(dir $@)
 	git clone https://github.com/nucleotides/nucleotides-data.git $@
-	cd ./$@ && git reset --hard 1a137e5
+	cd ./$@ && git reset --hard bb895e1
 	rm $@/inputs/data/*
 	cp data/test_organism.yml $@/inputs/data/
 	cp data/benchmark.yml $@/inputs/
