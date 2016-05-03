@@ -25,6 +25,18 @@ aws_region := AWS_DEFAULT_REGION=us-west-1
 
 params := NUCLEOTIDES_API=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_host) $(aws_pass) $(aws_key) $(aws_region)
 
+docker_db := @docker run \
+	--env="$(db_user)" \
+	--env="$(db_name)" \
+	--env="PGHOST=$(docker_host)" \
+	--env="PGPASSWORD=pass" \
+	--env="PGUSER=postgres" \
+	--env="PGPORT=5433" \
+	--env="PGDATABASE=postgres" \
+	--env=POSTGRES_HOST=//localhost:5433 \
+	--volume=$(abspath tmp/data/nucleotides):/data:ro \
+	--net=host
+
 #################################################
 #
 # Build and upload python package
@@ -107,19 +119,18 @@ tmp/data/%: ./plumbing/fetch_s3_file
 	bundle exec $^ s3://nucleotides-testing/short-read-assembler/$* $@
 
 tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
-	@echo "drop schema public cascade;\ncreate schema public;" |\
-		PGPASSWORD=pass psql -d postgres -h $(docker_host) -U postgres -p 5433
-	@docker run \
-	  --env="$(db_user)" \
+	$(docker_db) \
+	  --entrypoint=psql \
+	  kiasaki/alpine-postgres:9.5 \
+	  --command="drop schema public cascade; create schema public;"
+	$(docker_db) \
 	  --env="$(db_pass)" \
-	  --env="$(db_name)" \
-	  --env=POSTGRES_HOST=//localhost:5433 \
-          --volume=$(abspath $<):/data:ro \
-	  --net=host \
 	  nucleotides/api:staging \
 	  migrate
-	@PGPASSWORD=pass pg_dump -d postgres -h $(docker_host) -U postgres -p 5433 --inserts \
-		   | grep -v 'SET row_security = off;' > $@
+	$(docker_db) \
+	  --entrypoint=pg_dump \
+	  kiasaki/alpine-postgres:9.5 \
+	  --inserts | grep -v 'SET row_security = off;' > $@
 
 tmp/data/nucleotides:
 	mkdir -p $(dir $@)
