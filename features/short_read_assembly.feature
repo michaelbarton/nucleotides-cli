@@ -3,6 +3,9 @@ Feature: Processing a short read assembly benchmark
   Background:
     Given a clean set of benchmarks
     And no files in the S3 directory "s3://nucleotides-testing/uploads/"
+    And I set the environment variables to:
+      | variable           | value                             |
+      | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
     And the nucleotides directory is available on the path
     And the file named "nucleotides/5/metadata.json" with:
       """
@@ -46,7 +49,7 @@ Feature: Processing a short read assembly benchmark
     And I copy the file "../data/contigs.fa" to "nucleotides/5/outputs/contig_fasta/5887df3630"
     When I run the bash command:
       """
-      nucleotides post-data 5 --s3-upload=s3://nucleotides-testing/uploads/
+      nucleotides post-data 5
       """
     And I get the url "/tasks/5"
     Then the stderr should not contain anything
@@ -65,7 +68,7 @@ Feature: Processing a short read assembly benchmark
     Given I copy the file "../data/container_runtime.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
     When I run the bash command:
       """
-      nucleotides post-data 5 --s3-upload=s3://nucleotides-testing/uploads/
+      nucleotides post-data 5
       """
     And I get the url "/tasks/5"
     Then the stderr should not contain anything

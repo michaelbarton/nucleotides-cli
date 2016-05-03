@@ -3,6 +3,9 @@ Feature: Running a reference assembly benchmark task
   Background:
     Given a clean set of benchmarks
     And no files in the S3 directory "s3://nucleotides-testing/uploads/"
+    And I set the environment variables to:
+      | variable           | value                             |
+      | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
     And the nucleotides directory is available on the path
     And the file named "nucleotides/6/metadata.json" with:
     """
@@ -72,7 +75,7 @@ Feature: Running a reference assembly benchmark task
     And I copy the file "../data/assembly_metrics.tsv" to "nucleotides/6/outputs/assembly_metrics/67ba437ffa"
     When I run the bash command:
       """
-      nucleotides post-data 6 --s3-upload=s3://nucleotides-testing/uploads/
+      nucleotides post-data 6
       """
     And I get the url "/tasks/6"
     Then the stderr should not contain anything
