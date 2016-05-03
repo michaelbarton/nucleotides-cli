@@ -10,6 +10,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   * Added the subcommand `all` to execute all the benchmarking tasks in order.
     This can be used instead of running each subcommand one after another.
 
+  * Added the subcommand `clean-up` to remove all files created during
+    nucleotides benchmarking. This is also included in the `all` subcommand.
+
 ### Changed
 
   * The S3 location to upload files is now specified in the environment
