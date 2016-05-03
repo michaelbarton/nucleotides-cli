@@ -1,10 +1,3 @@
-"""
-nucleotides post-data - Post collected benchmark metrics back to nucleotides API
-
-Usage:
-    nucleotides post-data <task>
-"""
-
 import os, functools, glob
 import nucleotides.util       as util
 import nucleotides.api_client as api
@@ -46,9 +39,7 @@ def post(app):
     map(upload_output_file, outputs)
     api.post_event(create_event_request(app, outputs), app)
 
-def run(args):
-    opts = util.parse(__doc__, args)
-    task = opts["<task>"]
+def run(task):
     app = util.application_state(task)
     app["s3-upload"] = os.environ["NUCLEOTIDES_S3_URL"]
     post(app)
