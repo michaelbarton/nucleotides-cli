@@ -10,12 +10,12 @@ Feature: Running the all the nucleotides commands in order to execute a benchmar
     When I run the bash command:
       """
       export TMPDIR=$(pwd) && \
-      nucleotides fetch-data 5 && \
-      nucleotides run-image  5 && \
-      nucleotides post-data  5 --s3-upload=s3://nucleotides-testing/uploads/ &&
-      nucleotides fetch-data 6 && \
-      nucleotides run-image  6 && \
-      nucleotides post-data  6 --s3-upload=s3://nucleotides-testing/uploads/
+      nucleotides fetch-data 1 && \
+      nucleotides run-image  1 && \
+      nucleotides post-data  1 --s3-upload=s3://nucleotides-testing/uploads/ &&
+      nucleotides fetch-data 2 && \
+      nucleotides run-image  2 && \
+      nucleotides post-data  2 --s3-upload=s3://nucleotides-testing/uploads/
       """
     And I get the url "/benchmarks/2f221a18eb86380369570b2ed147d8b4"
     Then the stderr should not contain anything
