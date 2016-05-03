@@ -15,6 +15,7 @@ import nucleotides.util as util
 import nucleotides.command.fetch_data
 import nucleotides.command.run_image
 import nucleotides.command.post_data
+import nucleotides.command.clean_up
 import nucleotides.command.all
 
 def select_command(c):
@@ -22,6 +23,7 @@ def select_command(c):
             'fetch-data' : nucleotides.command.fetch_data,
             'run-image'  : nucleotides.command.run_image,
             'post-data'  : nucleotides.command.post_data,
+            'clean-up'   : nucleotides.command.clean_up,
             'all'        : nucleotides.command.all
             }[c]
 
