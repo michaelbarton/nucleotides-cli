@@ -10,8 +10,8 @@ import biobox_cli.util.misc          as bbx_util
 
 def test_docstring_parse():
     nose.assert_equal(
-        util.parse(post.__doc__, ["post-data", "1", "--s3-upload=loc"]),
-        {'<task>': '1', 'post-data': True, "--s3-upload" : "loc"})
+        util.parse(post.__doc__, ["post-data", "1"]),
+        {'<task>': '1', 'post-data': True})
 
 def test_create_output_file_metadata():
     app  = app_helper.mock_short_read_assembler_state()
