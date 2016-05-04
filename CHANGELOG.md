@@ -13,6 +13,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   * Added the subcommand `clean-up` to remove all files created during
     nucleotides benchmarking. This is also included in the `all` subcommand.
 
+  * Returns a useful error message and exits non-zero when required environment
+    variables are missing.
+
 ### Changed
 
   * The S3 location to upload files is now specified in the environment

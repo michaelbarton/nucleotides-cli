@@ -41,5 +41,5 @@ def post(app):
 
 def run(task):
     app = util.application_state(task)
-    app["s3-upload"] = os.environ["NUCLEOTIDES_S3_URL"]
+    app["s3-upload"] = util.get_environment_variable("NUCLEOTIDES_S3_URL")
     post(app)
