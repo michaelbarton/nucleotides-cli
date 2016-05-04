@@ -21,6 +21,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   * The S3 location to upload files is now specified in the environment
     variable `NUCLEOTIDES_S3_URL` instead of as a command line argument.
 
+### Fixed
+
+  * Handle the cases where QUAST returns '-' in the assembly metrics as 0.
+
 ## 0.1.0
 
 ### Changed

@@ -128,3 +128,23 @@ Feature: Running a reference assembly benchmark task
        | events/0/metrics/total_length_gt_5000        | 629401.0 |
        | events/0/metrics/total_length_gt_50000       | 260065.0 |
        | events/0/metrics/unaligned_length            | 0.0      |
+
+
+  Scenario: Posting a benchmark when QUAST output includes non numeric values
+    Given I copy the file "../data/container_runtime.json" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json"
+    And the directory "nucleotides/6/outputs/assembly_metrics/"
+    And I run the bash command:
+      """
+      sed /NGA50/s/25079/-/ ../data/assembly_metrics.tsv > nucleotides/6/outputs/assembly_metrics/67ba437ffa
+      """
+    When I run the bash command:
+      """
+      nucleotides post-data 6
+      """
+    And I get the url "/tasks/6"
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the JSON should have the following:
+       | events/0/metrics/nga50  | 0.0  |
+       | complete                | true |
