@@ -34,3 +34,16 @@ def test_create_event_request_with_a_successful_event():
     nose.assert_in("lga75", event["metrics"])
     nose.assert_equal(event["metrics"]["lga75"], 16.0)
     nose.assert_equal(event["metrics"]["ng50"], 25079.0)
+
+
+def test_create_event_request_with_non_numeric_quast_values():
+    app = app_helper.mock_reference_evaluator_state(outputs = True)
+
+    import fileinput
+    for line in fileinput.input(app['path'] + '/outputs/assembly_metrics/outputs.csv', inplace = True):
+        if 'NGA50' in line:
+            print line.replace("25079", "-"),
+
+    event = post.create_event_request(app, post.create_output_file_metadata(app))
+    nose.assert_in("nga50", event["metrics"])
+    nose.assert_equal(event["metrics"]["nga50"], 0.0)
