@@ -177,11 +177,15 @@ tmp/data/nucleotides:
 .depoy_image:
 	docker pull bioboxes/file-deployer
 
-vendor/python: requirements.txt
-	mkdir -p log
-	virtualenv $@ 2>&1 > log/virtualenv.txt
-	$(path) pip install -r $< 2>&1 > log/pip.txt
-	touch $@
+vendor/python: requirements/default.txt requirements/development.txt
+	@mkdir -p log
+	@virtualenv $@ 2>&1 > log/virtualenv.txt
+	@$(path) pip install \
+		--requirement requirements/default.txt \
+		--requirement requirements/development.txt \
+		2>&1 > log/pip.txt
+	@touch $@
+
 
 Gemfile.lock: Gemfile
 	mkdir -p log
