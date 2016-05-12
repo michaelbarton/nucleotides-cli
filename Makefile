@@ -191,4 +191,10 @@ Gemfile.lock: Gemfile
 	mkdir -p log
 	bundle install --path vendor/bundle 2>&1 > log/bundle.txt
 
+clean:
+	docker kill $(shell cat .rdm_container); true
+	docker kill $(shell cat .api_container); true
+	rm -f .*_container .*_image Gemfile.lock
+	rm -rf vendor
+
 .PHONY: test autotest bootstrap
