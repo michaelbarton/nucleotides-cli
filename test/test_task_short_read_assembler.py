@@ -43,5 +43,8 @@ def test_copy_output_files():
     file_helper.assert_is_file(fs.get_output_file_path('contig_fasta/7e9f760161', app))
 
 
+@attr('slow')
 def test_complete_run_through():
     app = app_helper.mock_short_read_assembler_state(reads = True)
+    run.execute_image(app)
+    file_helper.assert_is_file(fs.get_output_file_path('contig_fasta/7e9f760161', app))
