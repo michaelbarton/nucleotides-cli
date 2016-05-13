@@ -8,8 +8,8 @@ def biobox_args(app):
     return [{"fastq" : [
         {"id" : 0 , "value" : path, "type": "paired"}]}]
 
-def copy_output_files(app):
-    fs.copy_tmp_file_to_outputs(app, 'contig_fasta', 'contig_fasta')
+def output_files():
+    return [['contig_fasta', [0, 'fasta', 0]]]
 
 def collect_metrics(app):
     import json

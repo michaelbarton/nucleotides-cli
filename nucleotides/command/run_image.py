@@ -17,6 +17,13 @@ def image_version(app):
 def image_task(app):
     return funcy.get_in(app, ["task", "image", "task"])
 
+def copy_output_files(app):
+    paths = image_type(app).output_files()
+    args  = fs.get_output_biobox_file_arguments(app)
+    for (dst, path) in paths:
+        src = funcy.get_in(args, path + ['value'])
+        fs.copy_tmp_file_to_outputs(app, src, dst)
+
 def create_container(app):
     avail.get_image(image_version(app))
     return image.create_container(
@@ -33,7 +40,7 @@ def execute_image(app):
     metrics = container.collect_runtime_metrics(id_)
 
     fs.create_runtime_metric_file(app, metrics)
-    image_type(app).copy_output_files(app)
+    copy_output_files(app)
 
 def run(task):
     execute_image(util.application_state(task))
