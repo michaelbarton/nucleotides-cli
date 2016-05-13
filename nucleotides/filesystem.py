@@ -1,4 +1,4 @@
-import os.path, shutil, json
+import os.path, shutil, json, yaml
 import boltons.fileutils  as fu
 import nucleotides.util   as util
 
@@ -18,13 +18,19 @@ def get_input_file_path(name, app):
     path = get_input_dir_path(name, app)
     return os.path.join(path, os.listdir(path)[0])
 
+
 def get_tmp_dir_path(app):
     dir_ = os.path.join(app['path'], 'tmp')
     fu.mkdir_p(dir_)
     return dir_
 
 def get_tmp_file_path(name, app):
-    return os.path.join(get_tmp_dir_path(), name)
+    return os.path.join(get_tmp_dir_path(app), name)
+
+def get_output_biobox_file_arguments(app):
+    with open(get_tmp_file_path('biobox.yaml', app)) as f:
+        return yaml.load(f.read())['arguments']
+
 
 def get_output_file_path(name, app):
     dir_ = os.path.join(app['path'], 'outputs')

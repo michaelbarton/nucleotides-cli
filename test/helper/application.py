@@ -37,6 +37,7 @@ def mock_short_read_assembler_state(task = True, dummy_reads = False, reads = Fa
         copy_to_directory('tmp/data/reads.fq.gz', 'inputs/short_read_fastq', app)
 
     if intermediates:
+        copy_to_file('data/sra_biobox.yaml', 'tmp/biobox.yaml', app)
         copy_to_directory('tmp/data/contigs.fa', 'tmp', app)
 
     if outputs:
