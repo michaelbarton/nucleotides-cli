@@ -113,7 +113,7 @@ bootstrap: \
 	tmp/data/reference.fa \
 	tmp/data/assembly_metrics.tsv \
 	tmp/data/contigs.fa \
-	tmp/data/container_runtime.json \
+	tmp/data/metrics.json \
 	tmp/data/fixtures.sql
 
 
