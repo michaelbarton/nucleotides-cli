@@ -81,7 +81,7 @@ $(dist): $(shell find bin nucleotides) requirements.txt setup.py MANIFEST.in
 #
 #################################################
 
-test = $(params) $(path) nosetests --rednose
+test = $(params) $(path) TMPDIR=./tmp/tests nosetests --rednose
 
 console:
 	@$(path) python -i console.py
