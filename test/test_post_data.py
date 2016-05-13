@@ -51,7 +51,7 @@ def test_short_read_assembler_successful_event():
         "url"      : "s3://url/dir/file"}]
     event = post.create_event_request(app, outputs)
     nose.assert_equal(event, {
-        "task" : 1,
+        "task" : 5,
         "success" : True,
         "metrics" : {'max_cpu_usage': 80, 'max_memory_usage': 20},
         "files" : [
@@ -63,4 +63,4 @@ def test_short_read_assembler_unsuccessful_event():
     app = app_helper.mock_short_read_assembler_state(outputs = False)
     outputs = []
     event = post.create_event_request(app, outputs)
-    nose.assert_equal(event, {"task" : 1, "success" : False, "files" : [], "metrics" : {}})
+    nose.assert_equal(event, {"task" : 5, "success" : False, "files" : [], "metrics" : {}})

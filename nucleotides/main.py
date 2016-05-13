@@ -9,6 +9,7 @@ Commands:
     all              Execute all nucleotides benchmark commands in order
 """
 
+import funcy, string, sys
 import nucleotides.util as util
 
 import nucleotides.command.fetch_data
