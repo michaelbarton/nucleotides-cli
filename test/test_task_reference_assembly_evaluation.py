@@ -2,15 +2,20 @@ import os.path, docker
 import nose.tools         as nose
 import helper.application as app_helper
 import helper.file        as file_helper
+import helper.image       as image_helper
 
 import nucleotides.command.post_data                  as post
+import nucleotides.command.run_image                  as run
 import nucleotides.task.reference_assembly_evaluation as task
 
-def test_copy_output_files():
+from nose.plugins.attrib import attr
+
+
+def test_create_container():
     app = app_helper.mock_reference_evaluator_state()
-    file_helper.create_benchmark_file(app, "/tmp/assembly_metrics/combined_quast_output/report.tsv", 'contents')
-    task.copy_output_files(app)
-    file_helper.assert_is_file(app["path"] + "/outputs/assembly_metrics/d1b2a59fbe")
+    cnt = run.create_container(app)
+    assert "Id" in cnt
+    image_helper.clean_up_container(cnt["Id"])
 
 def test_create_event_request_with_a_successful_event():
     app = app_helper.mock_reference_evaluator_state(outputs = True)
