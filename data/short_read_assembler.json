@@ -4,7 +4,7 @@
     "id": 1,
     "image": {
         "name": "bioboxes/velvet",
-        "sha256": "digest_2",
+        "sha256": "6611675a6d3755515592aa71932bd4ea4c26bccad34fae7a3ec1198ddcccddad",
         "task": "default",
         "type": "short_read_assembler"
     },

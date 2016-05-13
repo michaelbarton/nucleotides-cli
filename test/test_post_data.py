@@ -1,12 +1,12 @@
 import os
 import nose.tools         as nose
+import boltons.fileutils  as fu
 import helper.application as app_helper
 import helper.file        as file_helper
 import helper.s3          as s3_helper
 
 import nucleotides.util              as util
 import nucleotides.command.post_data as post
-import biobox_cli.util.misc          as bbx_util
 
 def test_create_output_file_metadata():
     app  = app_helper.mock_short_read_assembler_state()
@@ -29,7 +29,7 @@ def test_upload_output_file():
 
 def test_list_outputs():
     app = app_helper.mock_short_read_assembler_state(outputs = True)
-    bbx_util.mkdir_p(app["path"] + "/outputs/dummy")
+    fu.mkdir_p(app["path"] + "/outputs/dummy")
     outputs = post.list_outputs(app)
     nose.assert_in('contig_fasta', outputs)
     nose.assert_not_in('dummy', outputs)

@@ -1,10 +1,11 @@
 import os, functools, glob
+import nucleotides.filesystem as fs
 import nucleotides.util       as util
 import nucleotides.api_client as api
 import nucleotides.s3         as s3
 
 def output_file_metadata(s3_path, path):
-    digest = util.sha_digest(path)
+    digest = fs.sha_digest(path)
     return {
         "location" : path,
         "type"     : os.path.dirname(path).split("/")[-1],

@@ -83,6 +83,9 @@ $(dist): $(shell find bin nucleotides) requirements.txt setup.py MANIFEST.in
 
 test = $(params) $(path) nosetests --rednose
 
+console:
+	@$(path) python -i console.py
+
 feature: Gemfile.lock $(credentials)
 	@$(params) $(path) bundle exec cucumber $(ARGS)
 
