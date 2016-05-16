@@ -9,6 +9,9 @@ import nucleotides.util          as util
 def image_type(app):
     return util.select_task(funcy.get_in(app, ["task", "image", "type"]))
 
+def image_name(app):
+    return funcy.get_in(app, ["task", "image", "name"])
+
 def image_version(app):
     return funcy.get_in(app, ["task", "image", "name"]) + \
            "@sha256:" + \
@@ -17,6 +20,23 @@ def image_version(app):
 def image_task(app):
     return funcy.get_in(app, ["task", "image", "task"])
 
+def setup(app):
+    biobox = image_type(app)
+    if hasattr(biobox, 'before_container_hook'):
+        biobox.before_container_hook(app)
+
+def create_container(app):
+    avail.get_image(image_version(app))
+    if (image_name(app) == 'bioboxes/quast'):          # Special case, the quast
+        return image_type(app).create_container(app)   # has a non-standard input
+    else:                                              # biobox format
+        return image.create_container(
+                image_version(app),
+                image_type(app).biobox_args(app),
+                fs.get_tmp_dir_path(app),
+                image_task(app))
+
+
 def copy_output_files(app):
     paths = image_type(app).output_files()
     args  = fs.get_output_biobox_file_arguments(app)
@@ -24,15 +44,9 @@ def copy_output_files(app):
         src = funcy.get_in(args, path + ['value'])
         fs.copy_tmp_file_to_outputs(app, src, dst)
 
-def create_container(app):
-    avail.get_image(image_version(app))
-    return image.create_container(
-            image_version(app),
-            image_type(app).biobox_args(app),
-            fs.get_tmp_dir_path(app),
-            image_task(app))
 
 def execute_image(app):
+    setup(app)
     biobox = create_container(app)
     id_ = biobox['Id']
 

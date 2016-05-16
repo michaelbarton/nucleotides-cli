@@ -1,5 +1,34 @@
-import boltons.fileutils             as fu
-import nucleotides.filesystem        as fs
+import boltons.fileutils    as fu
+import biobox.image.volume  as vol
+import biobox.util          as util
+
+import biobox_cli.biobox_type.assembler_benchmark as image
+
+import nucleotides.filesystem         as fs
+import nucleotides.command.run_image  as run
+
+def before_container_hook(app):
+    fu.mkdir_p(fs.get_tmp_file_path('assembly_metrics', app))
+
+def create_container(app):
+    """
+    This function is a hack to get around the biobox/quast custom biobox.yaml
+    format. When the biobox/quast biobox.yaml is standardised, this method should
+    be removed and the biobox.image.create_container function used instead.
+    """
+    args = {
+            '--input-fasta' : fs.get_input_file_path('contig_fasta', app),
+            '--input-ref'   : fs.get_input_dir_path('reference_fasta', app)}
+    volumes = image.Assembler_Benchmark().prepare_volumes(args, fs.get_tmp_dir_path(app))
+    docker_args = {
+            'volumes'     : map(vol.get_host_path, volumes),
+            'host_config' : util.client().create_host_config(binds=volumes)}
+    return util.client().create_container(
+            run.image_version(app),
+            run.image_task(app),
+            **docker_args)
+
+
 
 def biobox_args(app):
     contigs    = fs.get_input_file_path('contig_fasta', app)
@@ -11,9 +40,6 @@ def biobox_args(app):
 
 def successful_event_outputs():
     return set(["assembly_metrics"])
-
-def setup(app):
-    fu.mkdir_p(fs.get_tmp_file_path('assembly_metrics', app))
 
 def copy_output_files(app):
     fs.copy_tmp_file_to_outputs(app, 'assembly_metrics/combined_quast_output/report.tsv', 'assembly_metrics')
