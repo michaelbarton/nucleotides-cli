@@ -7,7 +7,7 @@ Feature: Reporting useful error messages
 
   Scenario Outline: Reporting errors when environment variables are not set
     Given the nucleotides directory is available on the path
-    And I copy the file "../data/container_runtime.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
+    And I copy the file "../data/metrics.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
     And I copy the file "../data/contigs.fa" to "nucleotides/5/outputs/contig_fasta/5887df3630"
     And the file named "nucleotides/5/metadata.json" with:
       """
