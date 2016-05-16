@@ -1,9 +1,12 @@
-import os.path, docker
+import os.path
 import nose.tools         as nose
 import helper.application as app_helper
 import helper.file        as file_helper
 import helper.image       as image_helper
+import biobox.util        as docker
+import biobox.container   as container
 
+import nucleotides.filesystem                         as fs
 import nucleotides.command.post_data                  as post
 import nucleotides.command.run_image                  as run
 import nucleotides.task.reference_assembly_evaluation as task
@@ -16,6 +19,22 @@ def test_create_container():
     cnt = run.create_container(app)
     assert "Id" in cnt
     image_helper.clean_up_container(cnt["Id"])
+
+@attr('slow')
+def test_run_container():
+    app = app_helper.mock_reference_evaluator_state()
+    id_ = run.create_container(app)['Id']
+    docker.client().start(id_)
+    docker.client().wait(id_)
+    nose.assert_equal(container.did_exit_succcessfully(id_), True)
+    image_helper.clean_up_container(id_)
+
+@attr('slow')
+def test_complete_run_through():
+    app = app_helper.mock_reference_evaluator_state()
+    run.execute_image(app)
+    file_helper.assert_is_file(fs.get_output_file_path('assembly_metrics/67ba437ffa', app))
+
 
 def test_create_event_request_with_a_successful_event():
     app = app_helper.mock_reference_evaluator_state(outputs = True)

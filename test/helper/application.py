@@ -46,7 +46,7 @@ def mock_short_read_assembler_state(task = True, dummy_reads = False, reads = Fa
 
     return app
 
-def mock_reference_evaluator_state(outputs = False):
+def mock_reference_evaluator_state(intermediates = False, outputs = False):
     import json, shutil
     app = mock_app()
 
@@ -58,6 +58,10 @@ def mock_reference_evaluator_state(outputs = False):
 
     copy_to_file('tmp/data/reference.fa', 'inputs/reference_fasta/6bac51cc35.fa', app)
     copy_to_file('tmp/data/contigs.fa', 'inputs/contig_fasta/7e9f760161.fa', app)
+
+    if intermediates:
+        copy_to_file('tmp/data/assembly_metrics.tsv', 'tmp/combined_quast_output/report.tsv', app)
+        copy_to_file('data/quast_biobox.yaml', 'tmp/biobox.yaml', app)
 
     if outputs:
         copy_to_file('tmp/data/assembly_metrics.tsv', 'outputs/assembly_metrics/outputs.csv', app)

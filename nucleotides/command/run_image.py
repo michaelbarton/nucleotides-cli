@@ -38,11 +38,15 @@ def create_container(app):
 
 
 def copy_output_files(app):
-    paths = image_type(app).output_files()
-    args  = fs.get_output_biobox_file_arguments(app)
-    for (dst, path) in paths:
-        src = funcy.get_in(args, path + ['value'])
-        fs.copy_tmp_file_to_outputs(app, src, dst)
+    avail.get_image(image_version(app))
+    if (image_name(app) == 'bioboxes/quast'):          # Quast also does not produce
+        return image_type(app).copy_output_files(app)   # a standard biobox.yaml
+    else:
+        paths = image_type(app).output_files()
+        args  = fs.get_output_biobox_file_arguments(app)
+        for (dst, path) in paths:
+            src = funcy.get_in(args, path + ['value'])
+            fs.copy_tmp_file_to_outputs(app, src, dst)
 
 
 def execute_image(app):
