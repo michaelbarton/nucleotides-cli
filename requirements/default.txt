@@ -1,6 +1,6 @@
+biobox-py  == 0.2.0
+boltons    == 16.2.0
 boto3      == 1.2.3
 docopt     == 0.6.2
-boltons    == 16.2.0
 
--e git://github.com/michaelbarton/bioboxes.py.git@792cf69#egg=biobox-py
 -e git://github.com/bioboxes/command-line-interface.git@c686ff8#egg=biobox-cli
