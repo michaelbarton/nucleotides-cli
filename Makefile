@@ -71,7 +71,7 @@ ssh: $(dist)
 		$(installer-image) \
 		/bin/bash
 
-$(dist): $(shell find bin nucleotides) requirements.txt setup.py MANIFEST.in
+$(dist): $(shell find bin nucleotides) requirements/default.txt setup.py MANIFEST.in
 	@$(path) python setup.py sdist
 	@touch $@
 
