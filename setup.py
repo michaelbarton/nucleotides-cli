@@ -1,6 +1,13 @@
 from setuptools import setup, find_packages
 from nucleotides.version import __version__
 
+def requirements():
+    import pkg_resources, os
+    reqs = pkg_resources.resource_string(__name__, os.path.join('requirements', 'default.txt')).strip()
+    packages = filter(lambda x: 'git://' not in x, reqs.splitlines())
+    packages.append("biobox-cli")
+    return packages
+
 setup(
     name                 = 'nucleotides-client',
     version              = __version__,
@@ -9,14 +16,10 @@ setup(
     author_email         = 'mail@nucleotid.es',
     url                  = 'http://nucleotid.es',
     scripts              = ['bin/nucleotides'],
-    install_requires     = [
-        "boto3==1.2.3",
-        "docopt==0.6.2",
-        "biobox-cli"],
+    install_requires     = requirements(),
     dependency_links=[
         "git+ssh://github.com/bioboxes/command-line-interface.git@c686ff8#egg=biobox-cli"
     ],
-
     packages             = find_packages(),
 
     classifiers = [

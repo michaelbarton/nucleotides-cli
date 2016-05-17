@@ -7,38 +7,7 @@ Feature: Running a reference assembly benchmark task
       | variable           | value                             |
       | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
     And the nucleotides directory is available on the path
-    And the file named "nucleotides/6/metadata.json" with:
-    """
-    {
-        "benchmark": "6151f5ab282d90e4cee404433b271dda",
-        "complete": false,
-        "id": 6,
-        "image": {
-            "name": "bioboxes/quast",
-            "sha256": "digest_4",
-            "task": "default",
-            "type": "reference_assembly_evaluation"
-        },
-        "inputs": [
-            {
-                "sha256": "6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414",
-                "type": "reference_fasta",
-                "url": "s3://nucleotides-testing/short-read-assembler/reference.fa"
-            },
-            {
-                "sha256": "7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092",
-                "type": "contig_fasta",
-                "url": "s3://nucleotides-testing/uploads/7e/7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092"
-            },
-            {
-                "sha256": "86e54db7dc0c982005a0e359eef85e5ca569cb6f661135d4af6ffcfe5ee38651",
-                "type": "container_runtime_metrics",
-                "url": "s3://nucleotides-testing/uploads/86/86e54db7dc0c982005a0e359eef85e5ca569cb6f661135d4af6ffcfe5ee38651"
-            }
-        ],
-        "type": "evaluate"
-    }
-    """
+    Given I copy the file "../../data/reference_assembly_evaluation.json" to "nucleotides/6/metadata.json"
 
   Scenario: Executing a reference assembly benchmark task
     Given I copy the file "../data/reference.fa" to "nucleotides/6/inputs/reference_fasta/6bac51cc35"
@@ -71,7 +40,7 @@ Feature: Running a reference assembly benchmark task
 
 
   Scenario: Posting a successful benchmark
-    Given I copy the file "../data/container_runtime.json" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json"
+    Given I copy the file "../data/metrics.json" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json"
     And I copy the file "../data/assembly_metrics.tsv" to "nucleotides/6/outputs/assembly_metrics/67ba437ffa"
     When I run the bash command:
       """
@@ -131,7 +100,7 @@ Feature: Running a reference assembly benchmark task
 
 
   Scenario: Posting a benchmark when QUAST output includes non numeric values
-    Given I copy the file "../data/container_runtime.json" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json"
+    Given I copy the file "../data/metrics.json" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json"
     And the directory "nucleotides/6/outputs/assembly_metrics/"
     And I run the bash command:
       """

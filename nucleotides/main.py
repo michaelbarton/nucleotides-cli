@@ -9,7 +9,7 @@ Commands:
     all              Execute all nucleotides benchmark commands in order
 """
 
-import biobox_cli.main  as bbx_main
+import funcy, string, sys
 import nucleotides.util as util
 
 import nucleotides.command.fetch_data
@@ -27,6 +27,13 @@ def select_command(c):
             'all'        : nucleotides.command.all
             }[c]
 
+def input_args():
+    f = funcy.compose(
+            funcy.rest,
+            funcy.partial(map, string.strip),
+            funcy.partial(filter, lambda x: len(x) != 0))
+    return f(sys.argv)
+
 def run():
-    args = util.parse(__doc__, bbx_main.input_args(), True)
+    args = util.parse(__doc__, input_args(), True)
     select_command(args['<command>']).run(args['<task>'])
