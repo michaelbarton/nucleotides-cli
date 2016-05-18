@@ -1,17 +1,12 @@
 import os
 import nose.tools         as nose
+import boltons.fileutils  as fu
 import helper.application as app_helper
 import helper.file        as file_helper
 import helper.s3          as s3_helper
 
 import nucleotides.util              as util
 import nucleotides.command.post_data as post
-import biobox_cli.util.misc          as bbx_util
-
-def test_docstring_parse():
-    nose.assert_equal(
-        util.parse(post.__doc__, ["post-data", "1", "--s3-upload=loc"]),
-        {'<task>': '1', 'post-data': True, "--s3-upload" : "loc"})
 
 def test_create_output_file_metadata():
     app  = app_helper.mock_short_read_assembler_state()
@@ -34,7 +29,38 @@ def test_upload_output_file():
 
 def test_list_outputs():
     app = app_helper.mock_short_read_assembler_state(outputs = True)
-    bbx_util.mkdir_p(app["path"] + "/outputs/dummy")
+    fu.mkdir_p(app["path"] + "/outputs/dummy")
     outputs = post.list_outputs(app)
     nose.assert_in('contig_fasta', outputs)
     nose.assert_not_in('dummy', outputs)
+
+
+############################################
+#
+# Short read assembler
+#
+############################################
+
+
+def test_short_read_assembler_successful_event():
+    app = app_helper.mock_short_read_assembler_state(outputs = True)
+    outputs = [{
+        "type"     : "contig_fasta",
+        "location" : "/local/path",
+        "sha256"   : "digest_1",
+        "url"      : "s3://url/dir/file"}]
+    event = post.create_event_request(app, outputs)
+    nose.assert_equal(event, {
+        "task" : 5,
+        "success" : True,
+        "metrics" : {'max_cpu_usage': 80, 'max_memory_usage': 20},
+        "files" : [
+            {"url"    : "s3://url/dir/file",
+             "sha256" : "digest_1",
+             "type"   : "contig_fasta"}]})
+
+def test_short_read_assembler_unsuccessful_event():
+    app = app_helper.mock_short_read_assembler_state(outputs = False)
+    outputs = []
+    event = post.create_event_request(app, outputs)
+    nose.assert_equal(event, {"task" : 5, "success" : False, "files" : [], "metrics" : {}})

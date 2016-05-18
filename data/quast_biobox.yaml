@@ -1,0 +1,7 @@
+version: 0.9.0
+results:
+  - name: HTML
+    type: html
+    inline: false
+    value: combined_quast_output/report.html
+    description: A summary of multiple metrics.

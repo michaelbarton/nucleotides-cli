@@ -71,7 +71,7 @@ ssh: $(dist)
 		$(installer-image) \
 		/bin/bash
 
-$(dist): $(shell find bin nucleotides) requirements.txt setup.py MANIFEST.in
+$(dist): $(shell find bin nucleotides) requirements/default.txt setup.py MANIFEST.in
 	@$(path) python setup.py sdist
 	@touch $@
 
@@ -81,7 +81,10 @@ $(dist): $(shell find bin nucleotides) requirements.txt setup.py MANIFEST.in
 #
 #################################################
 
-test = $(params) $(path) nosetests --rednose
+test = $(params) $(path) TMPDIR=./tmp/tests nosetests --rednose
+
+console:
+	@$(path) python -i console.py
 
 feature: Gemfile.lock $(credentials)
 	@$(params) $(path) bundle exec cucumber $(ARGS)
@@ -110,7 +113,7 @@ bootstrap: \
 	tmp/data/reference.fa \
 	tmp/data/assembly_metrics.tsv \
 	tmp/data/contigs.fa \
-	tmp/data/container_runtime.json \
+	tmp/data/metrics.json \
 	tmp/data/fixtures.sql
 
 
@@ -177,14 +180,24 @@ tmp/data/nucleotides:
 .depoy_image:
 	docker pull bioboxes/file-deployer
 
-vendor/python: requirements.txt
-	mkdir -p log
-	virtualenv $@ 2>&1 > log/virtualenv.txt
-	$(path) pip install -r $< 2>&1 > log/pip.txt
-	touch $@
+vendor/python: requirements/default.txt requirements/development.txt
+	@mkdir -p log
+	@virtualenv $@ 2>&1 > log/virtualenv.txt
+	@$(path) pip install \
+		--requirement requirements/default.txt \
+		--requirement requirements/development.txt \
+		2>&1 > log/pip.txt
+	@touch $@
+
 
 Gemfile.lock: Gemfile
 	mkdir -p log
 	bundle install --path vendor/bundle 2>&1 > log/bundle.txt
+
+clean:
+	docker kill $(shell cat .rdm_container); true
+	docker kill $(shell cat .api_container); true
+	rm -f .*_container .*_image Gemfile.lock
+	rm -rf vendor
 
 .PHONY: test autotest bootstrap

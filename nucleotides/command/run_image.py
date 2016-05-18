@@ -1,74 +1,64 @@
-"""
-nucleotides run-image - Execute Docker image for benchmarking
+import funcy
+import nucleotides.filesystem    as fs
+import biobox.util               as docker
+import biobox.container          as container
+import biobox.image.availability as avail
+import biobox.image.execute      as image
+import nucleotides.util          as util
 
-Usage:
-    nucleotides run-image <task>
-"""
+def image_type(app):
+    return util.select_task(funcy.get_in(app, ["task", "image", "type"]))
 
-import os, shutil, json
-import nucleotides.util       as util
-import biobox_cli.command.run as image_runner
-import biobox_cli.util.misc   as bbx_util
-import biobox_cli.container   as bbx_image
+def image_name(app):
+    return funcy.get_in(app, ["task", "image", "name"])
 
-def get_input_dir_path(name, app):
-    return os.path.join(app['path'], 'inputs', name)
+def image_version(app):
+    return funcy.get_in(app, ["task", "image", "name"]) + \
+           "@sha256:" + \
+           funcy.get_in(app, ["task", "image", "sha256"])
 
-def get_input_file_path(name, app):
-    path = get_input_dir_path(name, app)
-    return os.path.join(path, os.listdir(path)[0])
+def image_task(app):
+    return funcy.get_in(app, ["task", "image", "task"])
 
-def get_tmp_file_path(name, app):
-    dir_ = os.path.join(app['path'], 'tmp')
-    bbx_util.mkdir_p(dir_)
-    return os.path.join(dir_, name)
+def setup(app):
+    biobox = image_type(app)
+    if hasattr(biobox, 'before_container_hook'):
+        biobox.before_container_hook(app)
 
-def get_output_file_path(name, app):
-    dir_ = os.path.join(app['path'], 'outputs')
-    return os.path.join(dir_, name)
+def create_container(app):
+    avail.get_image(image_version(app))
+    if (image_name(app) == 'bioboxes/quast'):          # Special case, the quast
+        return image_type(app).create_container(app)   # has a non-standard input
+    else:                                              # biobox format
+        return image.create_container(
+                image_version(app),
+                image_type(app).biobox_args(app),
+                fs.get_tmp_dir_path(app),
+                image_task(app))
 
-def copy_tmp_file_to_outputs(app, src_file, dst_dir):
-    src = os.path.join(app['path'], 'tmp', src_file)
-    dst = os.path.join(app['path'], 'outputs', dst_dir, util.sha_digest(src)[:10])
-    bbx_util.mkdir_p(os.path.dirname(dst))
-    shutil.copy(src, dst)
 
-def create_runtime_metric_file(app, metrics):
-    dst = os.path.join(app['path'], 'outputs', 'container_runtime_metrics', 'metrics.json')
-    bbx_util.mkdir_p(os.path.dirname(dst))
-    with open(dst, 'w') as f:
-        f.write(json.dumps(metrics))
+def copy_output_files(app):
+    avail.get_image(image_version(app))
+    if (image_name(app) == 'bioboxes/quast'):          # Quast also does not produce
+        return image_type(app).copy_output_files(app)   # a standard biobox.yaml
+    else:
+        paths = image_type(app).output_files()
+        args  = fs.get_output_biobox_file_arguments(app)
+        for (dst, path) in paths:
+            src = funcy.get_in(args, path + ['value'])
+            fs.copy_tmp_file_to_outputs(app, src, dst)
 
-def collect_metrics(name, container):
-    import time
-    time.sleep(1)
-    client = bbx_image.client()
-
-    id_ = filter(lambda x: x['Image'] == name, client.containers())[0]['Id']
-    stats = []
-    while container.isAlive():
-        stats.append(next(client.stats(id_)))
-        time.sleep(15)
-    return map(json.loads, stats)
 
 def execute_image(app):
-    from threading import Thread
-    from functools import partial
+    setup(app)
+    biobox = create_container(app)
+    id_ = biobox['Id']
 
-    task = util.select_task(app["task"]["image"]["type"])
-    task.setup(app)
+    docker.client().start(id_)
+    metrics = container.collect_runtime_metrics(id_)
 
-    bbx_image.exit_if_no_image_available(app["task"]["image"]["name"])
+    fs.create_runtime_metric_file(app, metrics)
+    copy_output_files(app)
 
-    container = Thread(target = partial(image_runner.run, task.create_biobox_args(app)))
-    container.start()
-
-    image = app["task"]["image"]["name"]
-    metrics = collect_metrics(image, container)
-    create_runtime_metric_file(app, metrics)
-    task.copy_output_files(app)
-
-def run(args):
-    opts = util.parse(__doc__, args)
-    task = opts["<task>"]
+def run(task):
     execute_image(util.application_state(task))

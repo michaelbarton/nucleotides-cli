@@ -4,7 +4,7 @@
     "id": 6,
     "image": {
         "name": "bioboxes/quast",
-        "sha256": "digest_4",
+        "sha256": "1c70cbff3de254f26102cbd25e6c4cd0c30b2af99cd14297493690db7bfb4dbc",
         "task": "default",
         "type": "reference_assembly_evaluation"
     },

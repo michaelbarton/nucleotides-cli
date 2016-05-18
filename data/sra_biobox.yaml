@@ -1,0 +1,6 @@
+version: 0.9.0
+arguments:
+  - fasta:
+    - id: velvet_contigs_1
+      value: contigs.fa
+      type: contigs

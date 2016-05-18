@@ -5,10 +5,6 @@ import nose.tools         as nose
 import nucleotides.main   as main
 import nucleotides.util   as util
 
-def test_parse_args():
-    nose.assert_equal(util.parse(main.__doc__, ["fetch-data", "1"]),
-            {'<task>': "1", '<command>': 'fetch-data', '<args>' : []})
-
 def test_get_task_metadata_with_no_metadata_json():
     app = app_helper.mock_short_read_assembler_state(task = False)
     metadata = util.get_task_metadata("1", app)

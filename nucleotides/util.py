@@ -1,7 +1,8 @@
+from __future__ import print_function
 import os, os.path
 
+import boltons.fileutils    as fu
 import nucleotides.log      as log
-import biobox_cli.util.misc as bbx_util
 
 def select_task(c):
     import nucleotides.task.short_read_assembler
@@ -21,8 +22,8 @@ def parse(doc, argv, opts = False):
 
 def create_application_state(task):
     path = os.path.join("nucleotides", task)
-    bbx_util.mkdir_p(path)
-    return {'api'    : os.environ["NUCLEOTIDES_API"],
+    fu.mkdir_p(path)
+    return {'api'    : get_environment_variable("NUCLEOTIDES_API"),
             'logger' : log.create_logger(os.path.join(path, "benchmark.log")),
             'path'   : path}
 
@@ -44,11 +45,10 @@ def application_state(task):
     app['task'] = get_task_metadata(task, app)
     return app
 
-# http://stackoverflow.com/a/4213255/91144
-def sha_digest(filename):
-    import hashlib
-    sha = hashlib.sha256()
-    with open(filename,'rb') as f:
-        for chunk in iter(lambda: f.read(sha.block_size), b''):
-            sha.update(chunk)
-    return sha.hexdigest()
+def get_environment_variable(name):
+    import sys
+    if not name in os.environ:
+        print("Missing environment variable: {}".format(name), file=sys.stderr)
+        exit(1)
+    return os.environ[name]
+

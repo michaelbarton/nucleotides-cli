@@ -1,21 +1,11 @@
-"""
-nucleotides post-data - Post collected benchmark metrics back to nucleotides API
-
-Usage:
-    nucleotides post-data <task> [--s3-upload=<url>]
-
-Options:
-    task                 The current task number
-    --s3-upload=<url>    S3 location to upload generated files to.
-"""
-
 import os, functools, glob
+import nucleotides.filesystem as fs
 import nucleotides.util       as util
 import nucleotides.api_client as api
 import nucleotides.s3         as s3
 
 def output_file_metadata(s3_path, path):
-    digest = util.sha_digest(path)
+    digest = fs.sha_digest(path)
     return {
         "location" : path,
         "type"     : os.path.dirname(path).split("/")[-1],
@@ -50,9 +40,7 @@ def post(app):
     map(upload_output_file, outputs)
     api.post_event(create_event_request(app, outputs), app)
 
-def run(args):
-    opts = util.parse(__doc__, args)
-    task = opts["<task>"]
+def run(task):
     app = util.application_state(task)
-    app["s3-upload"] = opts["--s3-upload"]
+    app["s3-upload"] = util.get_environment_variable("NUCLEOTIDES_S3_URL")
     post(app)

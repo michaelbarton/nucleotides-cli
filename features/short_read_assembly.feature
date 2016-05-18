@@ -3,29 +3,11 @@ Feature: Processing a short read assembly benchmark
   Background:
     Given a clean set of benchmarks
     And no files in the S3 directory "s3://nucleotides-testing/uploads/"
+    And I set the environment variables to:
+      | variable           | value                             |
+      | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
     And the nucleotides directory is available on the path
-    And the file named "nucleotides/5/metadata.json" with:
-      """
-      {
-          "benchmark": "6151f5ab282d90e4cee404433b271dda",
-          "complete": false,
-          "id": 5,
-          "image": {
-              "name": "bioboxes/velvet",
-              "sha256": "digest_1",
-              "task": "default",
-              "type": "short_read_assembler"
-          },
-          "inputs": [
-              {
-                  "sha256": "11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533",
-                  "type": "short_read_fastq",
-                  "url": "s3://nucleotides-testing/short-read-assembler/reads.fq.gz"
-              }
-          ],
-          "type": "produce"
-      }
-      """
+    Given I copy the file "../../data/short_read_assembler.json" to "nucleotides/5/metadata.json"
 
 
   Scenario: Executing a short read assembler docker image
@@ -42,11 +24,11 @@ Feature: Processing a short read assembly benchmark
 
 
   Scenario: Posting a successful benchmark
-    Given I copy the file "../data/container_runtime.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
+    Given I copy the file "../data/metrics.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
     And I copy the file "../data/contigs.fa" to "nucleotides/5/outputs/contig_fasta/5887df3630"
     When I run the bash command:
       """
-      nucleotides post-data 5 --s3-upload=s3://nucleotides-testing/uploads/
+      nucleotides post-data 5
       """
     And I get the url "/tasks/5"
     Then the stderr should not contain anything
@@ -62,10 +44,10 @@ Feature: Processing a short read assembly benchmark
 
 
   Scenario: Posting a failed benchmark
-    Given I copy the file "../data/container_runtime.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
+    Given I copy the file "../data/metrics.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
     When I run the bash command:
       """
-      nucleotides post-data 5 --s3-upload=s3://nucleotides-testing/uploads/
+      nucleotides post-data 5
       """
     And I get the url "/tasks/5"
     Then the stderr should not contain anything

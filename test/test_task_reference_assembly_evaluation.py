@@ -1,28 +1,40 @@
-import os.path, docker
+import os.path
 import nose.tools         as nose
 import helper.application as app_helper
 import helper.file        as file_helper
+import helper.image       as image_helper
+import biobox.util        as docker
+import biobox.container   as container
 
+import nucleotides.filesystem                         as fs
 import nucleotides.command.post_data                  as post
+import nucleotides.command.run_image                  as run
 import nucleotides.task.reference_assembly_evaluation as task
 
-def test_create_biobox_args():
-    app  = app_helper.mock_reference_evaluator_state()
-    args = task.create_biobox_args(app)
-    nose.assert_equal("run", args[0])
-    nose.assert_equal("assembler_benchmark", args[1])
-    nose.assert_equal("bioboxes/quast", args[2])
-    nose.assert_equal("--input-fasta={}/inputs/contig_fasta/7e9f760161.fa".format(app["path"]), args[3])
-    nose.assert_equal("--input-ref={}/inputs/reference_fasta".format(app["path"]), args[4])
-    nose.assert_equal("--output={}/tmp/assembly_metrics".format(app["path"]), args[5])
-    nose.assert_equal("--task=default", args[6])
-    nose.assert_equal("--no-rm", args[7])
+from nose.plugins.attrib import attr
 
-def test_copy_output_files():
+
+def test_create_container():
     app = app_helper.mock_reference_evaluator_state()
-    file_helper.create_benchmark_file(app, "/tmp/assembly_metrics/combined_quast_output/report.tsv", 'contents')
-    task.copy_output_files(app)
-    file_helper.assert_is_file(app["path"] + "/outputs/assembly_metrics/d1b2a59fbe")
+    cnt = run.create_container(app)
+    assert "Id" in cnt
+    image_helper.clean_up_container(cnt["Id"])
+
+@attr('slow')
+def test_run_container():
+    app = app_helper.mock_reference_evaluator_state()
+    id_ = run.create_container(app)['Id']
+    docker.client().start(id_)
+    docker.client().wait(id_)
+    nose.assert_equal(container.did_exit_succcessfully(id_), True)
+    image_helper.clean_up_container(id_)
+
+@attr('slow')
+def test_complete_run_through():
+    app = app_helper.mock_reference_evaluator_state()
+    run.execute_image(app)
+    file_helper.assert_is_file(fs.get_output_file_path('assembly_metrics/67ba437ffa', app))
+
 
 def test_create_event_request_with_a_successful_event():
     app = app_helper.mock_reference_evaluator_state(outputs = True)
@@ -34,3 +46,16 @@ def test_create_event_request_with_a_successful_event():
     nose.assert_in("lga75", event["metrics"])
     nose.assert_equal(event["metrics"]["lga75"], 16.0)
     nose.assert_equal(event["metrics"]["ng50"], 25079.0)
+
+
+def test_create_event_request_with_non_numeric_quast_values():
+    app = app_helper.mock_reference_evaluator_state(outputs = True)
+
+    import fileinput
+    for line in fileinput.input(app['path'] + '/outputs/assembly_metrics/outputs.csv', inplace = True):
+        if 'NGA50' in line:
+            print line.replace("25079", "-"),
+
+    event = post.create_event_request(app, post.create_output_file_metadata(app))
+    nose.assert_in("nga50", event["metrics"])
+    nose.assert_equal(event["metrics"]["nga50"], 0.0)

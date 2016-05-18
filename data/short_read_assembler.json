@@ -1,10 +1,10 @@
 {
     "benchmark": "453e406dcee4d18174d4ff623f52dcd8",
     "complete": false,
-    "id": 1,
+    "id": 5,
     "image": {
         "name": "bioboxes/velvet",
-        "sha256": "digest_2",
+        "sha256": "6611675a6d3755515592aa71932bd4ea4c26bccad34fae7a3ec1198ddcccddad",
         "task": "default",
         "type": "short_read_assembler"
     },
