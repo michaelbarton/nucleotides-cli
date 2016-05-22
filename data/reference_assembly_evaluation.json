@@ -12,7 +12,7 @@
         {
             "sha256": "6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414",
             "type": "reference_fasta",
-            "url": "s3://nucleotides-testing/short-read-assembler/reference.fa"
+            "url": "s3://nucleotides-testing/short-read-assembler/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414"
         },
         {
             "sha256": "7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092",

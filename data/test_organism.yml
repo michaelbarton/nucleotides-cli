@@ -6,7 +6,7 @@ source:
   references:
     - file_type: reference_fasta
       sha256: 6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414
-      url: s3://nucleotides-testing/short-read-assembler/reference.fa
+      url: s3://nucleotides-testing/short-read-assembler/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414
 data:
   - name: regular_fragment_1
     extraction_method_type: cultured_colony_isolate

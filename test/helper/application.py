@@ -56,7 +56,7 @@ def mock_reference_evaluator_state(intermediates = False, outputs = False):
 
     app["s3-upload"] = "s3://"
 
-    copy_to_file('tmp/data/reference.fa', 'inputs/reference_fasta/6bac51cc35.fa', app)
+    copy_to_file('tmp/data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414', 'inputs/reference_fasta/6bac51cc35.fa', app)
     copy_to_file('tmp/data/contigs.fa', 'inputs/contig_fasta/7e9f760161.fa', app)
 
     if intermediates:
