@@ -24,7 +24,7 @@ Feature: Fetching input data files for benchmarking
       | image/name      | "bioboxes/velvet"                                                  |
       | image/type      | "short_read_assembler"                                             |
       | image/sha256    | "6611675a6d3755515592aa71932bd4ea4c26bccad34fae7a3ec1198ddcccddad" |
-      | inputs/0/url    | "s3://nucleotides-testing/short-read-assembler/reads.fq.gz"        |
+      | inputs/0/url    | "s3://nucleotides-testing/short-read-assembler/dummy.reads.fq.gz"        |
       | inputs/0/sha256 | "11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533" |
       | inputs/0/type   | "short_read_fastq"                                                 |
-    And the file "nucleotides/3/inputs/short_read_fastq/reads.fq.gz" should exist
+    And the file "nucleotides/3/inputs/short_read_fastq/dummy.reads.fq.gz" should exist

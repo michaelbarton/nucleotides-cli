@@ -108,7 +108,7 @@ bootstrap: \
 	.api_container \
 	.installer_image \
 	.depoy_image \
-	tmp/data/reads.fq.gz \
+	tmp/data/24b5b01b08482053d7d13acd514e359fb0b726f1e8ae36aa194b6ddc07335298 \
 	tmp/data/dummy.reads.fq.gz \
 	tmp/data/reference.fa \
 	tmp/data/assembly_metrics.tsv \
