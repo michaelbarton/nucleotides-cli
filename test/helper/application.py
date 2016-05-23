@@ -46,7 +46,7 @@ def mock_short_read_assembler_state(task = True, dummy_reads = False, reads = Fa
 
     return app
 
-def mock_reference_evaluator_state(intermediates = False, outputs = False):
+def mock_reference_evaluator_state(inputs = True, intermediates = False, outputs = False):
     import json, shutil
     app = mock_app()
 
@@ -56,8 +56,9 @@ def mock_reference_evaluator_state(intermediates = False, outputs = False):
 
     app["s3-upload"] = "s3://"
 
-    copy_to_file('tmp/data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414', 'inputs/reference_fasta/6bac51cc35.fa', app)
-    copy_to_file('tmp/data/contigs.fa', 'inputs/contig_fasta/7e9f760161.fa', app)
+    if inputs:
+        copy_to_file('tmp/data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414', 'inputs/reference_fasta/6bac51cc35.fa', app)
+        copy_to_file('tmp/data/contigs.fa', 'inputs/contig_fasta/7e9f760161.fa', app)
 
     if intermediates:
         copy_to_file('tmp/data/assembly_metrics.tsv', 'tmp/combined_quast_output/report.tsv', app)

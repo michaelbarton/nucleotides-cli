@@ -20,3 +20,6 @@ data:
       - sha256: 11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533
         file_type: short_read_fastq
         url: s3://nucleotides-testing/short-read-assembler/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533
+      - sha256: 873226329e6bcacc64a35461daf5f87f92701303e501f3edf189da9dd2119cf0
+        file_type: short_read_fastq
+        url: s3://nucleotides-testing/short-read-assembler/873226329e6bcacc64a35461daf5f87f92701303e501f3edf189da9dd2119cf0

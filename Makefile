@@ -90,7 +90,7 @@ feature: Gemfile.lock $(credentials)
 	@$(params) $(path) bundle exec cucumber $(ARGS)
 
 test:
-	@$(test)
+	@$(test) $(ARGS)
 
 autotest:
 	@clear && $(test) -a '!slow' || true # Using true starts tests even on failure
