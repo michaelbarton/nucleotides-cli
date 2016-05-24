@@ -8,15 +8,15 @@ Feature: Fetching input data files for benchmarking
     Given the nucleotides directory is available on the path
     When I run the bash command:
       """
-      nucleotides fetch-data 3
+      nucleotides fetch-data 5
       """
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
-    And the file "nucleotides/3/metadata.json" should exist
-    And the file "nucleotides/3/metadata.json" should be a valid JSON document
+    And the file "nucleotides/5/metadata.json" should exist
+    And the file "nucleotides/5/metadata.json" should be a valid JSON document
     And the JSON should have the following:
-       | id              | 3                                                                                                                |
+       | id              | 5                                                                                                                |
        | complete        | false                                                                                                            |
        | benchmark       | "4f57d0ecf9622a0bd8a6e3f79c71a09d"                                                                               |
        | type            | "produce"                                                                                                        |
@@ -27,7 +27,7 @@ Feature: Fetching input data files for benchmarking
        | inputs/0/url    | "s3://nucleotides-testing/short-read-assembler/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533" |
        | inputs/0/sha256 | "11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533"                                               |
        | inputs/0/type   | "short_read_fastq"                                                                                               |
-    And the file "nucleotides/3/inputs/short_read_fastq/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533.fq.gz" should exist
+    And the file "nucleotides/5/inputs/short_read_fastq/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533.fq.gz" should exist
 
 
   Scenario: Fetching input data files for assembly benchmarking task
