@@ -36,4 +36,3 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
     Examples:
       | task_1 | task_2 | url                              |
       | 1      | 2      | 2f221a18eb86380369570b2ed147d8b4 |
-      | 11     | 12     | 453e406dcee4d18174d4ff623f52dcd8 |
