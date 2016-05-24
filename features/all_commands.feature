@@ -34,6 +34,6 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
     And the directory "nucleotides/<task_2>" should not exist
 
     Examples:
-      | task_1 | task_2 | url |
+      | task_1 | task_2 | url                              |
       | 1      | 2      | 2f221a18eb86380369570b2ed147d8b4 |
-      | 5      | 6      | 98c1d2a9d58ce748c08cf65dd3354676 |
+      | 11     | 12     | 453e406dcee4d18174d4ff623f52dcd8 |
