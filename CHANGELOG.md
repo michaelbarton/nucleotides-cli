@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.2.1
+
+### Fixed
+
+  * File extensions are added to downloaded files. This fixes the problem where
+    some bioboxes use the file extension to determine the file type.
+
 ## 0.2.0
 
 ### Added
