@@ -92,6 +92,9 @@ feature: Gemfile.lock $(credentials)
 test:
 	@$(test) $(ARGS)
 
+wip:
+	@$(test) -a 'wip' $(ARGS)
+
 autotest:
 	@clear && $(test) -a '!slow' || true # Using true starts tests even on failure
 	@fswatch -o ./nucleotides -o ./test | xargs -n 1 -I {} bash -c "clear && $(test) -a '!slow'"
