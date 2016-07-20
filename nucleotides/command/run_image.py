@@ -27,14 +27,11 @@ def setup(app):
 
 def create_container(app):
     avail.get_image(image_version(app))
-    if (image_name(app) == 'bioboxes/quast'):          # Special case, the quast
-        return image_type(app).create_container(app)   # has a non-standard input
-    else:                                              # biobox format
-        return image.create_container(
-                image_version(app),
-                image_type(app).biobox_args(app),
-                fs.get_tmp_dir_path(app),
-                image_task(app))
+    return image.create_container(
+            image_version(app),
+            image_type(app).biobox_args(app),
+            fs.get_tmp_dir_path(app),
+            image_task(app))
 
 
 def copy_output_files(app):
