@@ -4,7 +4,7 @@
     "id": 6,
     "image": {
         "name": "bioboxes/quast",
-        "sha256": "1c70cbff3de254f26102cbd25e6c4cd0c30b2af99cd14297493690db7bfb4dbc",
+        "sha256": "1dfe1fb0eb84cd7344b6821cd4f4cdb3f5c1ccb330438eea640b4ce6fda1c4bb",
         "task": "default",
         "type": "reference_assembly_evaluation"
     },
@@ -12,17 +12,12 @@
         {
             "sha256": "6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414",
             "type": "reference_fasta",
-            "url": "s3://nucleotides-testing/short-read-assembler/reference.fa"
+            "url": "s3://nucleotides-testing/short-read-assembler/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414"
         },
         {
             "sha256": "7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092",
             "type": "contig_fasta",
-            "url": "s3://nucleotides-testing/uploads/7e/7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092"
-        },
-        {
-            "sha256": "86e54db7dc0c982005a0e359eef85e5ca569cb6f661135d4af6ffcfe5ee38651",
-            "type": "container_runtime_metrics",
-            "url": "s3://nucleotides-testing/uploads/86/86e54db7dc0c982005a0e359eef85e5ca569cb6f661135d4af6ffcfe5ee38651"
+            "url": "s3://nucleotides-testing/short-read-assembler/7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092"
         }
     ],
     "type": "evaluate"

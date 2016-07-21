@@ -18,17 +18,21 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
     And the exit status should be 0
     And the directory "nucleotides/1" should not exist
 
-  Scenario: Running all benchmark commands together using the `all` command
-    Given the default aruba exit timeout is 300 seconds
+  Scenario Outline: Running all short read assembly benchmark commands together using `all`
+    Given the default aruba exit timeout is 600 seconds
     When I run the bash command:
       """
-      export TMPDIR=$(pwd) && nucleotides all 1 && nucleotides all 2
+      export TMPDIR=$(pwd) && nucleotides all <task_1> && nucleotides all <task_2>
       """
-    And I get the url "/benchmarks/2f221a18eb86380369570b2ed147d8b4"
+    And I get the url "/benchmarks/<url>"
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
     And the JSON should have the following:
       | complete | true |
-    And the directory "nucleotides/1" should not exist
-    And the directory "nucleotides/2" should not exist
+    And the directory "nucleotides/<task_1>" should not exist
+    And the directory "nucleotides/<task_2>" should not exist
+
+    Examples:
+      | task_1 | task_2 | url                              |
+      | 1      | 2      | 2f221a18eb86380369570b2ed147d8b4 |

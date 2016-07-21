@@ -90,7 +90,10 @@ feature: Gemfile.lock $(credentials)
 	@$(params) $(path) bundle exec cucumber $(ARGS)
 
 test:
-	@$(test)
+	@$(test) $(ARGS)
+
+wip:
+	@$(test) -a 'wip' $(ARGS)
 
 autotest:
 	@clear && $(test) -a '!slow' || true # Using true starts tests even on failure
@@ -108,9 +111,9 @@ bootstrap: \
 	.api_container \
 	.installer_image \
 	.depoy_image \
-	tmp/data/reads.fq.gz \
+	tmp/data/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533 \
+	tmp/data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414 \
 	tmp/data/dummy.reads.fq.gz \
-	tmp/data/reference.fa \
 	tmp/data/assembly_metrics.tsv \
 	tmp/data/contigs.fa \
 	tmp/data/metrics.json \
@@ -138,7 +141,7 @@ tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
 tmp/data/nucleotides:
 	mkdir -p $(dir $@)
 	git clone https://github.com/nucleotides/nucleotides-data.git $@
-	cd ./$@ && git reset --hard bb895e1
+	cd ./$@ && git reset --hard 7302d48
 	rm $@/inputs/data/*
 	cp data/test_organism.yml $@/inputs/data/
 	cp data/benchmark.yml $@/inputs/
@@ -198,6 +201,6 @@ clean:
 	docker kill $(shell cat .rdm_container); true
 	docker kill $(shell cat .api_container); true
 	rm -f .*_container .*_image Gemfile.lock
-	rm -rf vendor
+	rm -rf vendor tmp/data
 
 .PHONY: test autotest bootstrap
