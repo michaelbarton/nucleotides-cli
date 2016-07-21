@@ -13,7 +13,7 @@ def biobox_args(app):
     references = fs.get_input_dir_path('reference_fasta', app)
     return [
             {"fasta"     : [{"id" : 0 , "value" : contigs,    "type": "contig"}]},
-            {"fasta_dir" : [{"id" : 1 , "value" : references, "type": "contig"}]}]
+            {"fasta_dir" : [{"id" : 1 , "value" : references, "type": "references"}]}]
 
 
 def successful_event_outputs():
