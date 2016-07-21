@@ -92,6 +92,9 @@ feature: Gemfile.lock $(credentials)
 test:
 	@$(test) $(ARGS)
 
+wip:
+	@$(test) -a 'wip' $(ARGS)
+
 autotest:
 	@clear && $(test) -a '!slow' || true # Using true starts tests even on failure
 	@fswatch -o ./nucleotides -o ./test | xargs -n 1 -I {} bash -c "clear && $(test) -a '!slow'"
@@ -138,7 +141,7 @@ tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
 tmp/data/nucleotides:
 	mkdir -p $(dir $@)
 	git clone https://github.com/nucleotides/nucleotides-data.git $@
-	cd ./$@ && git reset --hard bb895e1
+	cd ./$@ && git reset --hard 7302d48
 	rm $@/inputs/data/*
 	cp data/test_organism.yml $@/inputs/data/
 	cp data/benchmark.yml $@/inputs/

@@ -20,6 +20,7 @@ def test_create_container():
     assert "Id" in cnt
     image_helper.clean_up_container(cnt["Id"])
 
+
 @attr('slow')
 def test_run_container():
     app = app_helper.mock_reference_evaluator_state()
@@ -29,11 +30,12 @@ def test_run_container():
     nose.assert_equal(container.did_exit_succcessfully(id_), True)
     image_helper.clean_up_container(id_)
 
+
 @attr('slow')
 def test_complete_run_through():
     app = app_helper.mock_reference_evaluator_state()
     run.execute_image(app)
-    file_helper.assert_is_file(fs.get_output_file_path('assembly_metrics/67ba437ffa', app))
+    file_helper.assert_is_file(fs.get_output_file_path('assembly_metrics/ccd8168a0e', app))
 
 
 def test_create_event_request_with_a_successful_event():
