@@ -19,7 +19,7 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
     And the directory "nucleotides/1" should not exist
 
   Scenario Outline: Running all short read assembly benchmark commands together using `all`
-    Given the default aruba exit timeout is 600 seconds
+    Given the default aruba exit timeout is 900 seconds
     When I run the bash command:
       """
       export TMPDIR=$(pwd) && nucleotides all <task_1> && nucleotides all <task_2>
