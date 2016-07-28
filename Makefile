@@ -201,6 +201,6 @@ clean:
 	docker kill $(shell cat .rdm_container); true
 	docker kill $(shell cat .api_container); true
 	rm -f .*_container .*_image Gemfile.lock
-	rm -rf vendor tmp/data
+	rm -rf vendor tmp .bundle log
 
 .PHONY: test autotest bootstrap
