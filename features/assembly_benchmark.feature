@@ -20,7 +20,7 @@ Feature: Running a reference assembly benchmark task
     And the stdout should not contain anything
     And the exit status should be 0
     And the file "nucleotides/6/outputs/container_runtime_metrics/metrics.json" should exist
-    And the file "nucleotides/6/outputs/assembly_metrics/ccd8168a0e" should exist
+    And the file "nucleotides/6/outputs/assembly_metrics/718b9ad933" should exist
 
 
   Scenario: Executing a benchmark task when the image has not been pulled
@@ -35,7 +35,7 @@ Feature: Running a reference assembly benchmark task
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the file "nucleotides/6/outputs/container_runtime_metrics/metrics.json" should exist
-    And the file "nucleotides/6/outputs/assembly_metrics/ccd8168a0e" should exist
+    And the file "nucleotides/6/outputs/assembly_metrics/718b9ad933" should exist
     And the exit status should be 0
 
 
