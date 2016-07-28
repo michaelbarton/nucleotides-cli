@@ -35,7 +35,7 @@ def test_run_container():
 def test_complete_run_through():
     app = app_helper.mock_reference_evaluator_state()
     run.execute_image(app)
-    file_helper.assert_is_file(fs.get_output_file_path('assembly_metrics/ccd8168a0e', app))
+    file_helper.assert_is_file(fs.get_output_file_path('assembly_metrics/718b9ad933', app))
 
 
 def test_create_event_request_with_a_successful_event():

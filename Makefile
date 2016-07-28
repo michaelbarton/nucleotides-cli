@@ -141,7 +141,6 @@ tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
 tmp/data/nucleotides:
 	mkdir -p $(dir $@)
 	git clone https://github.com/nucleotides/nucleotides-data.git $@
-	cd ./$@ && git reset --hard 7302d48
 	rm $@/inputs/data/*
 	cp data/test_organism.yml $@/inputs/data/
 	cp data/benchmark.yml $@/inputs/
@@ -201,6 +200,6 @@ clean:
 	docker kill $(shell cat .rdm_container); true
 	docker kill $(shell cat .api_container); true
 	rm -f .*_container .*_image Gemfile.lock
-	rm -rf vendor tmp/data
+	rm -rf vendor tmp .bundle log
 
 .PHONY: test autotest bootstrap
