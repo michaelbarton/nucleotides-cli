@@ -17,16 +17,13 @@ setup(
     url                  = 'http://nucleotid.es',
     scripts              = ['bin/nucleotides'],
     install_requires     = requirements(),
-    dependency_links=[
-        "git+ssh://github.com/bioboxes/command-line-interface.git@c686ff8#egg=biobox-cli"
-    ],
     packages             = find_packages(),
 
     classifiers = [
         'Natural Language :: English',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Intended Audience :: Science/Research',
         'Operating System :: POSIX'

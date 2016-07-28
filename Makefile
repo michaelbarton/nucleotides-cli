@@ -1,8 +1,8 @@
-path := PATH=$(abspath ./vendor/python/bin):$(shell echo "${PATH}")
+path := PATH=$(abspath .tox/py27-build/bin):$(shell echo "${PATH}")
 
 version := $(shell $(path) python setup.py --version)
 name    := $(shell $(path) python setup.py --name)
-dist    := dist/$(name)-$(version).tar.gz
+dist    := .tox/dist/$(name)-$(version).zip
 
 installer-image := test-install
 
@@ -44,24 +44,21 @@ docker_db := @docker run \
 #################################################
 
 publish: $(dist)
-	@cp $< $(dir $<)/nucleotides-client.tar.gz
-	@docker run \
+	mkdir -p tmp/dist
+	cp $< tmp/dist
+	docker run \
 		--tty \
-		--volume=$(abspath $(dir $<)):/dist:ro \
+		--volume=$(abspath tmp/dist):/dist:ro \
 		--env=AWS_ACCESS_KEY=$(shell bundle exec ./plumbing/fetch_credential access_key) \
 		--env=AWS_SECRET_KEY=$(shell bundle exec ./plumbing/fetch_credential secret_key) \
 		--entrypoint=/push-to-s3 \
 		bioboxes/file-deployer \
-		nucleotides-tools client $(version) /$(dir $<)/nucleotides-client.tar.gz
+		nucleotides-tools client $(version) /dist/nucleotides-client.zip
 
 build: $(dist) test-build
 
-test-build: $(dist) .installer_image
-	@docker run \
-		--tty \
-		--volume=$(abspath $(dir $<)):/dist:ro \
-		$(installer-image) \
-		/bin/bash -c "pip install --user /$< && clear && /root/.local/bin/nucleotides -h"
+test-build:
+	tox -e py27-build
 
 ssh: $(dist)
 	@docker run \
@@ -72,8 +69,7 @@ ssh: $(dist)
 		/bin/bash
 
 $(dist): $(shell find bin nucleotides) requirements/default.txt setup.py MANIFEST.in
-	@$(path) python setup.py sdist
-	@touch $@
+	@tox --sdistonly
 
 #################################################
 #
@@ -81,22 +77,19 @@ $(dist): $(shell find bin nucleotides) requirements/default.txt setup.py MANIFES
 #
 #################################################
 
-test = $(params) $(path) TMPDIR=./tmp/tests nosetests --rednose
-
-console:
-	@$(path) python -i console.py
+test = $(params) tox -e py27-unit
 
 feature: Gemfile.lock $(credentials)
-	@$(params) $(path) bundle exec cucumber $(ARGS)
+	@$(path) $(params) bundle exec cucumber $(ARGS)
 
 test:
 	@$(test) $(ARGS)
 
 wip:
-	@$(test) -a 'wip' $(ARGS)
+	@$(test) -- -a 'wip' $(ARGS)
 
 autotest:
-	@clear && $(test) -a '!slow' || true # Using true starts tests even on failure
+	@clear && $(test) -- -a '!slow' || true # Using true starts tests even on failure
 	@fswatch -o ./nucleotides -o ./test | xargs -n 1 -I {} bash -c "clear && $(test) -a '!slow'"
 
 ################################################
@@ -109,7 +102,6 @@ bootstrap: \
 	Gemfile.lock \
 	vendor/python \
 	.api_container \
-	.installer_image \
 	.depoy_image \
 	tmp/data/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533 \
 	tmp/data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414 \
@@ -175,22 +167,8 @@ tmp/data/nucleotides:
 	docker pull nucleotides/api:staging
 	touch $@
 
-.installer_image: $(shell find images/test-install -type f)
-	cd ./images/$(installer-image) && docker build --tag $(installer-image) .
-	touch $@
-
 .depoy_image:
 	docker pull bioboxes/file-deployer
-
-vendor/python: requirements/default.txt requirements/development.txt
-	@mkdir -p log
-	@virtualenv $@ 2>&1 > log/virtualenv.txt
-	@$(path) pip install \
-		--requirement requirements/default.txt \
-		--requirement requirements/development.txt \
-		2>&1 > log/pip.txt
-	@touch $@
-
 
 Gemfile.lock: Gemfile
 	mkdir -p log
