@@ -39,4 +39,4 @@ Feature: Fetching input data files for benchmarking
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
-    And the file "nucleotides/4/inputs/reference_fasta/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414.fa" should exist
+    And the file "nucleotides/4/inputs/reference_fasta/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414.fa.gz" should exist

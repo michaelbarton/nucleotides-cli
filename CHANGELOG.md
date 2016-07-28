@@ -3,7 +3,23 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 0.2.1
+## 0.3.0 - 2016-07-28
+
+### Fixed
+
+  * Removed dependency on the `biobox_cli` python which was still present in
+    the `setup.py`. This dependency is no longer needed but was still being
+    installed. This is now fixed.
+
+### Changed
+
+  * Reference fasta files are now downloaded with the `.fq.gz` format. The
+    assembly benchmark code has been updated correspondingly.
+
+  * Tox is used to build and run tests for the client. This simplifies the
+    process over virtualenv which was the previous method.
+
+## 0.2.1 - 2016-07-21
 
 ### Fixed
 
@@ -16,7 +32,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
     monitoring biobox Docker containers. This library provides stability and
     bug fixes.
 
-## 0.2.0
+## 0.2.0 - 2016-05-17
 
 ### Added
 
@@ -38,7 +54,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
   * Handle the cases where QUAST returns '-' in the assembly metrics as 0.
 
-## 0.1.0
+## 0.1.0 - 2016-03-18
 
 ### Changed
 

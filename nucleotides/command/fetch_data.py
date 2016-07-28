@@ -7,7 +7,7 @@ import nucleotides.s3          as s3
 
 EXTENSION_MAPPING = {
         'short_read_fastq' : '.fq.gz',
-        'reference_fasta'  : '.fa',
+        'reference_fasta'  : '.fa.gz',
         'contig_fasta'     : '.fa' }
 
 def destination_path(path, f):

@@ -1,4 +1,6 @@
-import os.path, shutil, json, yaml
+import os.path, shutil, json
+
+import ruamel.yaml        as yaml
 import boltons.fileutils  as fu
 import nucleotides.util   as util
 

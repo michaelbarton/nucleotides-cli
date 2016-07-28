@@ -8,3 +8,4 @@ log
 *.pyc
 dist
 *.egg-info
+.tox

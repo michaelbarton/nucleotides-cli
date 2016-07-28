@@ -1,3 +1,4 @@
+import ruamel.yaml          as yaml
 import boltons.fileutils    as fu
 import biobox.image.volume  as vol
 import biobox.util          as util
@@ -30,7 +31,7 @@ def parse_quast_value(x):
 
 
 def collect_metrics(app):
-    import pkg_resources, yaml, os
+    import pkg_resources, os
     mapping_path = os.path.join('..', 'mappings', 'quast.yml')
     mapping = yaml.safe_load(pkg_resources.resource_string(__name__, mapping_path))
 
