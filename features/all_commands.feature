@@ -29,8 +29,8 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
     And the stdout should not contain anything
     And the exit status should be 0
     And the JSON should have the following:
-      | complete              | true    |
-      | events/0/metrics/ng50 | 25079.0 |
+      | complete                       | true    |
+      | tasks/1/events/0/metrics/nga50 | 25079.0 |
     And the directory "nucleotides/<task_1>" should not exist
     And the directory "nucleotides/<task_2>" should not exist
 
