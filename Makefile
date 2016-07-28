@@ -100,7 +100,6 @@ autotest:
 
 bootstrap: \
 	Gemfile.lock \
-	vendor/python \
 	.api_container \
 	.depoy_image \
 	tmp/data/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533 \
