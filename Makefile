@@ -45,7 +45,7 @@ docker_db := @docker run \
 
 publish: $(dist)
 	@mkdir -p tmp/dist
-	@cp $< tmp/dist
+	@cp $< tmp/dist/nucleotides-client.zip
 	@docker run \
 		--tty \
 		--volume=$(abspath tmp/dist):/dist:ro \
