@@ -44,9 +44,9 @@ docker_db := @docker run \
 #################################################
 
 publish: $(dist)
-	mkdir -p tmp/dist
-	cp $< tmp/dist
-	docker run \
+	@mkdir -p tmp/dist
+	@cp $< tmp/dist
+	@docker run \
 		--tty \
 		--volume=$(abspath tmp/dist):/dist:ro \
 		--env=AWS_ACCESS_KEY=$(shell bundle exec ./plumbing/fetch_credential access_key) \
