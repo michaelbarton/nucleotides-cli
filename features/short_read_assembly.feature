@@ -6,16 +6,12 @@ Feature: Processing a short read assembly benchmark
     And I set the environment variables to:
       | variable           | value                             |
       | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
-    And the nucleotides directory is available on the path
-    Given I copy the file "../../data/short_read_assembler.json" to "nucleotides/5/metadata.json"
+    And I copy the file "../../data/short_read_assembler.json" to "nucleotides/5/metadata.json"
 
 
   Scenario: Executing a short read assembler docker image
     Given I copy the file "../data/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533" to "nucleotides/5/inputs/short_read_fastq/11948b41d4.fq.gz"
-    When I run the bash command:
-      """
-      export TMPDIR=$(pwd) && nucleotides run-image 5
-      """
+    When I run `nucleotides run-image 5`
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
@@ -26,10 +22,7 @@ Feature: Processing a short read assembly benchmark
   Scenario: Posting a successful benchmark
     Given I copy the file "../data/metrics.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
     And I copy the file "../data/contigs.fa" to "nucleotides/5/outputs/contig_fasta/5887df3630"
-    When I run the bash command:
-      """
-      nucleotides post-data 5
-      """
+    When I run `nucleotides post-data 5`
     And I get the url "/tasks/5"
     Then the stderr should not contain anything
     And the stdout should not contain anything
@@ -45,10 +38,7 @@ Feature: Processing a short read assembly benchmark
 
   Scenario: Posting a failed benchmark
     Given I copy the file "../data/metrics.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
-    When I run the bash command:
-      """
-      nucleotides post-data 5
-      """
+    When I run `nucleotides post-data 5`
     And I get the url "/tasks/5"
     Then the stderr should not contain anything
     And the stdout should not contain anything

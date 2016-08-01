@@ -5,11 +5,7 @@ Feature: Fetching input data files for benchmarking
     And no files in the S3 directory "s3://nucleotides-testing/uploads/"
 
   Scenario: Fetching input data files for short read assembly task
-    Given the nucleotides directory is available on the path
-    When I run the bash command:
-      """
-      nucleotides fetch-data 5
-      """
+    When I run `nucleotides fetch-data 5`
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
@@ -31,11 +27,7 @@ Feature: Fetching input data files for benchmarking
 
 
   Scenario: Fetching input data files for assembly benchmarking task
-    Given the nucleotides directory is available on the path
-    When I run the bash command:
-      """
-      nucleotides fetch-data 4
-      """
+    When I run `nucleotides fetch-data 4`
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0

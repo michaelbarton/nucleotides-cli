@@ -17,9 +17,9 @@ Feature: Reporting useful error messages
     Then the stdout should not contain anything
     And the exit status should be 1
     And the stderr should contain:
-    """
-    Missing environment variable: <variable>
-    """
+      """
+      Missing environment variable: <variable>
+      """
 
     Examples:
       | variable           |
