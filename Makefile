@@ -1,4 +1,4 @@
-path := PATH=$(abspath .tox/py27-build/bin):$(shell echo "${PATH}")
+path := PATH=$(abspath .tox/py27-build/bin):$(PATH)
 
 version := $(shell $(path) python setup.py --version)
 name    := $(shell $(path) python setup.py --name)
@@ -80,7 +80,7 @@ $(dist): $(shell find bin nucleotides) requirements/default.txt setup.py MANIFES
 test = $(params) tox -e py27-unit
 
 feature: Gemfile.lock $(credentials)
-	@$(path) $(params) bundle exec cucumber $(ARGS)
+	@$(path) $(params) TMPDIR=$(abspath tmp/aruba) bundle exec cucumber $(ARGS)
 
 test:
 	@$(test) $(ARGS)

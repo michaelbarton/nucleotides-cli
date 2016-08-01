@@ -6,16 +6,12 @@ Feature: Running a reference assembly benchmark task
     And I set the environment variables to:
       | variable           | value                             |
       | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
-    And the nucleotides directory is available on the path
-    Given I copy the file "../../data/reference_assembly_evaluation.json" to "nucleotides/6/metadata.json"
+    And I copy the file "../../data/reference_assembly_evaluation.json" to "nucleotides/6/metadata.json"
 
   Scenario: Executing a reference assembly benchmark task
     Given I copy the file "../data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414" to "nucleotides/6/inputs/reference_fasta/6bac51cc35.fa.gz"
     And I copy the file "../data/contigs.fa" to "nucleotides/6/inputs/contig_fasta/7e9f760161.fa"
-    When I run the bash command:
-      """
-      export TMPDIR=$(pwd) && nucleotides run-image 6
-      """
+    When I run `nucleotides run-image 6`
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
@@ -28,10 +24,7 @@ Feature: Running a reference assembly benchmark task
     And I copy the file "../data/contigs.fa" to "nucleotides/6/inputs/contig_fasta/7e9f760161"
     And the image "bioboxes/quast" is not installed
     And the default aruba exit timeout is 180 seconds
-    When I run the bash command:
-      """
-      export TMPDIR=$(pwd) && nucleotides run-image 6
-      """
+    When I run `nucleotides run-image 6`
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the file "nucleotides/6/outputs/container_runtime_metrics/metrics.json" should exist
@@ -42,10 +35,7 @@ Feature: Running a reference assembly benchmark task
   Scenario: Posting a successful benchmark
     Given I copy the file "../data/metrics.json" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json"
     And I copy the file "../data/assembly_metrics.tsv" to "nucleotides/6/outputs/assembly_metrics/67ba437ffa"
-    When I run the bash command:
-      """
-      nucleotides post-data 6
-      """
+    When I run `nucleotides post-data 6`
     And I get the url "/tasks/6"
     Then the stderr should not contain anything
     And the stdout should not contain anything
@@ -106,10 +96,7 @@ Feature: Running a reference assembly benchmark task
       """
       sed /NGA50/s/25079/-/ ../data/assembly_metrics.tsv > nucleotides/6/outputs/assembly_metrics/67ba437ffa
       """
-    When I run the bash command:
-      """
-      nucleotides post-data 6
-      """
+    When I run `nucleotides post-data 6`
     And I get the url "/tasks/6"
     Then the stderr should not contain anything
     And the stdout should not contain anything
