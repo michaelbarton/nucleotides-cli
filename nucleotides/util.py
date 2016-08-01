@@ -6,7 +6,7 @@ import nucleotides.log      as log
 
 def get_asset_file_contents(path):
     import pkg_resources, os
-    return pkg_resources.resource_string(__name__, os.path.join("..", "assets", path)).strip()
+    return pkg_resources.resource_string(__name__, os.path.join("assets", path)).strip()
 
 def select_task(c):
     import nucleotides.task.short_read_assembler
