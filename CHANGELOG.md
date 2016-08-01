@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.3.1 - 2016-08-01
+
+### Fixed
+
+  * QUAST mappings are now included in the python package
+
 ## 0.3.0 - 2016-07-28
 
 ### Fixed
