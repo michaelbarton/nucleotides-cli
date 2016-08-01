@@ -4,6 +4,10 @@ import os, os.path
 import boltons.fileutils    as fu
 import nucleotides.log      as log
 
+def get_asset_file_contents(path):
+    import pkg_resources, os
+    return pkg_resources.resource_string(__name__, os.path.join("..", "assets", path)).strip()
+
 def select_task(c):
     import nucleotides.task.short_read_assembler
     import nucleotides.task.reference_assembly_evaluation
@@ -51,4 +55,3 @@ def get_environment_variable(name):
         print("Missing environment variable: {}".format(name), file=sys.stderr)
         exit(1)
     return os.environ[name]
-
