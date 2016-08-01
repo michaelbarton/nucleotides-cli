@@ -1,8 +1,9 @@
+import os
 import ruamel.yaml          as yaml
 import boltons.fileutils    as fu
 import biobox.image.volume  as vol
-import biobox.util          as util
 
+import nucleotides.util               as util
 import nucleotides.filesystem         as fs
 import nucleotides.command.run_image  as run
 
@@ -12,8 +13,7 @@ def before_container_hook(app):
 def biobox_args(app):
     contigs    = fs.get_input_file_path('contig_fasta', app)
     references = fs.get_input_dir_path('reference_fasta', app)
-    return [
-            {"fasta"     : [{"id" : 0 , "value" : contigs,    "type": "contig"}]},
+    return [{"fasta"     : [{"id" : 0 , "value" : contigs,    "type": "contig"}]},
             {"fasta_dir" : [{"id" : 1 , "value" : references, "type": "references"}]}]
 
 
@@ -31,9 +31,8 @@ def parse_quast_value(x):
 
 
 def collect_metrics(app):
-    import pkg_resources, os
-    mapping_path = os.path.join('..', 'mappings', 'quast.yml')
-    mapping = yaml.safe_load(pkg_resources.resource_string(__name__, mapping_path))
+    path = os.path.join('mappings', 'quast.yml')
+    mapping = yaml.safe_load(util.get_asset_file_contents(path))
 
     path = fs.get_output_file_path('assembly_metrics', app)
     with open(os.path.join(path, os.listdir(path)[0]), 'r') as f:
