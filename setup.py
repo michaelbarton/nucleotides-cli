@@ -18,6 +18,8 @@ setup(
     scripts              = ['bin/nucleotides'],
     install_requires     = requirements(),
     packages             = find_packages(),
+    package_data         = {'': ['assets/*']},
+    include_package_data = True,
 
     classifiers = [
         'Natural Language :: English',
