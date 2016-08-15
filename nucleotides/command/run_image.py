@@ -27,10 +27,12 @@ def setup(app):
 
 def create_container(app):
     avail.get_image(image_version(app))
+    dirs = {"output"   : fs.get_tmp_dir_path(app),
+            "metadata" : fs.get_meta_dir_path(app)}
     return image.create_container(
             image_version(app),
             image_type(app).biobox_args(app),
-            {"output" : fs.get_tmp_dir_path(app)},
+            dirs,
             image_task(app))
 
 

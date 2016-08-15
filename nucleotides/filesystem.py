@@ -31,6 +31,24 @@ def get_input_file_path(name, app):
     return os.path.join(path, os.listdir(path)[0])
 
 
+def get_meta_dir_path(app):
+    """
+    Return the path to the metadata directory for the given nucleotides task.
+    Creates the directory if it does not already exist.
+    """
+    dir_ = os.path.join(app['path'], 'meta')
+    fu.mkdir_p(dir_)
+    return dir_
+
+
+def get_meta_file_path(name, app):
+    """
+    Return the path to the given file within the metadata directory for the given
+    nucleotides task. Creates the temporary directory if it does not already exist.
+    """
+    return os.path.join(get_meta_dir_path(app), name)
+
+
 def get_tmp_dir_path(app):
     """
     Return the path to the temporary directory for the given nucleotides task.
