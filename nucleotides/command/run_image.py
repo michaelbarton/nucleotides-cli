@@ -30,7 +30,7 @@ def create_container(app):
     return image.create_container(
             image_version(app),
             image_type(app).biobox_args(app),
-            fs.get_tmp_dir_path(app),
+            {"output" : fs.get_tmp_dir_path(app)},
             image_task(app))
 
 
