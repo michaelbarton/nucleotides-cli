@@ -53,7 +53,7 @@ def test_short_read_assembler_successful_event():
     nose.assert_equal(event, {
         "task" : 5,
         "success" : True,
-        "metrics" : {'max_cpu_usage': 80, 'max_memory_usage': 20},
+        "metrics" : {'max_cpu_usage': 80, 'max_memory_usage': 20, 'total_wall_clock_time_in_seconds': 30},
         "files" : [
             {"url"    : "s3://url/dir/file",
              "sha256" : "digest_1",

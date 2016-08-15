@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.4.0 - DATE
+
+### Added
+
+  * A new metric total wallclock time is collected and sent to the nucleotides
+    API with the name `total_wall_clock_time_in_seconds`. This is calculated
+    from the sum of the number of cgroup samples and the sampling interval (15
+    seconds).
+
 ## 0.3.1 - 2016-08-01
 
 ### Fixed

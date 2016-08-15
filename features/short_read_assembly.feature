@@ -31,9 +31,10 @@ Feature: Processing a short read assembly benchmark
       | uploads/7e/7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092 |
       | uploads/20/202313628063e33c1ba8320927357be02660f0b0b6b02a63cd5f256337a7e408 |
     And the JSON should have the following:
-      | complete                           | true |
-      | events/0/metrics/max_memory_usage  | 20.0 |
-      | events/0/metrics/max_cpu_usage     | 80.0 |
+      | complete                                          | true |
+      | events/0/metrics/max_memory_usage                 | 20.0 |
+      | events/0/metrics/max_cpu_usage                    | 80.0 |
+      | events/0/metrics/total_wall_clock_time_in_seconds | 30.0 |
 
 
   Scenario: Posting a failed benchmark
@@ -46,6 +47,7 @@ Feature: Processing a short read assembly benchmark
     And the S3 bucket "nucleotides-testing" should contain the files:
       | uploads/20/202313628063e33c1ba8320927357be02660f0b0b6b02a63cd5f256337a7e408 |
     And the JSON should have the following:
-      | complete                           | false |
-      | events/0/metrics/max_memory_usage  | 20.0  |
-      | events/0/metrics/max_cpu_usage     | 80.0  |
+      | complete                                          | false |
+      | events/0/metrics/max_memory_usage                 | 20.0  |
+      | events/0/metrics/max_cpu_usage                    | 80.0  |
+      | events/0/metrics/total_wall_clock_time_in_seconds | 30.0  |
