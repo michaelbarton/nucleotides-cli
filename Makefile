@@ -79,7 +79,7 @@ $(dist): $(shell find bin nucleotides) requirements/default.txt setup.py MANIFES
 
 test = $(params) tox -e py27-unit
 
-feature: Gemfile.lock $(credentials)
+feature: Gemfile.lock $(credentials) test-build
 	@$(path) $(params) TMPDIR=$(abspath tmp/aruba) bundle exec cucumber $(ARGS)
 
 test:
