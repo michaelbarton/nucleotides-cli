@@ -38,6 +38,7 @@ def create_container(app):
 
 def copy_output_files(app):
     avail.get_image(image_version(app))
+    fs.copy_log_file_to_outputs(app)
     if (image_name(app) == 'bioboxes/quast'):          # Quast also does not produce
         return image_type(app).copy_output_files(app)   # a standard biobox.yaml
     else:

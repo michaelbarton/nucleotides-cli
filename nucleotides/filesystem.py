@@ -71,8 +71,9 @@ def get_output_file_path(name, app):
     """
     Return the path for the given file name within the nucleotides task.
     """
-    dir_ = os.path.join(app['path'], 'outputs')
-    return os.path.join(dir_, name)
+    path = os.path.join(app['path'], 'outputs', name)
+    fu.mkdir_p(os.path.dirname(path))
+    return path
 
 
 def get_output_biobox_file_arguments(app):
@@ -121,13 +122,22 @@ def copy_tmp_file_to_outputs(app, src_file, dst_dir):
     copy_file(src, dst)
 
 
+def copy_log_file_to_outputs(app):
+    """
+    Copies the log.txt file created by the Docker container to the
+    container_runtime_metrics directory.
+    """
+    src = get_meta_file_path('log.txt', app)
+    dst = get_output_file_path('container_runtime_metrics/log.txt', app)
+    copy_file(src, dst)
+
+
 def create_runtime_metric_file(app, metrics):
     """
     Parses the raw cgroup data collected from the Docker container into a new file
     containing a JSON dictionary of nucleotides metrics suitable for upload to the
     nuclotides API.
     """
-    dst = get_output_file_path('container_runtime_metrics/log.txt', app)
-    fu.mkdir_p(os.path.dirname(dst))
+    dst = get_output_file_path('container_runtime_metrics/metrics.json', app)
     with open(dst, 'w') as f:
         f.write(json.dumps(metrics))
