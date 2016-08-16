@@ -4,7 +4,7 @@ directory. Each nucleotides benchmarking task takes place in a directory named f
 the nucleotides task ID. This module functions to simplify getting the location of
 where input files can be found, and where output files should be created.
 """
-import os.path, shutil, json
+import os.path, json
 
 import ruamel.yaml        as yaml
 import boltons.fileutils  as fu
@@ -101,6 +101,15 @@ def sha_digest(filename):
     return sha.hexdigest()
 
 
+def copy_file(src, dst):
+    """
+    Copies src to dst creating the destination directory if necessary.
+    """
+    import shutil
+    fu.mkdir_p(os.path.dirname(dst))
+    shutil.copy(src, dst)
+
+
 def copy_tmp_file_to_outputs(app, src_file, dst_dir):
     """
     Copies a Docker container generated file from temporary directory to the output
@@ -109,8 +118,7 @@ def copy_tmp_file_to_outputs(app, src_file, dst_dir):
     """
     src = os.path.join(app['path'], 'tmp', src_file)
     dst = os.path.join(app['path'], 'outputs', dst_dir, sha_digest(src)[:10])
-    fu.mkdir_p(os.path.dirname(dst))
-    shutil.copy(src, dst)
+    copy_file(src, dst)
 
 
 def create_runtime_metric_file(app, metrics):
@@ -119,7 +127,7 @@ def create_runtime_metric_file(app, metrics):
     containing a JSON dictionary of nucleotides metrics suitable for upload to the
     nuclotides API.
     """
-    dst = os.path.join(app['path'], 'outputs', 'container_runtime_metrics', 'metrics.json')
+    dst = get_output_file_path('container_runtime_metrics/log.txt', app)
     fu.mkdir_p(os.path.dirname(dst))
     with open(dst, 'w') as f:
         f.write(json.dumps(metrics))
