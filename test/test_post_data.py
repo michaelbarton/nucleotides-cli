@@ -8,6 +8,8 @@ import helper.s3          as s3_helper
 import nucleotides.util              as util
 import nucleotides.command.post_data as post
 
+from nose.plugins.attrib import attr
+
 def test_create_output_file_metadata():
     app  = app_helper.mock_short_read_assembler_state()
     app["s3-upload"] = "s3://url/"
@@ -41,7 +43,7 @@ def test_list_outputs():
 #
 ############################################
 
-
+@attr('wip')
 def test_short_read_assembler_successful_event():
     app = app_helper.mock_short_read_assembler_state(outputs = True)
     outputs = [{
@@ -50,14 +52,14 @@ def test_short_read_assembler_successful_event():
         "sha256"   : "digest_1",
         "url"      : "s3://url/dir/file"}]
     event = post.create_event_request(app, outputs)
-    nose.assert_equal(event, {
+    nose.assert_equal({
         "task" : 5,
         "success" : True,
         "metrics" : {'max_cpu_usage': 80, 'max_memory_usage': 20, 'total_wall_clock_time_in_seconds': 30},
         "files" : [
             {"url"    : "s3://url/dir/file",
              "sha256" : "digest_1",
-             "type"   : "contig_fasta"}]})
+             "type"   : "contig_fasta"}]}, event)
 
 def test_short_read_assembler_unsuccessful_event():
     app = app_helper.mock_short_read_assembler_state(outputs = False)

@@ -40,14 +40,14 @@ def test_list_input_files():
 def test_copy_output_files():
     app = app_helper.mock_short_read_assembler_state(intermediates = True)
     run.copy_output_files(app)
-    file_helper.assert_is_file(fs.get_output_file_path('container_runtime_metrics/log.txt', app))
-    file_helper.assert_is_file(fs.get_output_file_path('contig_fasta/7e9f760161', app))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/log.txt'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/7e9f760161'))
 
 
 @attr('slow')
 def test_complete_run_through():
     app = app_helper.mock_short_read_assembler_state(reads = True)
     run.execute_image(app)
-    file_helper.assert_is_file(fs.get_output_file_path('contig_fasta/7e9f760161', app))
-    file_helper.assert_is_file(fs.get_output_file_path('container_runtime_metrics/metrics.json', app))
-    file_helper.assert_is_file(fs.get_output_file_path('container_runtime_metrics/log.txt', app))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/7e9f760161'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/log.txt'))

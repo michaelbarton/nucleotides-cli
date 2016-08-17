@@ -42,7 +42,8 @@ def mock_short_read_assembler_state(task = True, dummy_reads = False, reads = Fa
         copy_to_directory('tmp/data/contigs.fa', 'tmp', app)
 
     if outputs:
-        copy_to_directory('tmp/data/contigs.fa', 'outputs/contig_fasta', app)
+        copy_to_directory('tmp/data/contigs.fa',   'outputs/contig_fasta', app)
+        copy_to_directory('data/log.txt',          'outputs/container_log', app)
         copy_to_directory('tmp/data/metrics.json', 'outputs/container_runtime_metrics', app)
 
     return app

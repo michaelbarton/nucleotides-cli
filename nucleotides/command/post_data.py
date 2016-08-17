@@ -35,6 +35,11 @@ def output_file_metadata(s3_path, path):
         "sha256"   : digest,
         "url"      : s3_file_url(s3_path, digest)}
 
+def list_outputs(app):
+    return map(lambda x: x.split("/")[-2], glob.glob(app["path"] + "/outputs/*/*"))
+
+
+
 
 def upload_output_file(f):
     s3.post_file(f["location"], f["url"])
@@ -42,9 +47,6 @@ def upload_output_file(f):
 def create_output_file_metadata(app):
     return map(functools.partial(output_file_metadata, app["s3-upload"]),
                glob.glob(app["path"] + "/outputs/*/*"))
-
-def list_outputs(app):
-    return map(lambda x: x.split("/")[-2], glob.glob(app["path"] + "/outputs/*/*"))
 
 def create_event_request(app, outputs):
     def remove_loc(d):
