@@ -1,16 +1,40 @@
+"""\
+Functions for creating file metadata and posting benchmarking event data to the
+nucleotides API.
+"""
+
 import os, functools, glob
-import nucleotides.filesystem as fs
 import nucleotides.util       as util
 import nucleotides.api_client as api
 import nucleotides.s3         as s3
 
+def s3_file_url(s3_path, digest):
+    """
+    Returns the s3 for a given file based on the file's sha256 digest.
+    """
+    return os.path.join(s3_path, digest[0:2], digest)
+
+
+def file_type(path):
+    """
+    Returns the file type based on the parent directory name.
+    """
+    return os.path.dirname(path).split("/")[-1]
+
+
 def output_file_metadata(s3_path, path):
-    digest = fs.sha_digest(path)
+    """
+    Returns metadata dictionary containing the required fields to submit a file to
+    the nucleotides benchmarking event API.
+    """
+    import nucleotides.filesystem
+    digest = nucleotides.filesystem.sha_digest(path)
     return {
         "location" : path,
-        "type"     : os.path.dirname(path).split("/")[-1],
+        "type"     : file_type(path),
         "sha256"   : digest,
-        "url"      : os.path.join(s3_path, digest[0:2], digest)}
+        "url"      : s3_file_url(s3_path, digest)}
+
 
 def upload_output_file(f):
     s3.post_file(f["location"], f["url"])

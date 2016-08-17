@@ -16,6 +16,7 @@ Feature: Running a reference assembly benchmark task
     And the stdout should not contain anything
     And the exit status should be 0
     And the file "nucleotides/6/outputs/container_runtime_metrics/metrics.json" should exist
+    And the file "nucleotides/6/outputs/container_runtime_metrics/log.txt" should exist
     And the file "nucleotides/6/outputs/assembly_metrics/718b9ad933" should exist
 
 
@@ -27,6 +28,7 @@ Feature: Running a reference assembly benchmark task
     When I run `nucleotides run-image 6`
     Then the stderr should not contain anything
     And the stdout should not contain anything
+    And the file "nucleotides/6/outputs/container_runtime_metrics/log.txt" should exist
     And the file "nucleotides/6/outputs/container_runtime_metrics/metrics.json" should exist
     And the file "nucleotides/6/outputs/assembly_metrics/718b9ad933" should exist
     And the exit status should be 0
@@ -34,6 +36,7 @@ Feature: Running a reference assembly benchmark task
 
   Scenario: Posting a successful benchmark
     Given I copy the file "../data/metrics.json" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json"
+    And I copy the file "../../data/log.txt" to "nucleotides/6/outputs/container_runtime_metrics/log.txt"
     And I copy the file "../data/assembly_metrics.tsv" to "nucleotides/6/outputs/assembly_metrics/67ba437ffa"
     When I run `nucleotides post-data 6`
     And I get the url "/tasks/6"
@@ -43,6 +46,7 @@ Feature: Running a reference assembly benchmark task
     And the S3 bucket "nucleotides-testing" should contain the files:
       | uploads/20/202313628063e33c1ba8320927357be02660f0b0b6b02a63cd5f256337a7e408 |
       | uploads/67/67ba437ffad3984921037194b41216b9fd3de1ed37162bc1d22803ccb9105e4b |
+      | uploads/e0/e0e8af37908fb7c275a9467c3ddbba0994c9a33dbf691496a60f4b0bec975f0a |
     And the JSON should have the following:
        | complete                                     | true     |
        | events/0/metrics/duplication_ratio           | 1.001    |
