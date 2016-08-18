@@ -24,6 +24,7 @@ def copy_to_file(src_file, dst_file, app):
 
 def mock_short_read_assembler_state(task = True, dummy_reads = False, reads = False, intermediates = False, outputs = False):
     app = mock_app()
+    app["s3-upload"] = "s3://"
 
     if task:
         shutil.copy('data/short_read_assembler.json', app['path'] + '/metadata.json')
@@ -37,11 +38,13 @@ def mock_short_read_assembler_state(task = True, dummy_reads = False, reads = Fa
         copy_to_directory('tmp/data/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533', 'inputs/short_read_fastq', app)
 
     if intermediates:
+        copy_to_file('data/log.txt', 'meta/log.txt', app)
         copy_to_file('data/sra_biobox.yaml', 'tmp/biobox.yaml', app)
         copy_to_directory('tmp/data/contigs.fa', 'tmp', app)
 
     if outputs:
-        copy_to_directory('tmp/data/contigs.fa', 'outputs/contig_fasta', app)
+        copy_to_directory('tmp/data/contigs.fa',   'outputs/contig_fasta', app)
+        copy_to_directory('data/log.txt',          'outputs/container_log', app)
         copy_to_directory('tmp/data/metrics.json', 'outputs/container_runtime_metrics', app)
 
     return app
@@ -61,11 +64,13 @@ def mock_reference_evaluator_state(inputs = True, intermediates = False, outputs
         copy_to_file('tmp/data/contigs.fa', 'inputs/contig_fasta/7e9f760161.fa', app)
 
     if intermediates:
+        copy_to_file('data/log.txt', 'meta/log.txt', app)
         copy_to_file('tmp/data/assembly_metrics.tsv', 'tmp/combined_quast_output/report.tsv', app)
         copy_to_file('data/quast_biobox.yaml', 'tmp/biobox.yaml', app)
 
     if outputs:
         copy_to_file('tmp/data/assembly_metrics.tsv', 'outputs/assembly_metrics/outputs.csv', app)
-        copy_to_directory('tmp/data/metrics.json', 'outputs/container_runtime_metrics', app)
+        copy_to_directory('data/log.txt',             'outputs/container_log', app)
+        copy_to_directory('tmp/data/metrics.json',    'outputs/container_runtime_metrics', app)
 
     return app

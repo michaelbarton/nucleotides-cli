@@ -12,6 +12,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
     from the sum of the number of cgroup samples and the sampling interval (15
     seconds).
 
+  * The log file created by the Docker container is uploaded to S3 and a
+    reference to the file is stored in the nucleotides API using the file type
+    `container_log`.
+
 ## 0.3.1 - 2016-08-01
 
 ### Fixed

@@ -24,8 +24,14 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
     And the stdout should not contain anything
     And the exit status should be 0
     And the JSON should have the following:
-      | complete                       | true    |
-      | tasks/1/events/0/metrics/nga50 | 25079.0 |
+      | complete                       | true                        |
+      | tasks/0/events/0/files/0/type  | "container_log"             |
+      | tasks/0/events/0/files/1/type  | "container_runtime_metrics" |
+      | tasks/0/events/0/files/2/type  | "contig_fasta"              |
+      | tasks/1/events/0/metrics/nga50 | 25079.0                     |
+      | tasks/1/events/0/files/0/type  | "assembly_metrics"          |
+      | tasks/1/events/0/files/1/type  | "container_log"             |
+      | tasks/1/events/0/files/2/type  | "container_runtime_metrics" |
     And the directory "nucleotides/<task_1>" should not exist
     And the directory "nucleotides/<task_2>" should not exist
 

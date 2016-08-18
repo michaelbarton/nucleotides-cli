@@ -27,15 +27,18 @@ def setup(app):
 
 def create_container(app):
     avail.get_image(image_version(app))
+    dirs = {"output"   : fs.get_task_dir_path(app, 'tmp'),
+            "metadata" : fs.get_task_dir_path(app, 'meta')}
     return image.create_container(
             image_version(app),
             image_type(app).biobox_args(app),
-            fs.get_tmp_dir_path(app),
+            dirs,
             image_task(app))
 
 
 def copy_output_files(app):
     avail.get_image(image_version(app))
+    fs.copy_log_file_to_outputs(app)
     if (image_name(app) == 'bioboxes/quast'):          # Quast also does not produce
         return image_type(app).copy_output_files(app)   # a standard biobox.yaml
     else:

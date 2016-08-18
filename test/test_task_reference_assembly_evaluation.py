@@ -35,12 +35,13 @@ def test_run_container():
 def test_complete_run_through():
     app = app_helper.mock_reference_evaluator_state()
     run.execute_image(app)
-    file_helper.assert_is_file(fs.get_output_file_path('assembly_metrics/718b9ad933', app))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/assembly_metrics/718b9ad933'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/log.txt'))
 
 
 def test_create_event_request_with_a_successful_event():
     app = app_helper.mock_reference_evaluator_state(outputs = True)
-    event = post.create_event_request(app, post.create_output_file_metadata(app))
+    event = post.create_event_request(app, post.list_outputs(app))
     nose.assert_equal(event["task"], 6)
     nose.assert_equal(event["success"], True)
     nose.assert_equal(event["files"][0]["type"], "assembly_metrics")
@@ -58,6 +59,6 @@ def test_create_event_request_with_non_numeric_quast_values():
         if 'NGA50' in line:
             print line.replace("25079", "-"),
 
-    event = post.create_event_request(app, post.create_output_file_metadata(app))
+    event = post.create_event_request(app, post.list_outputs(app))
     nose.assert_in("nga50", event["metrics"])
     nose.assert_equal(event["metrics"]["nga50"], 0.0)
