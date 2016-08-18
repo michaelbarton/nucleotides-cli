@@ -41,7 +41,7 @@ def list_outputs(app):
     Creates metadata dictionaries for all produced output files.
     """
     return map(functools.partial(output_file_metadata, app["s3-upload"]),
-               glob.glob(app["path"] + "/outputs/*/*"))
+               sorted(glob.glob(app["path"] + "/outputs/*/*")))
 
 
 def upload_output_file(f):
