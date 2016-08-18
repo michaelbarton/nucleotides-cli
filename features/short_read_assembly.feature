@@ -16,13 +16,13 @@ Feature: Processing a short read assembly benchmark
     And the stdout should not contain anything
     And the exit status should be 0
     And the file "nucleotides/5/outputs/contig_fasta/7e9f760161" should exist
-    And the file "nucleotides/5/outputs/container_runtime/metrics.json" should exist
-    And the file "nucleotides/5/outputs/container_runtime/log.txt" should exist
+    And the file "nucleotides/5/outputs/container_runtime_metrics/metrics.json" should exist
+    And the file "nucleotides/5/outputs/container_log/log.txt" should exist
 
 
   Scenario: Posting a successful benchmark
     Given I copy the file "../data/metrics.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
-    And I copy the file "../../data/log.txt" to "nucleotides/6/outputs/container_runtime_metrics/log.txt"
+    And I copy the file "../../data/log.txt" to "nucleotides/5/outputs/container_log/log.txt"
     And I copy the file "../data/contigs.fa" to "nucleotides/5/outputs/contig_fasta/5887df3630"
     When I run `nucleotides post-data 5`
     And I get the url "/tasks/5"
@@ -34,15 +34,18 @@ Feature: Processing a short read assembly benchmark
       | uploads/20/202313628063e33c1ba8320927357be02660f0b0b6b02a63cd5f256337a7e408 |
       | uploads/e0/e0e8af37908fb7c275a9467c3ddbba0994c9a33dbf691496a60f4b0bec975f0a |
     And the JSON should have the following:
-      | complete                                          | true |
-      | events/0/metrics/max_memory_usage                 | 20.0 |
-      | events/0/metrics/max_cpu_usage                    | 80.0 |
-      | events/0/metrics/total_wall_clock_time_in_seconds | 30.0 |
-      | events/0/files/0/type                             | log  |
+      | complete                                          | true                        |
+      | events/0/metrics/max_memory_usage                 | 20.0                        |
+      | events/0/metrics/max_cpu_usage                    | 80.0                        |
+      | events/0/metrics/total_wall_clock_time_in_seconds | 30.0                        |
+      | events/0/files/0/type                             | "container_log"             |
+      | events/0/files/1/type                             | "container_runtime_metrics" |
+      | events/0/files/2/type                             | "contig_fasta"              |
 
 
   Scenario: Posting a failed benchmark
     Given I copy the file "../data/metrics.json" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json"
+    And I copy the file "../../data/log.txt" to "nucleotides/5/outputs/container_log/log.txt"
     When I run `nucleotides post-data 5`
     And I get the url "/tasks/5"
     Then the stderr should not contain anything
@@ -51,7 +54,9 @@ Feature: Processing a short read assembly benchmark
     And the S3 bucket "nucleotides-testing" should contain the files:
       | uploads/20/202313628063e33c1ba8320927357be02660f0b0b6b02a63cd5f256337a7e408 |
     And the JSON should have the following:
-      | complete                                          | false |
-      | events/0/metrics/max_memory_usage                 | 20.0  |
-      | events/0/metrics/max_cpu_usage                    | 80.0  |
-      | events/0/metrics/total_wall_clock_time_in_seconds | 30.0  |
+      | complete                                          | false                       |
+      | events/0/metrics/max_memory_usage                 | 20.0                        |
+      | events/0/metrics/max_cpu_usage                    | 80.0                        |
+      | events/0/metrics/total_wall_clock_time_in_seconds | 30.0                        |
+      | events/0/files/0/type                             | "container_log"             |
+      | events/0/files/1/type                             | "container_runtime_metrics" |

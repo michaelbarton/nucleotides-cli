@@ -96,7 +96,7 @@ def copy_log_file_to_outputs(app):
     container_runtime_metrics directory.
     """
     src = get_task_file_path(app, 'meta/log.txt')
-    dst = get_task_file_path(app, 'outputs/container_runtime_metrics/log.txt')
+    dst = get_task_file_path(app, 'outputs/container_log/log.txt')
     copy_file(src, dst)
 
 
