@@ -4,7 +4,7 @@ directory. Each nucleotides benchmarking task takes place in a directory named f
 the nucleotides task ID. This module functions to simplify getting the location of
 where input files can be found, and where output files should be created.
 """
-import os.path, json
+import os.path, json, functools
 
 import ruamel.yaml        as yaml
 import boltons.fileutils  as fu
@@ -50,7 +50,6 @@ def get_output_biobox_file_arguments(app):
     """
     with open(get_task_file_path(app, 'tmp/biobox.yaml')) as f:
         return yaml.load(f.read())['arguments']
-
 
 #########################################
 #

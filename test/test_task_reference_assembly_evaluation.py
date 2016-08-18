@@ -41,7 +41,7 @@ def test_complete_run_through():
 
 def test_create_event_request_with_a_successful_event():
     app = app_helper.mock_reference_evaluator_state(outputs = True)
-    event = post.create_event_request(app, post.create_output_file_metadata(app))
+    event = post.create_event_request(app, post.list_outputs(app))
     nose.assert_equal(event["task"], 6)
     nose.assert_equal(event["success"], True)
     nose.assert_equal(event["files"][0]["type"], "assembly_metrics")
@@ -59,6 +59,6 @@ def test_create_event_request_with_non_numeric_quast_values():
         if 'NGA50' in line:
             print line.replace("25079", "-"),
 
-    event = post.create_event_request(app, post.create_output_file_metadata(app))
+    event = post.create_event_request(app, post.list_outputs(app))
     nose.assert_in("nga50", event["metrics"])
     nose.assert_equal(event["metrics"]["nga50"], 0.0)

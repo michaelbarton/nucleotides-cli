@@ -24,6 +24,7 @@ def copy_to_file(src_file, dst_file, app):
 
 def mock_short_read_assembler_state(task = True, dummy_reads = False, reads = False, intermediates = False, outputs = False):
     app = mock_app()
+    app["s3-upload"] = "s3://"
 
     if task:
         shutil.copy('data/short_read_assembler.json', app['path'] + '/metadata.json')

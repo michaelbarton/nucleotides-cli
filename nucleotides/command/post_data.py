@@ -35,36 +35,51 @@ def output_file_metadata(s3_path, path):
         "sha256"   : digest,
         "url"      : s3_file_url(s3_path, digest)}
 
+
 def list_outputs(app):
-    return map(lambda x: x.split("/")[-2], glob.glob(app["path"] + "/outputs/*/*"))
-
-
-
-
-def upload_output_file(f):
-    s3.post_file(f["location"], f["url"])
-
-def create_output_file_metadata(app):
+    """
+    Creates metadata dictionaries for all produced output files.
+    """
     return map(functools.partial(output_file_metadata, app["s3-upload"]),
                glob.glob(app["path"] + "/outputs/*/*"))
 
+
+def upload_output_file(f):
+    """
+    Uploads file to s3 location specified in the dictionary
+    """
+    s3.post_file(f["location"], f["url"])
+
+
+
 def create_event_request(app, outputs):
+    """
+    Given a list of output file metadata dictionaries, creates the JSON body that
+    should be posted to the nucleotides event API.
+    """
     def remove_loc(d):
         d.pop("location")
         return d
 
     task = util.select_task(app["task"]["image"]["type"])
+    created_files = map(lambda x: x['type'], outputs)
 
     return {
         "task"    : app["task"]["id"],
-        "success" : task.successful_event_outputs().issubset(list_outputs(app)),
+        "success" : task.successful_event_outputs().issubset(created_files),
         "files"   : map(remove_loc, outputs),
         "metrics" : task.collect_metrics(app) }
 
+
 def post(app):
-    outputs = create_output_file_metadata(app)
+    """
+    Fetches list of output files, uploads each to S3 and posts event status to
+    the nucleotides API.
+    """
+    outputs = list_outputs(app)
     map(upload_output_file, outputs)
     api.post_event(create_event_request(app, outputs), app)
+
 
 def run(task):
     app = util.application_state(task)
