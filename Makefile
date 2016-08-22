@@ -138,6 +138,10 @@ tmp/data/nucleotides:
 	rm $@/inputs/data/*
 	cp data/test_organism.yml $@/inputs/data/
 	cp data/benchmark.yml $@/inputs/
+	cp data/crash_test_image.yml $@/tmp
+	tail -n +2 $@/inputs/image.yml >> $@/tmp
+	mv $@/tmp $@/inputs/image.yml
+
 
 .api_container: .rdm_container .api_image
 	@docker run \
