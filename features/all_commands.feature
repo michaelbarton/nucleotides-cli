@@ -37,4 +37,29 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
 
     Examples:
       | task_1 | task_2 | url                              |
-      | 1      | 2      | 2f221a18eb86380369570b2ed147d8b4 |
+      | 9      | 10     | 98c1d2a9d58ce748c08cf65dd3354676 |
+
+
+  Scenario: Executing a short read assembly task that fails whilst producing a log
+    Given the default aruba exit timeout is 900 seconds
+    When I run `nucleotides all 5`
+    And I get the url "/tasks/5"
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the JSON should have the following:
+      | complete               | false                       |
+      | events/0/files/0/type  | "container_log"             |
+      | events/0/files/1/type  | "container_runtime_metrics" |
+
+
+  Scenario: Executing a short read assembly task that fails without producing a log
+    Given the default aruba exit timeout is 900 seconds
+    When I run `nucleotides all 1`
+    And I get the url "/tasks/1"
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the JSON should have the following:
+      | complete               | false                       |
+      | events/0/files/0/type  | "container_runtime_metrics" |

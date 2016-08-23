@@ -7,7 +7,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-  * A new metric total wallclock time is collected and sent to the nucleotides
+  * The client now can handle cases where the Docker image fails to complete or
+    run successfully. In these cases the client will upload container logs and
+    metrics to the API if they are available. This will be useful for
+    diagnosing problematic biobox images.
+
+  * A new metric total wall clock time is collected and sent to the nucleotides
     API with the name `total_wall_clock_time_in_seconds`. This is calculated
     from the sum of the number of cgroup samples and the sampling interval (15
     seconds).

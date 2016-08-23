@@ -132,12 +132,17 @@ tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
 	  kiasaki/alpine-postgres:9.5 \
 	  --inserts | grep -v 'SET row_security = off;' > $@
 
-tmp/data/nucleotides:
+tmp/data/nucleotides: data/crash_test_image.yml
+	rm -rf $@
 	mkdir -p $(dir $@)
 	git clone https://github.com/nucleotides/nucleotides-data.git $@
 	rm $@/inputs/data/*
 	cp data/test_organism.yml $@/inputs/data/
 	cp data/benchmark.yml $@/inputs/
+	cp data/crash_test_image.yml $@/tmp
+	tail -n +2 $@/inputs/image.yml >> $@/tmp
+	mv $@/tmp $@/inputs/image.yml
+
 
 .api_container: .rdm_container .api_image
 	@docker run \

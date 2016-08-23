@@ -57,6 +57,7 @@ def test_short_read_assembler_successful_event():
              "sha256" : "digest_1",
              "type"   : "contig_fasta"}]}, event)
 
+
 def test_short_read_assembler_unsuccessful_event():
     app = app_helper.mock_short_read_assembler_state(outputs = False)
     outputs = []

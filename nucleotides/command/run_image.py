@@ -1,4 +1,4 @@
-import funcy
+import funcy, os
 import nucleotides.filesystem    as fs
 import biobox.util               as docker
 import biobox.container          as container
@@ -38,15 +38,19 @@ def create_container(app):
 
 def copy_output_files(app):
     avail.get_image(image_version(app))
-    fs.copy_log_file_to_outputs(app)
-    if (image_name(app) == 'bioboxes/quast'):          # Quast also does not produce
-        return image_type(app).copy_output_files(app)   # a standard biobox.yaml
-    else:
-        paths = image_type(app).output_files()
-        args  = fs.get_output_biobox_file_arguments(app)
-        for (dst, path) in paths:
-            src = funcy.get_in(args, path + ['value'])
-            fs.copy_tmp_file_to_outputs(app, src, dst)
+
+    if os.path.isfile(fs.get_task_file_path(app, 'meta/log.txt')):
+        fs.copy_log_file_to_outputs(app)
+
+    if os.path.isfile(fs.get_task_file_path(app, 'tmp/biobox.yaml')):
+        if (image_name(app) == 'bioboxes/quast'):          # Quast also does not produce
+            return image_type(app).copy_output_files(app)   # a standard biobox.yaml
+        else:
+            paths = image_type(app).output_files()
+            args  = fs.get_output_biobox_file_arguments(app)
+            for (dst, path) in paths:
+                src = funcy.get_in(args, path + ['value'])
+                fs.copy_tmp_file_to_outputs(app, src, dst)
 
 
 def execute_image(app):
