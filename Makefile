@@ -110,7 +110,6 @@ bootstrap: \
 	tmp/data/dummy.reads.fq.gz \
 	tmp/data/assembly_metrics.tsv \
 	tmp/data/contigs.fa \
-	tmp/data/metrics.json \
 	tmp/data/fixtures.sql
 
 
