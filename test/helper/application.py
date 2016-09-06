@@ -47,9 +47,9 @@ def mock_short_read_assembler_state(task = True, dummy_reads = False, reads = Fa
         copy_to_directory('tmp/data/contigs.fa', 'tmp', app)
 
     if outputs:
-        copy_to_directory('tmp/data/contigs.fa',   'outputs/contig_fasta', app)
-        copy_to_directory('data/log.txt',          'outputs/container_log', app)
-        copy_to_directory('tmp/data/metrics.json', 'outputs/container_runtime_metrics', app)
+        copy_to_directory('tmp/data/contigs.fa',    'outputs/contig_fasta', app)
+        copy_to_directory('data/log.txt',           'outputs/container_log', app)
+        copy_to_file('data/cgroup_metrics.json.gz', 'outputs/container_runtime_metrics/metrics.json.gz', app)
 
     return app
 
@@ -75,6 +75,6 @@ def mock_reference_evaluator_state(inputs = True, intermediates = False, outputs
     if outputs:
         copy_to_file('tmp/data/assembly_metrics.tsv', 'outputs/assembly_metrics/outputs.csv', app)
         copy_to_directory('data/log.txt',             'outputs/container_log', app)
-        copy_to_directory('tmp/data/metrics.json',    'outputs/container_runtime_metrics', app)
+        copy_to_file('data/cgroup_metrics.json.gz', 'outputs/container_runtime_metrics/metrics.json.gz', app)
 
     return app

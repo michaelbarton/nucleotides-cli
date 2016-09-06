@@ -106,6 +106,7 @@ def create_runtime_metric_file(app, metrics):
     containing a JSON dictionary of nucleotides metrics suitable for upload to the
     nuclotides API.
     """
-    dst = get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json')
-    with open(dst, 'w') as f:
+    import gzip
+    dst = get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json.gz')
+    with gzip.open(dst, 'w') as f:
         f.write(json.dumps(metrics))
