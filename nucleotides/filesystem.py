@@ -85,8 +85,8 @@ def copy_tmp_file_to_outputs(app, src_file, dst_dir):
     directory. The name of the file will be the 10-character truncated sha256sum of
     the file.
     """
-    src = os.path.join(app['path'], 'tmp', src_file)
-    dst = os.path.join(app['path'], 'outputs', dst_dir, sha_digest(src)[:10])
+    src = get_task_file_path(app, 'tmp/{}'.format(src_file))
+    dst = get_task_file_path(app, 'outputs/{}/{}'.format(dst_dir, sha_digest(src)[:10]))
     copy_file(src, dst)
 
 
@@ -106,6 +106,7 @@ def create_runtime_metric_file(app, metrics):
     containing a JSON dictionary of nucleotides metrics suitable for upload to the
     nuclotides API.
     """
-    dst = get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json')
-    with open(dst, 'w') as f:
+    import gzip
+    dst = get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json.gz')
+    with gzip.open(dst, 'w') as f:
         f.write(json.dumps(metrics))

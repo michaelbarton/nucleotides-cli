@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+  * The control group (cgroup) metrics collected from the running docker
+    container are now uploaded as a gzip file to S3.
+
   * The client now can handle cases where the Docker image fails to complete or
     run successfully. In these cases the client will upload container logs and
     metrics to the API if they are available. This will be useful for

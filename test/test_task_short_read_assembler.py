@@ -49,5 +49,5 @@ def test_complete_run_through():
     app = app_helper.mock_short_read_assembler_state(reads = True)
     run.execute_image(app)
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/7e9f760161'))
-    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json.gz'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/log.txt'))

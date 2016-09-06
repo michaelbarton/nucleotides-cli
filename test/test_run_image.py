@@ -17,7 +17,7 @@ def test_failing_image_with_no_outputs():
     app["task"]["image"] = image
     app_helper.rewrite_app_task(app)
     run.execute_image(app)
-    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json.gz'))
 
 
 @attr('slow')
@@ -32,5 +32,5 @@ def test_failing_image_with_log_output():
     app["task"]["image"] = image
     app_helper.rewrite_app_task(app)
     run.execute_image(app)
-    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json.gz'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/log.txt'))
