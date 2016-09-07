@@ -3,7 +3,6 @@ import nucleotides.metrics as met
 
 from nose.plugins.attrib import attr
 
-@attr('wip')
 def test_parse_runtime_metrics():
     import gzip, json
     with gzip.open('data/cgroup_metrics.json.gz') as f:
