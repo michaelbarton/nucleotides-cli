@@ -34,13 +34,18 @@ Feature: Processing a short read assembly benchmark
       | uploads/e0/e0e8af37908fb7c275a9467c3ddbba0994c9a33dbf691496a60f4b0bec975f0a |
       | uploads/f8/f8efa7d0bcace3be05f4fff453e414efae0e7d5f680bf215f8374b0a9fdaf9c4 |
     And the JSON should have the following:
-      | complete                                          | true                        |
-      | events/0/metrics/max_memory_usage                 | 183865344.0                 |
-      | events/0/metrics/max_cpu_usage                    | 53545596799.0               |
-      | events/0/metrics/total_wall_clock_time_in_seconds | 15.0                        |
-      | events/0/files/0/type                             | "container_log"             |
-      | events/0/files/1/type                             | "container_runtime_metrics" |
-      | events/0/files/2/type                             | "contig_fasta"              |
+      | complete                                                  | true                        |
+      | events/0/metrics/total_cpu_usage_in_seconds               | 53.545                      |
+      | events/0/metrics/total_cpu_usage_in_seconds_in_kernelmode | 1.75                        |
+      | events/0/metrics/total_cpu_usage_in_seconds_in_usermode   | 11.11                       |
+      | events/0/metrics/total_memory_usage_in_megabytes          | 0.183                       |
+      | events/0/metrics/total_rss_in_megabytes                   | 0.084                       |
+      | events/0/metrics/total_read_io_in_megabytes               | 40.517                      |
+      | events/0/metrics/total_write_io_in_megabytes              | 0.0                         |
+      | events/0/metrics/total_wall_clock_time_in_seconds         | 15.0                        |
+      | events/0/files/0/type                                     | "container_log"             |
+      | events/0/files/1/type                                     | "container_runtime_metrics" |
+      | events/0/files/2/type                                     | "contig_fasta"              |
 
 
   Scenario: Posting a failed benchmark
