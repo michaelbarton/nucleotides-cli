@@ -35,13 +35,13 @@ Feature: Processing a short read assembly benchmark
       | uploads/f8/f8efa7d0bcace3be05f4fff453e414efae0e7d5f680bf215f8374b0a9fdaf9c4 |
     And the JSON should have the following:
       | complete                                                  | true                        |
-      | events/0/metrics/total_cpu_usage_in_seconds               | 53.545                      |
+      | events/0/metrics/total_cpu_usage_in_seconds               | 53.546                      |
       | events/0/metrics/total_cpu_usage_in_seconds_in_kernelmode | 1.75                        |
       | events/0/metrics/total_cpu_usage_in_seconds_in_usermode   | 11.11                       |
-      | events/0/metrics/total_memory_usage_in_megabytes          | 0.183                       |
-      | events/0/metrics/total_rss_in_megabytes                   | 0.084                       |
-      | events/0/metrics/total_read_io_in_megabytes               | 40.517                      |
-      | events/0/metrics/total_write_io_in_megabytes              | 0.0                         |
+      | events/0/metrics/total_memory_usage_in_mibibytes          | 175.348                     |
+      | events/0/metrics/total_rss_in_mibibytes                   | 80.543                      |
+      | events/0/metrics/total_read_io_in_mibibytes               | 38.641                      |
+      | events/0/metrics/total_write_io_in_mibibytes              | 0.0                         |
       | events/0/metrics/total_wall_clock_time_in_seconds         | 15.0                        |
       | events/0/files/0/type                                     | "container_log"             |
       | events/0/files/1/type                                     | "container_runtime_metrics" |
@@ -59,9 +59,14 @@ Feature: Processing a short read assembly benchmark
     And the S3 bucket "nucleotides-testing" should contain the files:
       | uploads/f8/f8efa7d0bcace3be05f4fff453e414efae0e7d5f680bf215f8374b0a9fdaf9c4 |
     And the JSON should have the following:
-      | complete                                          | false                       |
-      | events/0/metrics/max_memory_usage                 | 183865344.0                 |
-      | events/0/metrics/max_cpu_usage                    | 53545596799.0               |
-      | events/0/metrics/total_wall_clock_time_in_seconds | 15.0                        |
-      | events/0/files/0/type                             | "container_log"             |
-      | events/0/files/1/type                             | "container_runtime_metrics" |
+      | complete                                                  | false                       |
+      | events/0/metrics/total_cpu_usage_in_seconds               | 53.546                      |
+      | events/0/metrics/total_cpu_usage_in_seconds_in_kernelmode | 1.75                        |
+      | events/0/metrics/total_cpu_usage_in_seconds_in_usermode   | 11.11                       |
+      | events/0/metrics/total_memory_usage_in_mibibytes          | 175.348                     |
+      | events/0/metrics/total_rss_in_mibibytes                   | 80.543                      |
+      | events/0/metrics/total_read_io_in_mibibytes               | 38.641                      |
+      | events/0/metrics/total_write_io_in_mibibytes              | 0.0                         |
+      | events/0/metrics/total_wall_clock_time_in_seconds         | 15.0                        |
+      | events/0/files/0/type                                     | "container_log"             |
+      | events/0/files/1/type                                     | "container_runtime_metrics" |
