@@ -71,3 +71,22 @@ Feature: Processing a short read assembly benchmark
       | events/0/metrics/total_wall_clock_time_in_seconds         | 0.0                        |
       | events/0/files/0/type                                     | "container_log"             |
       | events/0/files/1/type                                     | "container_runtime_metrics" |
+
+  Scenario: Posting a benchmark with missing cgroup data
+    Given I copy the file "../../data/cgroup_metrics_incomplete.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
+    And I copy the file "../../data/log.txt" to "nucleotides/5/outputs/container_log/log.txt"
+    And I copy the file "../data/contigs.fa" to "nucleotides/5/outputs/contig_fasta/5887df3630"
+    When I run `nucleotides post-data 5`
+    And I get the url "/tasks/5"
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the S3 bucket "nucleotides-testing" should contain the files:
+      | uploads/7e/7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092 |
+      | uploads/e0/e0e8af37908fb7c275a9467c3ddbba0994c9a33dbf691496a60f4b0bec975f0a |
+      | uploads/f8/f8efa7d0bcace3be05f4fff453e414efae0e7d5f680bf215f8374b0a9fdaf9c4 |
+    And the JSON should have the following:
+      | complete                                    | true   |
+      | events/0/metrics/total_cpu_usage_in_seconds | 53.546 |
+    And the JSON should have the following:
+      | events/0/metrics/total_rss_in_mibibytes | null |
