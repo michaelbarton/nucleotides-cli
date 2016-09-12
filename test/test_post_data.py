@@ -59,7 +59,7 @@ def test_short_read_assembler_successful_event():
             "total_rss_in_mibibytes"                   : 80.543,
             "total_read_io_in_mibibytes"               : 38.641,
             "total_write_io_in_mibibytes"              : 0.0,
-            "total_wall_clock_time_in_seconds"         : 15.0},
+            "total_wall_clock_time_in_seconds"         : 0.0},
         "files" : [
             {"url"    : "s3://url/dir/file",
              "sha256" : "digest_1",

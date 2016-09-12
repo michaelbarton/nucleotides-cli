@@ -6,6 +6,9 @@ the Docker container into metrics that may be uploaded to the nucleotides API.
 """
 Interval in seconds in which cgroup data is collected
 """
+
+import biobox.cgroup as cgroup
+
 SAMPLING_INTERVAL      = 15
 BYTE_TO_MIBIBYTE       = 1.0 / 1024 ** 2
 NANOSECONDS_TO_SECONDS = 1e-9
@@ -27,5 +30,6 @@ def parse_runtime_metrics(metrics):
     import jmespath
     f = lambda (name, (path, units)): [name, round(jmespath.search(path, metrics) * units, 3)]
     nucleotides_metrics = dict(map(f, CGROUP_JMESPATHS.iteritems()))
-    nucleotides_metrics["total_wall_clock_time_in_seconds"] = len(metrics) * SAMPLING_INTERVAL
+    nucleotides_metrics["total_wall_clock_time_in_seconds"] = \
+        duration = cgroup.time_diff_in_seconds(metrics[0]['read'], metrics[-1]['read'])
     return nucleotides_metrics

@@ -16,7 +16,7 @@ def test_parse_runtime_metrics():
         "total_rss_in_mibibytes"                   : 80.543,
         "total_read_io_in_mibibytes"               : 38.641,
         "total_write_io_in_mibibytes"              : 0.0,
-        "total_wall_clock_time_in_seconds"         : 15.0}
+        "total_wall_clock_time_in_seconds"         : 0.0}
 
     for k,v in expected.iteritems():
         nose.assert_in(k, metrics)

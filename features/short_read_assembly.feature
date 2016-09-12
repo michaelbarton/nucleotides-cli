@@ -42,7 +42,7 @@ Feature: Processing a short read assembly benchmark
       | events/0/metrics/total_rss_in_mibibytes                   | 80.543                      |
       | events/0/metrics/total_read_io_in_mibibytes               | 38.641                      |
       | events/0/metrics/total_write_io_in_mibibytes              | 0.0                         |
-      | events/0/metrics/total_wall_clock_time_in_seconds         | 15.0                        |
+      | events/0/metrics/total_wall_clock_time_in_seconds         | 0.0                        |
       | events/0/files/0/type                                     | "container_log"             |
       | events/0/files/1/type                                     | "container_runtime_metrics" |
       | events/0/files/2/type                                     | "contig_fasta"              |
@@ -67,6 +67,6 @@ Feature: Processing a short read assembly benchmark
       | events/0/metrics/total_rss_in_mibibytes                   | 80.543                      |
       | events/0/metrics/total_read_io_in_mibibytes               | 38.641                      |
       | events/0/metrics/total_write_io_in_mibibytes              | 0.0                         |
-      | events/0/metrics/total_wall_clock_time_in_seconds         | 15.0                        |
+      | events/0/metrics/total_wall_clock_time_in_seconds         | 0.0                        |
       | events/0/files/0/type                                     | "container_log"             |
       | events/0/files/1/type                                     | "container_runtime_metrics" |
