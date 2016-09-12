@@ -34,7 +34,6 @@ def test_parse_runtime_metrics():
         nose.assert_equal(metrics[k], v,
                 "Exected {} to equal {} but was {}.".format(k, v, metrics[k]))
 
-
 def test_parse_incomplete_runtime_metrics():
     with gzip.open('data/cgroup_metrics_incomplete.json.gz') as f:
         metrics = met.parse_runtime_metrics(json.loads(f.read()))

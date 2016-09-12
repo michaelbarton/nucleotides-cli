@@ -84,9 +84,8 @@ Feature: Processing a short read assembly benchmark
     And the S3 bucket "nucleotides-testing" should contain the files:
       | uploads/7e/7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092 |
       | uploads/e0/e0e8af37908fb7c275a9467c3ddbba0994c9a33dbf691496a60f4b0bec975f0a |
-      | uploads/f8/f8efa7d0bcace3be05f4fff453e414efae0e7d5f680bf215f8374b0a9fdaf9c4 |
+      | uploads/1c/1c4bdb15285e6ee5be63753fcbae5148cffce29dd7745f82e4ea763634f6e70b |
     And the JSON should have the following:
       | complete                                    | true   |
       | events/0/metrics/total_cpu_usage_in_seconds | 53.546 |
-    And the JSON should have the following:
-      | events/0/metrics/total_rss_in_mibibytes | null |
+    And the JSON response should not have "events/0/metrics/total_rss_in_mibibytes"
