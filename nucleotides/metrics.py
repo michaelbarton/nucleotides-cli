@@ -14,7 +14,13 @@ import biobox.cgroup as cgroup
 
 SAMPLING_INTERVAL      = 15
 BYTE_TO_MIBIBYTE       = 1.0 / 1024 ** 2
+SECONDS                = 1
 NANOSECONDS_TO_SECONDS = 1e-9
+
+
+def time_diff(xs):
+    return cgroup.time_diff_in_seconds(xs[0], xs[-1])
+
 
 CGROUP_JMESPATHS = {
     "total_memory_usage_in_mibibytes"          : [funcy.last, "memory_stats.max_usage", BYTE_TO_MIBIBYTE],
@@ -23,7 +29,9 @@ CGROUP_JMESPATHS = {
     "total_cpu_usage_in_seconds_in_kernelmode" : [funcy.last, "cpu_stats.cpu_usage.usage_in_kernelmode", NANOSECONDS_TO_SECONDS],
     "total_cpu_usage_in_seconds_in_usermode"   : [funcy.last, "cpu_stats.cpu_usage.usage_in_usermode", NANOSECONDS_TO_SECONDS],
     "total_read_io_in_mibibytes"               : [funcy.last, "sum(blkio_stats.io_service_bytes_recursive[?op=='Read'].value)", BYTE_TO_MIBIBYTE],
-    "total_write_io_in_mibibytes"              : [funcy.last, "sum(blkio_stats.io_service_bytes_recursive[?op=='Write'].value)", BYTE_TO_MIBIBYTE] }
+    "total_write_io_in_mibibytes"              : [funcy.last, "sum(blkio_stats.io_service_bytes_recursive[?op=='Write'].value)", BYTE_TO_MIBIBYTE],
+    "total_wall_clock_time_in_seconds"         : [time_diff,  "read", SECONDS]}
+
 
 def extract_metric(doc, path):
     """
@@ -45,7 +53,7 @@ def parse_runtime_metrics(metrics):
     """
     Given a list of cgroup dictionaries, parses them into a single dictionary of
     nucleotides metrics that can be uploaded to the nucleotides API. Ignores metrics
-    where more than 10% of the values are None.
+    where more than 10% of the values are missing.
     """
     def parse(acc, (name, (f, path, units))):
         values = extract_metric(metrics, path)
@@ -54,6 +62,4 @@ def parse_runtime_metrics(metrics):
         return acc
 
     nucleotides_metrics = dict(reduce(parse, CGROUP_JMESPATHS.iteritems(), []))
-    nucleotides_metrics["total_wall_clock_time_in_seconds"] = \
-        duration = cgroup.time_diff_in_seconds(metrics[0]['read'], metrics[-1]['read'])
     return nucleotides_metrics
