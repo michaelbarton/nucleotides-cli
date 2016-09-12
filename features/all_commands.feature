@@ -32,6 +32,20 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
       | tasks/1/events/0/files/0/type  | "assembly_metrics"          |
       | tasks/1/events/0/files/1/type  | "container_log"             |
       | tasks/1/events/0/files/2/type  | "container_runtime_metrics" |
+    And the JSON should have the following:
+      | tasks/0/events/0/metrics/total_cpu_usage_in_seconds               |
+      | tasks/0/events/0/metrics/total_cpu_usage_in_seconds_in_kernelmode |
+      | tasks/0/events/0/metrics/total_cpu_usage_in_seconds_in_usermode   |
+      | tasks/0/events/0/metrics/total_memory_usage_in_mibibytes          |
+      | tasks/0/events/0/metrics/total_read_io_in_mibibytes               |
+      | tasks/0/events/0/metrics/total_write_io_in_mibibytes              |
+      | tasks/0/events/0/metrics/total_wall_clock_time_in_seconds         |
+      | tasks/0/events/0/files/0/url                                      |
+      | tasks/0/events/0/files/1/url                                      |
+      | tasks/0/events/0/files/2/url                                      |
+      | tasks/0/events/0/files/0/sha256                                   |
+      | tasks/0/events/0/files/1/sha256                                   |
+      | tasks/0/events/0/files/2/sha256                                   |
     And the directory "nucleotides/<task_1>" should not exist
     And the directory "nucleotides/<task_2>" should not exist
 

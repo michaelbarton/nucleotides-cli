@@ -2,6 +2,7 @@ import funcy, os
 import nucleotides.filesystem    as fs
 import biobox.util               as docker
 import biobox.container          as container
+import biobox.cgroup             as cgroup
 import biobox.image.availability as avail
 import biobox.image.execute      as image
 import nucleotides.util          as util
@@ -58,8 +59,8 @@ def execute_image(app):
     biobox = create_container(app)
     id_ = biobox['Id']
 
-    docker.client().start(id_)
-    metrics = container.collect_runtime_metrics(id_)
+    docker.client(timeout = 15).start(id_)
+    metrics = cgroup.collect_runtime_metrics(id_)
 
     fs.create_runtime_metric_file(app, metrics)
     copy_output_files(app)
