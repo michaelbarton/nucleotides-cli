@@ -10,7 +10,8 @@ Feature: Processing a short read assembly benchmark
 
 
   Scenario: Executing a short read assembler docker image
-    Given I copy the file "../data/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533" to "nucleotides/5/inputs/short_read_fastq/11948b41d4.fq.gz"
+    Given the default aruba exit timeout is 900 seconds
+    And I copy the file "../data/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533" to "nucleotides/5/inputs/short_read_fastq/11948b41d4.fq.gz"
     When I run `nucleotides run-image 5`
     Then the stderr should not contain anything
     And the stdout should not contain anything
