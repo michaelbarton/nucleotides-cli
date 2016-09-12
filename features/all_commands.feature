@@ -37,7 +37,6 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
       | tasks/0/events/0/metrics/total_cpu_usage_in_seconds_in_kernelmode |
       | tasks/0/events/0/metrics/total_cpu_usage_in_seconds_in_usermode   |
       | tasks/0/events/0/metrics/total_memory_usage_in_mibibytes          |
-      | tasks/0/events/0/metrics/total_rss_in_mibibytes                   |
       | tasks/0/events/0/metrics/total_read_io_in_mibibytes               |
       | tasks/0/events/0/metrics/total_write_io_in_mibibytes              |
       | tasks/0/events/0/metrics/total_wall_clock_time_in_seconds         |
