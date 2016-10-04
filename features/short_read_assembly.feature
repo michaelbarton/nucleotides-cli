@@ -19,6 +19,7 @@ Feature: Processing a short read assembly benchmark
     And the file "nucleotides/5/outputs/contig_fasta/7e9f760161" should exist
     And the file "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz" should exist
     And the file "nucleotides/5/outputs/container_log/log.txt" should exist
+    And the file "nucleotides/5/benchmark.log" should exist
 
 
   Scenario: Posting a successful benchmark
@@ -43,10 +44,11 @@ Feature: Processing a short read assembly benchmark
       | events/0/metrics/total_rss_in_mibibytes                   | 80.543                      |
       | events/0/metrics/total_read_io_in_mibibytes               | 38.641                      |
       | events/0/metrics/total_write_io_in_mibibytes              | 0.0                         |
-      | events/0/metrics/total_wall_clock_time_in_seconds         | 0.0                        |
+      | events/0/metrics/total_wall_clock_time_in_seconds         | 0.0                         |
       | events/0/files/0/type                                     | "container_log"             |
       | events/0/files/1/type                                     | "container_runtime_metrics" |
       | events/0/files/2/type                                     | "contig_fasta"              |
+    And the file "nucleotides/5/benchmark.log" should exist
 
 
   Scenario: Posting a failed benchmark
@@ -71,6 +73,7 @@ Feature: Processing a short read assembly benchmark
       | events/0/metrics/total_wall_clock_time_in_seconds         | 0.0                        |
       | events/0/files/0/type                                     | "container_log"             |
       | events/0/files/1/type                                     | "container_runtime_metrics" |
+    And the file "nucleotides/5/benchmark.log" should exist
 
   Scenario: Posting a benchmark with missing cgroup data
     Given I copy the file "../../data/cgroup_metrics_incomplete.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
@@ -89,3 +92,4 @@ Feature: Processing a short read assembly benchmark
       | complete                                    | true   |
       | events/0/metrics/total_cpu_usage_in_seconds | 53.546 |
     And the JSON response should not have "events/0/metrics/total_rss_in_mibibytes"
+    And the file "nucleotides/5/benchmark.log" should exist

@@ -66,4 +66,8 @@ def execute_image(app):
     copy_output_files(app)
 
 def run(task):
-    execute_image(util.application_state(task))
+    app = util.application_state(task)
+    image = image_version(app)
+    app['logger'].info("Starting image execution for {}".format(image))
+    execute_image(app)
+    app['logger'].info("Finished image execution for {}".format(image))

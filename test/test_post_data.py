@@ -28,7 +28,7 @@ def test_upload_output_file():
     app  = app_helper.mock_short_read_assembler_state()
     url  = "s3://nucleotides-testing/upload/"
     path = file_helper.create_benchmark_file(app, '/outputs/contig_fasta/d1b2a59fbe', 'contents')
-    post.upload_output_file(post.output_file_metadata(url, path))
+    post.upload_output_file(app, post.output_file_metadata(url, path))
     expected_path = "upload/d1/d1b2a59fbea7e20077af9f91b27e95e865061b270be03ff539ab3b73587882e8"
     s3_helper.assert_s3_file_exists("nucleotides-testing", expected_path)
     s3_helper.delete_s3_file("nucleotides-testing", expected_path)

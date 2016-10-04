@@ -3,10 +3,12 @@ Functions for creating file metadata and posting benchmarking event data to the
 nucleotides API.
 """
 
-import os, functools, glob
+import os, glob
 import nucleotides.util       as util
 import nucleotides.api_client as api
 import nucleotides.s3         as s3
+
+from functools import partial
 
 def s3_file_url(s3_path, digest):
     """
@@ -40,14 +42,15 @@ def list_outputs(app):
     """
     Creates metadata dictionaries for all produced output files.
     """
-    return map(functools.partial(output_file_metadata, app["s3-upload"]),
+    return map(partial(output_file_metadata, app["s3-upload"]),
                sorted(glob.glob(app["path"] + "/outputs/*/*")))
 
 
-def upload_output_file(f):
+def upload_output_file(app, f):
     """
     Uploads file to s3 location specified in the dictionary
     """
+    app['logger'].debug("Posting file '{}' to S3 '{}'".format(f["location"], f["url"]))
     s3.post_file(f["location"], f["url"])
 
 
@@ -77,11 +80,13 @@ def post(app):
     the nucleotides API.
     """
     outputs = list_outputs(app)
-    map(upload_output_file, outputs)
+    map(partial(upload_output_file, app), outputs)
     api.post_event(create_event_request(app, outputs), app)
 
 
 def run(task):
     app = util.application_state(task)
     app["s3-upload"] = util.get_environment_variable("NUCLEOTIDES_S3_URL")
+    app['logger'].info("Uploading all event data for task {}".format(task))
     post(app)
+    app['logger'].info("Finished upload files for task {}".format(task))

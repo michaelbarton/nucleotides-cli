@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 0.4.0 - DATE
+## 0.4.0 - 2016-10-03
 
 ### Added
 
@@ -29,6 +29,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   * The log file created by the Docker container is uploaded to S3 and a
     reference to the file is stored in the nucleotides API using the file type
     `container_log`.
+
+  * Extended logging information is sent to the benchmark.log file in each
+    nucleotides task directory. This should make debugging easier, where this
+    file can be consulted to resolve any problems.
 
 ## 0.3.1 - 2016-08-01
 
