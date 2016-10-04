@@ -11,6 +11,7 @@ Feature: Fetching input data files for benchmarking
     And the exit status should be 0
     And the file "nucleotides/9/metadata.json" should exist
     And the file "nucleotides/9/metadata.json" should be a valid JSON document
+    And the file "nucleotides/9/benchmark.log" should exist
     And the JSON should have the following:
        | id              | 9                                                                                                                |
        | complete        | false                                                                                                            |
@@ -32,3 +33,4 @@ Feature: Fetching input data files for benchmarking
     And the stdout should not contain anything
     And the exit status should be 0
     And the file "nucleotides/4/inputs/reference_fasta/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414.fa.gz" should exist
+    And the file "nucleotides/4/benchmark.log" should exist
