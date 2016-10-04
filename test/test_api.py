@@ -23,5 +23,5 @@ def test_post_event():
              "files" : [
                  {"url"    : "s3://url",
                   "sha256" : "adef5c",
-                  "type"   : "log" } ] }
+                  "type"   : "container_log" } ] }
     api.post_event(event, app_helper.mock_short_read_assembler_state(task = False))

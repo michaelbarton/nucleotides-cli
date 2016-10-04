@@ -8,11 +8,11 @@ import nucleotides.filesystem         as fs
 import nucleotides.command.run_image  as run
 
 def before_container_hook(app):
-    fu.mkdir_p(fs.get_tmp_file_path('assembly_metrics', app))
+    fu.mkdir_p(fs.get_task_dir_path(app, 'tmp/assembly_metrics'))
 
 def biobox_args(app):
-    contigs    = fs.get_input_file_path('contig_fasta', app)
-    references = fs.get_input_dir_path('reference_fasta', app)
+    contigs    = fs.get_task_path_file_without_name(app, 'inputs/contig_fasta')
+    references = fs.get_task_dir_path(app, 'inputs/reference_fasta')
     return [{"fasta"     : [{"id" : 0 , "value" : contigs,    "type": "contig"}]},
             {"fasta_dir" : [{"id" : 1 , "value" : references, "type": "references"}]}]
 
@@ -31,11 +31,11 @@ def parse_quast_value(x):
 
 
 def collect_metrics(app):
-    path = os.path.join('mappings', 'quast.yml')
-    mapping = yaml.safe_load(util.get_asset_file_contents(path))
+    mapping_file = os.path.join('mappings', 'quast.yml')
+    mapping = yaml.safe_load(util.get_asset_file_contents(mapping_file))
 
-    path = fs.get_output_file_path('assembly_metrics', app)
-    with open(os.path.join(path, os.listdir(path)[0]), 'r') as f:
+    path = fs.get_task_path_file_without_name(app, 'outputs/assembly_metrics')
+    with open(path, 'r') as f:
         raw_metrics = map(lambda x: x.split("\t"), f.read().strip().split("\n"))
 
     return dict(map(lambda (x,y): (mapping[x], parse_quast_value(y)),

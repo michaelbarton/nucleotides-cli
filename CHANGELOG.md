@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.4.0 - 2016-10-03
+
+### Added
+
+  * A new metric total wall clock time is collected and sent to the nucleotides
+    API with the name `total_wall_clock_time_in_seconds`. This is calculated
+    from the difference in approximate stop time and start time of the
+    container within the Docker client timeout (15s) and sampling interval
+    (15s).
+
+  * Additional cgroup metrics are collected from the running container. These
+    metrics are io reads, io writes, total resident set size (rss), CPU usage
+    in kernel mode, CPU usage in user mode. These are in additional to total
+    memory usage and total CPU time.
+
+  * The control group (cgroup) metrics collected from the running docker
+    container are now uploaded as a gzip file to S3.
+
+  * The client now can handle cases where the Docker image fails to complete or
+    run successfully. In these cases the client will upload container logs and
+    metrics to the API if they are available. This will be useful for
+    diagnosing problematic biobox images.
+
+  * The log file created by the Docker container is uploaded to S3 and a
+    reference to the file is stored in the nucleotides API using the file type
+    `container_log`.
+
+  * Extended logging information is sent to the benchmark.log file in each
+    nucleotides task directory. This should make debugging easier, where this
+    file can be consulted to resolve any problems.
+
 ## 0.3.1 - 2016-08-01
 
 ### Fixed

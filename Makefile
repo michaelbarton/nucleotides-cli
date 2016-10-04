@@ -79,7 +79,7 @@ $(dist): $(shell find bin nucleotides) requirements/default.txt setup.py MANIFES
 
 test = $(params) tox -e py27-unit
 
-feature: Gemfile.lock $(credentials)
+feature: Gemfile.lock $(credentials) test-build
 	@$(path) $(params) TMPDIR=$(abspath tmp/aruba) bundle exec cucumber $(ARGS)
 
 test:
@@ -87,6 +87,9 @@ test:
 
 wip:
 	@$(test) -- -a 'wip' $(ARGS)
+
+fast_test:
+	@clear && $(test) -- -a '!slow'
 
 autotest:
 	@clear && $(test) -- -a '!slow' || true # Using true starts tests even on failure
@@ -101,13 +104,12 @@ autotest:
 bootstrap: \
 	Gemfile.lock \
 	.api_container \
-	.depoy_image \
+	.deploy_image \
 	tmp/data/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533 \
 	tmp/data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414 \
 	tmp/data/dummy.reads.fq.gz \
 	tmp/data/assembly_metrics.tsv \
 	tmp/data/contigs.fa \
-	tmp/data/metrics.json \
 	tmp/data/fixtures.sql
 
 
@@ -129,12 +131,17 @@ tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
 	  kiasaki/alpine-postgres:9.5 \
 	  --inserts | grep -v 'SET row_security = off;' > $@
 
-tmp/data/nucleotides:
+tmp/data/nucleotides: data/crash_test_image.yml
+	rm -rf $@
 	mkdir -p $(dir $@)
 	git clone https://github.com/nucleotides/nucleotides-data.git $@
 	rm $@/inputs/data/*
 	cp data/test_organism.yml $@/inputs/data/
 	cp data/benchmark.yml $@/inputs/
+	cp data/crash_test_image.yml $@/tmp
+	tail -n +2 $@/inputs/image.yml >> $@/tmp
+	mv $@/tmp $@/inputs/image.yml
+
 
 .api_container: .rdm_container .api_image
 	@docker run \
@@ -166,7 +173,7 @@ tmp/data/nucleotides:
 	docker pull nucleotides/api:staging
 	touch $@
 
-.depoy_image:
+.deploy_image:
 	docker pull bioboxes/file-deployer
 
 Gemfile.lock: Gemfile
@@ -174,9 +181,9 @@ Gemfile.lock: Gemfile
 	bundle install --path vendor/bundle 2>&1 > log/bundle.txt
 
 clean:
-	docker kill $(shell cat .rdm_container); true
-	docker kill $(shell cat .api_container); true
-	rm -f .*_container .*_image Gemfile.lock
-	rm -rf vendor tmp .bundle log
+	@docker kill $(shell cat .rdm_container 2> /dev/null) 2> /dev/null; true
+	@docker kill $(shell cat .api_container 2> /dev/null) 2> /dev/null; true
+	@rm -f .*_container .*_image Gemfile.lock
+	@rm -rf vendor tmp .bundle log
 
-.PHONY: test autotest bootstrap
+.PHONY: test autotest bootstrap clean
