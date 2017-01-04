@@ -28,11 +28,11 @@ db_pass := POSTGRES_PASSWORD=pass
 db_name := POSTGRES_NAME=postgres
 
 # AWS keys used to send test data
-aws_pass   := AWS_SECRET_ACCESS_KEY=$(shell bundle exec ./plumbing/fetch_credential secret_key)
-aws_key    := AWS_ACCESS_KEY_ID=$(shell bundle exec ./plumbing/fetch_credential access_key)
-aws_region := AWS_DEFAULT_REGION=us-west-1
+aws_pass   = AWS_SECRET_ACCESS_KEY=$(shell bundle exec ./plumbing/fetch_credential secret_key)
+aws_key    = AWS_ACCESS_KEY_ID=$(shell bundle exec ./plumbing/fetch_credential access_key)
+aws_region = AWS_DEFAULT_REGION=us-west-1
 
-params := NUCLEOTIDES_API=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_host) $(aws_pass) $(aws_key) $(aws_region)
+params = NUCLEOTIDES_API=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_host) $(aws_pass) $(aws_key) $(aws_region)
 
 # Makefile macro shortcut to run docker images with all credentials configured.
 docker_db := @docker run \
