@@ -124,69 +124,86 @@ bootstrap: \
 
 
 tmp/data/%: ./plumbing/fetch_s3_file
-	$(shell mkdir -p $(dir $@))
-	bundle exec $^ s3://nucleotides-testing/short-read-assembler/$* $@
+	@$(shell mkdir -p $(dir $@))
+	@bundle exec $^ s3://nucleotides-testing/short-read-assembler/$* $@
 
 tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
-	$(docker_db) \
+	@printf $(WIDTH) "  --> Creating nucleotid.es fixture dataset"
+	@$(docker_db) \
 	  --entrypoint=psql \
 	  kiasaki/alpine-postgres:9.5 \
-	  --command="drop schema public cascade; create schema public;"
-	$(docker_db) \
+	  --command="drop schema public cascade; create schema public;" 2>&1 > log/migration.txt
+	@$(docker_db) \
 	  --env="$(db_pass)" \
 	  nucleotides/api:staging \
-	  migrate
-	$(docker_db) \
+	  migrate 2>&1 >> log/migration.txt
+	@$(docker_db) \
 	  --entrypoint=pg_dump \
 	  kiasaki/alpine-postgres:9.5 \
 	  --inserts | grep -v 'SET row_security = off;' > $@
+	@@$(OK)
 
 tmp/data/nucleotides: data/crash_test_image.yml
-	rm -rf $@
-	mkdir -p $(dir $@)
-	git clone https://github.com/nucleotides/nucleotides-data.git $@
-	rm $@/inputs/data/*
-	cp data/test_organism.yml $@/inputs/data/
-	cp data/benchmark.yml $@/inputs/
-	cp data/crash_test_image.yml $@/tmp
-	tail -n +2 $@/inputs/image.yml >> $@/tmp
-	mv $@/tmp $@/inputs/image.yml
+	@printf $(WIDTH) "  --> Creating test nucleotid.es data set"
+	@rm -rf $@
+	@mkdir -p $(dir $@) log
+	@git clone https://github.com/nucleotides/nucleotides-data.git $@
+	@rm $@/inputs/data/*
+	@cp data/test_organism.yml $@/inputs/data/
+	@cp data/benchmark.yml $@/inputs/
+	@cp data/crash_test_image.yml $@/tmp
+	@tail -n +2 $@/inputs/image.yml >> $@/tmp
+	@mv $@/tmp $@/inputs/image.yml
+	@$(OK)
 
 
 # Launch nucleotides API container, connnected to the RDS container
 .api_container: .rdm_container .api_image
-	$(docker_db) \
+	@printf $(WIDTH) "  --> Launching nucleotid.es API container"
+	@$(docker_db) \
 		--detach=true \
 		--net=host \
 		--publish 80:80 \
 		nucleotides/api:staging \
 		server > $@
+	@$(OK)
 
 # Launch POSTGRES RDS container
 .rdm_container: .rdm_image
-	docker run \
+	@printf $(WIDTH) "  --> Launching POSTGRES RDS container"
+	@docker run \
 		--env="$(db_user)" \
 		--env="$(db_pass)" \
 		--publish=5433:5432 \
 		--detach=true \
 		kiasaki/alpine-postgres:9.5 \
 		> $@
-	sleep 3
+	@sleep 3
+	@$(OK)
 
-.rdm_image:
-	docker pull kiasaki/alpine-postgres:9.5
-	touch $@
 
 .api_image:
-	docker pull nucleotides/api:staging
-	touch $@
+	@printf $(WIDTH) "  --> Fetching nucleotid.es API Docker image"
+	@docker pull nucleotides/api:staging 2>&1 > /dev/null
+	@touch $@
+	@$(OK)
+
+.rdm_image:
+	@printf $(WIDTH) "  --> Fetching Postgres RDS Docker image"
+	@docker pull kiasaki/alpine-postgres:9.5 2>&1 > /dev/null
+	@touch $@
+	@$(OK)
 
 .deploy_image:
-	docker pull bioboxes/file-deployer
+	@printf $(WIDTH) "  --> Fetching Docker image to publish client"
+	@docker pull bioboxes/file-deployer 2>&1 > /dev/null
+	@$(OK)
 
 Gemfile.lock: Gemfile
-	mkdir -p log
-	bundle install --path vendor/bundle 2>&1 > log/bundle.txt
+	@printf $(WIDTH) "  --> Fetching ruby dependencies for feature tests"
+	@mkdir -p log
+	@bundle install --path vendor/bundle 2>&1 > log/bundle.txt
+	@$(OK)
 
 clean:
 	@docker kill $(shell cat .rdm_container 2> /dev/null) 2> /dev/null; true
@@ -195,3 +212,17 @@ clean:
 	@rm -rf vendor tmp .bundle log
 
 .PHONY: test autotest bootstrap clean
+
+################################################
+#
+# Colours to format makefile target outputs
+#
+################################################
+
+OK=echo " $(GREEN)OK$(END)"
+WIDTH="%-70s"
+
+RED="\033[0;31m"
+GREEN=\033[0;32m
+YELLOW="\033[0;33m"
+END=\033[0m
