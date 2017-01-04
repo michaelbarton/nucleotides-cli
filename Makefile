@@ -153,18 +153,16 @@ tmp/data/nucleotides: data/crash_test_image.yml
 	mv $@/tmp $@/inputs/image.yml
 
 
+# Launch nucleotides API container, connnected to the RDS container
 .api_container: .rdm_container .api_image
-	@docker run \
-	  --detach=true \
-	  --env="$(db_user)" \
-	  --env="$(db_pass)" \
-	  --env="$(db_name)" \
-	  --env=POSTGRES_HOST=//localhost:5433 \
-	  --net=host \
-	  --publish 80:80 \
-	  nucleotides/api:staging \
-	  server > $@
+	$(docker_db) \
+		--detach=true \
+		--net=host \
+		--publish 80:80 \
+		nucleotides/api:staging \
+		server > $@
 
+# Launch POSTGRES RDS container
 .rdm_container: .rdm_image
 	docker run \
 		--env="$(db_user)" \
