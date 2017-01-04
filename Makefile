@@ -6,8 +6,15 @@ dist    := .tox/dist/$(name)-$(version).zip
 
 installer-image := test-install
 
+#################################################
+#
+# Setup credentials for testing
+#
+#################################################
+
 docker_host := $(shell echo ${DOCKER_HOST} | egrep -o "\d+.\d+.\d+.\d+")
 
+# Configure POSTGRES host based on whether boot2docker or native docker is being used
 ifdef docker_host
        db_host  := POSTGRES_HOST=//$(docker_host):5433
 else
@@ -15,16 +22,19 @@ else
        docker_host := localhost
 endif
 
+# Fake user created for testing database
 db_user := POSTGRES_USER=postgres
 db_pass := POSTGRES_PASSWORD=pass
 db_name := POSTGRES_NAME=postgres
 
+# AWS keys used to send test data
 aws_pass   := AWS_SECRET_ACCESS_KEY=$(shell bundle exec ./plumbing/fetch_credential secret_key)
 aws_key    := AWS_ACCESS_KEY_ID=$(shell bundle exec ./plumbing/fetch_credential access_key)
 aws_region := AWS_DEFAULT_REGION=us-west-1
 
 params := NUCLEOTIDES_API=$(docker_host) $(db_user) $(db_pass) $(db_name) $(db_host) $(aws_pass) $(aws_key) $(aws_region)
 
+# Makefile macro shortcut to run docker images with all credentials configured.
 docker_db := @docker run \
 	--env="$(db_user)" \
 	--env="$(db_name)" \
