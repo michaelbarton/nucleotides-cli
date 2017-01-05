@@ -25,6 +25,7 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
     And the exit status should be 0
     And the JSON should have the following:
       | complete                       | true                        |
+      | success                        | true                        |
       | tasks/0/events/0/files/0/type  | "container_log"             |
       | tasks/0/events/0/files/1/type  | "container_runtime_metrics" |
       | tasks/0/events/0/files/2/type  | "contig_fasta"              |
@@ -51,18 +52,19 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
 
     Examples:
       | task_1 | task_2 | url                              |
-      | 9      | 10     | 98c1d2a9d58ce748c08cf65dd3354676 |
+      | 5      | 6      | 98c1d2a9d58ce748c08cf65dd3354676 |
 
 
   Scenario: Executing a short read assembly task that fails whilst producing a log
     Given the default aruba exit timeout is 900 seconds
-    When I run `nucleotides all 5`
-    And I get the url "/tasks/5"
+    When I run `nucleotides all 3`
+    And I get the url "/tasks/3"
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
     And the JSON should have the following:
-      | complete               | false                       |
+      | complete               | true                        |
+      | success                | false                       |
       | events/0/files/0/type  | "container_log"             |
       | events/0/files/1/type  | "container_runtime_metrics" |
 
@@ -75,5 +77,6 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
     And the stdout should not contain anything
     And the exit status should be 0
     And the JSON should have the following:
-      | complete               | false                       |
+      | complete               | true                        |
+      | success                | false                       |
       | events/0/files/0/type  | "container_runtime_metrics" |
