@@ -11,9 +11,7 @@ dependencies:
   cache_directories:
     - "vendor/bundle"
   override:
-    - pip install tox
     - ./script/bootstrap
-    - docker pull bioboxes/velvet
     - mkdir -p $CIRCLE_TEST_REPORTS/cucumber
 
 test:

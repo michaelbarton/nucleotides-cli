@@ -37,6 +37,7 @@ Feature: Processing a short read assembly benchmark
       | uploads/f8/f8efa7d0bcace3be05f4fff453e414efae0e7d5f680bf215f8374b0a9fdaf9c4 |
     And the JSON should have the following:
       | complete                                                  | true                        |
+      | success                                                   | true                        |
       | events/0/metrics/total_cpu_usage_in_seconds               | 53.546                      |
       | events/0/metrics/total_cpu_usage_in_seconds_in_kernelmode | 1.75                        |
       | events/0/metrics/total_cpu_usage_in_seconds_in_usermode   | 11.11                       |
@@ -62,7 +63,8 @@ Feature: Processing a short read assembly benchmark
     And the S3 bucket "nucleotides-testing" should contain the files:
       | uploads/f8/f8efa7d0bcace3be05f4fff453e414efae0e7d5f680bf215f8374b0a9fdaf9c4 |
     And the JSON should have the following:
-      | complete                                                  | false                       |
+      | success                                                   | false                       |
+      | complete                                                  | true                        |
       | events/0/metrics/total_cpu_usage_in_seconds               | 53.546                      |
       | events/0/metrics/total_cpu_usage_in_seconds_in_kernelmode | 1.75                        |
       | events/0/metrics/total_cpu_usage_in_seconds_in_usermode   | 11.11                       |
@@ -70,7 +72,7 @@ Feature: Processing a short read assembly benchmark
       | events/0/metrics/total_rss_in_mibibytes                   | 80.543                      |
       | events/0/metrics/total_read_io_in_mibibytes               | 38.641                      |
       | events/0/metrics/total_write_io_in_mibibytes              | 0.0                         |
-      | events/0/metrics/total_wall_clock_time_in_seconds         | 0.0                        |
+      | events/0/metrics/total_wall_clock_time_in_seconds         | 0.0                         |
       | events/0/files/0/type                                     | "container_log"             |
       | events/0/files/1/type                                     | "container_runtime_metrics" |
     And the file "nucleotides/5/benchmark.log" should exist
@@ -89,6 +91,7 @@ Feature: Processing a short read assembly benchmark
       | uploads/e0/e0e8af37908fb7c275a9467c3ddbba0994c9a33dbf691496a60f4b0bec975f0a |
       | uploads/1c/1c4bdb15285e6ee5be63753fcbae5148cffce29dd7745f82e4ea763634f6e70b |
     And the JSON should have the following:
+      | success                                     | true   |
       | complete                                    | true   |
       | events/0/metrics/total_cpu_usage_in_seconds | 53.546 |
     And the JSON response should not have "events/0/metrics/total_rss_in_mibibytes"

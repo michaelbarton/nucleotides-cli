@@ -53,6 +53,7 @@ Feature: Running a reference assembly benchmark task
       | uploads/e0/e0e8af37908fb7c275a9467c3ddbba0994c9a33dbf691496a60f4b0bec975f0a |
     And the JSON should have the following:
        | complete                                     | true                        |
+       | success                                      | true                        |
        | events/0/metrics/duplication_ratio           | 1.001                       |
        | events/0/metrics/indels_per_100_kbp          | 0.0                         |
        | events/0/metrics/l50                         | 6.0                         |
@@ -115,3 +116,4 @@ Feature: Running a reference assembly benchmark task
     And the JSON should have the following:
        | events/0/metrics/nga50  | 0.0  |
        | complete                | true |
+       | success                 | true |
