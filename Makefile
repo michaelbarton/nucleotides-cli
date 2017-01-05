@@ -6,11 +6,19 @@ dist    := .tox/dist/$(name)-$(version).zip
 
 installer-image := test-install
 
+# Which branch to fetch input data files from. This can be overridden to fetch
+# files from a difference git branch. E.g. `make bootstrap DATA-BRANCH=dev`
+DATA-BRANCH=master
+
+.PHONY: test autotest bootstrap clean
+
+
 #################################################
 #
 # Setup credentials for testing
 #
 #################################################
+
 
 docker_host := $(shell echo ${DOCKER_HOST} | egrep -o "\d+.\d+.\d+.\d+")
 
@@ -44,14 +52,16 @@ docker_db := @docker run \
 	--env="PGPORT=5433" \
 	--env="PGDATABASE=postgres" \
 	--env=POSTGRES_HOST=//localhost:5433 \
-	--volume=$(abspath tmp/data/nucleotides):/data:ro \
+	--volume=$(abspath tmp/data/db_fixture):/data:ro \
 	--net=host
+
 
 #################################################
 #
 # Build and upload python package
 #
 #################################################
+
 
 publish: $(dist)
 	@mkdir -p tmp/dist
@@ -107,6 +117,78 @@ autotest:
 
 ################################################
 #
+# Create artificial dataset for testing nucleotides client
+#
+################################################
+
+
+# Minimal set of files required to migrate the database
+test-data := \
+	tmp/data/db_fixture/inputs/image.yml \
+	tmp/data/db_fixture/inputs/benchmark.yml \
+	tmp/data/db_fixture/inputs/data/test_organism.yml \
+	tmp/data/db_fixture/controlled_vocabulary/extraction_method.yml \
+	tmp/data/db_fixture/controlled_vocabulary/file.yml \
+	tmp/data/db_fixture/controlled_vocabulary/image.yml \
+	tmp/data/db_fixture/controlled_vocabulary/material.yml \
+	tmp/data/db_fixture/controlled_vocabulary/metric.yml \
+	tmp/data/db_fixture/controlled_vocabulary/platform.yml \
+	tmp/data/db_fixture/controlled_vocabulary/protocol.yml \
+	tmp/data/db_fixture/controlled_vocabulary/run_mode.yml \
+	tmp/data/db_fixture/controlled_vocabulary/source.yml \
+
+
+data-url = https://raw.githubusercontent.com/nucleotides/nucleotides-data/$(DATA-BRANCH)/
+
+
+# Fetch metadata files from github
+tmp/data/db_fixture/controlled_vocabulary/%:
+	@mkdir -p $(dir $@)
+	@printf $(WIDTH) "  --> Fetching nucleotides metadata file '$*'"
+	@wget --quiet $(data-url)/controlled_vocabulary/$* --output-document $@
+	@$(OK)
+
+
+tmp/data/db_fixture/inputs/image.yml: example_data/inputs/image.yml
+	@mkdir -p $(dir $@)
+	@printf $(WIDTH) "  --> Creating example 'image.yml' file"
+	@cp $< $@
+	@wget --quiet $(data-url)/inputs/image.yml --output-document - \
+		| tail -n +2 >> $@
+	@$(OK)
+
+
+
+# Copy dummy input files into testing directory
+tmp/data/db_fixture/inputs/%: example_data/inputs/%
+	@mkdir -p $(dir $@)
+	@printf $(WIDTH) "  --> Copying example input file '$*'"
+	@cp $< $@
+	@$(OK)
+
+
+# Create an SQL which can be used to reset the database to an example state
+tmp/data/fixtures.sql: .rdm_container $(test-data)
+	@printf $(WIDTH) "  --> Creating nucleotid.es fixture dataset"
+	@$(docker_db) \
+	  --entrypoint=psql \
+	  kiasaki/alpine-postgres:9.5 \
+	  --command="drop schema public cascade; create schema public;" \
+	  2> log/migration.txt > log/migration.txt
+	@$(docker_db) \
+	  --env="$(db_pass)" \
+	  nucleotides/api:staging \
+	  migrate \
+	  2>> log/migration.txt >> log/migration.txt
+	@$(docker_db) \
+	  --entrypoint=pg_dump \
+	  kiasaki/alpine-postgres:9.5 \
+	  --inserts | grep -v 'SET row_security = off;' > $@
+	@$(OK)
+
+
+################################################
+#
 # Bootstrap required project resources
 #
 ################################################
@@ -115,46 +197,17 @@ bootstrap: \
 	Gemfile.lock \
 	.api_container \
 	.deploy_image \
-	tmp/data/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533 \
-	tmp/data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414 \
 	tmp/data/dummy.reads.fq.gz \
 	tmp/data/assembly_metrics.tsv \
 	tmp/data/contigs.fa \
-	tmp/data/fixtures.sql
+	tmp/data/fixtures.sql \
+	tmp/data/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533 \
+	tmp/data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414
 
-
-tmp/data/%: ./plumbing/fetch_s3_file
+# Fetch example input data from S3
+tmp/data/%: ./plumbing/fetch_s3_file Gemfile.lock
 	@$(shell mkdir -p $(dir $@))
-	@bundle exec $^ s3://nucleotides-testing/short-read-assembler/$* $@
-
-tmp/data/fixtures.sql: tmp/data/nucleotides .rdm_container
-	@printf $(WIDTH) "  --> Creating nucleotid.es fixture dataset"
-	@$(docker_db) \
-	  --entrypoint=psql \
-	  kiasaki/alpine-postgres:9.5 \
-	  --command="drop schema public cascade; create schema public;" 2>&1 > log/migration.txt
-	@$(docker_db) \
-	  --env="$(db_pass)" \
-	  nucleotides/api:staging \
-	  migrate 2>&1 >> log/migration.txt
-	@$(docker_db) \
-	  --entrypoint=pg_dump \
-	  kiasaki/alpine-postgres:9.5 \
-	  --inserts | grep -v 'SET row_security = off;' > $@
-	@@$(OK)
-
-tmp/data/nucleotides: data/crash_test_image.yml
-	@printf $(WIDTH) "  --> Creating test nucleotid.es data set"
-	@rm -rf $@
-	@mkdir -p $(dir $@) log
-	@git clone https://github.com/nucleotides/nucleotides-data.git $@
-	@rm $@/inputs/data/*
-	@cp data/test_organism.yml $@/inputs/data/
-	@cp data/benchmark.yml $@/inputs/
-	@cp data/crash_test_image.yml $@/tmp
-	@tail -n +2 $@/inputs/image.yml >> $@/tmp
-	@mv $@/tmp $@/inputs/image.yml
-	@$(OK)
+	@bundle exec $< s3://nucleotides-testing/short-read-assembler/$* $@
 
 
 # Launch nucleotides API container, connnected to the RDS container
@@ -167,6 +220,7 @@ tmp/data/nucleotides: data/crash_test_image.yml
 		nucleotides/api:staging \
 		server > $@
 	@$(OK)
+
 
 # Launch POSTGRES RDS container
 .rdm_container: .rdm_image
@@ -209,9 +263,8 @@ clean:
 	@docker kill $(shell cat .rdm_container 2> /dev/null) 2> /dev/null; true
 	@docker kill $(shell cat .api_container 2> /dev/null) 2> /dev/null; true
 	@rm -f .*_container .*_image Gemfile.lock
-	@rm -rf vendor tmp .bundle log
+	@rm -rf tmp log
 
-.PHONY: test autotest bootstrap clean
 
 ################################################
 #
