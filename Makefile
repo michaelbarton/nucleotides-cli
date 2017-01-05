@@ -193,7 +193,10 @@ tmp/data/fixtures.sql: .rdm_container $(test-data)
 #
 ################################################
 
+# Test data must be downloaded first otherwise the Docker daemon sets the
+# `tmp/data` directory as root when mounting it as a volume
 bootstrap: \
+	$(test-data) \
 	Gemfile.lock \
 	.api_container \
 	.deploy_image \
