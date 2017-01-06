@@ -2,6 +2,6 @@
 - image_type: short_read_assembler
   name: bioboxes/crash-test-biobox
   versions:
-    - sha256: eaf1ab35314712db9d3fff0d265613629fe628ed9b058a9a4fe94424184f8c41
-      tasks: ["exit-1", "exit-1-with-log"]
+    - sha256: 531107520c3a131b714b23d5c58920f216a4e897a1db9a1c20ef960c2ed688f0
+      tasks: ["exit-1", "exit-1-with-log", "short-read-assembler"]
       name: "example_image"

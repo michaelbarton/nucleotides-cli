@@ -206,6 +206,7 @@ bootstrap: \
 	tmp/data/fixtures.sql \
 	tmp/data/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533 \
 	tmp/data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414
+	docker pull bioboxes/crash-test-biobox
 
 # Fetch example input data from S3
 tmp/data/%: ./plumbing/fetch_s3_file Gemfile.lock
