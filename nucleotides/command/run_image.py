@@ -54,13 +54,13 @@ def copy_output_files(app):
                 fs.copy_tmp_file_to_outputs(app, src, dst)
 
 
-def execute_image(app):
+def execute_image(app, docker_timeout = 15, metric_interval = 15, metric_warmup = 1):
     setup(app)
     biobox = create_container(app)
     id_ = biobox['Id']
 
-    docker.client(timeout = 15).start(id_)
-    metrics = cgroup.collect_runtime_metrics(id_)
+    docker.client(docker_timeout).start(id_)
+    metrics = cgroup.collect_runtime_metrics(id_, metric_interval, metric_warmup)
 
     fs.create_runtime_metric_file(app, metrics)
     copy_output_files(app)

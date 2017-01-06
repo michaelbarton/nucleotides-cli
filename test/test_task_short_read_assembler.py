@@ -20,7 +20,7 @@ def test_create_container():
     assert "Id" in cnt
     image_helper.clean_up_container(cnt["Id"])
 
-@attr('slow')
+
 def test_run_container():
     app = app_helper.mock_short_read_assembler_state(reads = True)
     id_ = run.create_container(app)['Id']
@@ -28,6 +28,7 @@ def test_run_container():
     docker.client().wait(id_)
     nose.assert_equal(container.did_exit_succcessfully(id_), True)
     image_helper.clean_up_container(id_)
+
 
 def test_list_input_files():
     app  = app_helper.mock_short_read_assembler_state(intermediates = True)
@@ -37,6 +38,7 @@ def test_list_input_files():
         location = os.path.join(app['path'], 'tmp', funcy.get_in(args, path + ['value']))
         nose.assert_true(os.path.isfile(location))
 
+
 def test_copy_output_files():
     app = app_helper.mock_short_read_assembler_state(intermediates = True)
     run.copy_output_files(app)
@@ -44,10 +46,10 @@ def test_copy_output_files():
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/7e9f760161'))
 
 
-@attr('slow')
 def test_complete_run_through():
-    app = app_helper.mock_short_read_assembler_state(reads = True)
-    run.execute_image(app)
-    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/7e9f760161'))
+    app = app_helper.mock_short_read_assembler_state(dummy_reads = True)
+    image_helper.execute_image(app)
+
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/01eb7cec61'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json.gz'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/log.txt'))
