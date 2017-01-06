@@ -9,7 +9,7 @@ Feature: Reporting useful error messages
     Given the nucleotides directory is available on the path
     And I copy the file "../../data/cgroup_metrics.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
     And I copy the file "../data/contigs.fa" to "nucleotides/5/outputs/contig_fasta/5887df3630"
-    And I copy the file "../../data/short_read_assembler.json" to "nucleotides/5/metadata.json"
+    And I copy the file "../../example_data/tasks/short_read_assembler.json" to "nucleotides/5/metadata.json"
     When I run the bash command:
       """
       unset <variable> && nucleotides post-data 5

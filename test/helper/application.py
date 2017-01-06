@@ -31,7 +31,7 @@ def mock_short_read_assembler_state(task = True, dummy_reads = False, reads = Fa
     app["s3-upload"] = "s3://"
 
     if task:
-        shutil.copy('data/short_read_assembler.json', app['path'] + '/metadata.json')
+        shutil.copy('example_data/tasks/short_read_assembler.json', app['path'] + '/metadata.json')
         with open(app['path'] + '/metadata.json', 'r') as f:
             app["task"] = json.loads(f.read())
 
