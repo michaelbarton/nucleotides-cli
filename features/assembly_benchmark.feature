@@ -6,7 +6,7 @@ Feature: Running a reference assembly benchmark task
     And I set the environment variables to:
       | variable           | value                             |
       | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
-    And I copy the file "../../data/reference_assembly_evaluation.json" to "nucleotides/6/metadata.json"
+    And I copy the file "../../example_data/tasks/reference_assembly_evaluation.json" to "nucleotides/6/metadata.json"
 
   Scenario: Executing a reference assembly benchmark task
     Given the default aruba exit timeout is 900 seconds
