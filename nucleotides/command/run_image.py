@@ -48,7 +48,7 @@ def copy_output_files(app):
             return image_type(app).copy_output_files(app)   # a standard biobox.yaml
         else:
             paths = image_type(app).output_files()
-            args  = fs.get_output_biobox_file_arguments(app)
+            args  = fs.get_output_biobox_file_contents(app)
             for (dst, path) in paths:
                 src = funcy.get_in(args, path + ['value'])
                 fs.copy_tmp_file_to_outputs(app, src, dst)

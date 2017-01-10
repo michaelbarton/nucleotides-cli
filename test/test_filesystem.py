@@ -4,7 +4,7 @@ import nucleotides.filesystem as fs
 
 from nose.plugins.attrib import attr
 
-def test_get_output_biobox_file_arguments():
+def test_get_output_biobox_file_contents():
     app = app_helper.mock_short_read_assembler_state(intermediates = True)
-    args = fs.get_output_biobox_file_arguments(app)
+    args = fs.get_output_biobox_file_contents(app)
     nose.assert_in('fasta', args[0])
