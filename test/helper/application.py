@@ -48,7 +48,7 @@ def mock_short_read_assembler_state(task = True, dummy_reads = False, reads = Fa
 
     if outputs:
         copy_to_directory('tmp/data/contigs.fa',    'outputs/contig_fasta', app)
-        copy_to_directory('data/log.txt',           'outputs/container_log', app)
+        copy_to_file('data/log.txt',                'outputs/container_log/e0e8af3790', app)
         copy_to_file('data/cgroup_metrics.json.gz', 'outputs/container_runtime_metrics/metrics.json.gz', app)
 
     return app
@@ -68,7 +68,7 @@ def mock_reference_evaluator_state(inputs = True, intermediates = False, outputs
         copy_to_file('tmp/data/contigs.fa', 'inputs/contig_fasta/7e9f760161.fa', app)
 
     if intermediates:
-        copy_to_file('data/log.txt', 'tmp/meta/log.txt', app)
+        copy_to_file('data/log.txt', 'meta/log.txt', app)
         copy_to_file('tmp/data/assembly_metrics.tsv', 'tmp/combined_quast_output/report.tsv', app)
         copy_to_file('data/quast_biobox.yaml', 'tmp/biobox.yaml', app)
 
