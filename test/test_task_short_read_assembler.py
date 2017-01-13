@@ -30,19 +30,17 @@ def test_run_container():
     image_helper.clean_up_container(id_)
 
 
-def test_list_input_files():
-    app  = app_helper.mock_short_read_assembler_state(intermediates = True)
-    args = fs.get_output_biobox_file_arguments(app)
-    paths = task.output_files()
-    for (file_type, path) in paths:
-        location = os.path.join(app['path'], 'tmp', funcy.get_in(args, path + ['value']))
+def test_output_file_paths():
+    app   = app_helper.mock_short_read_assembler_state(intermediates = True)
+    paths = task.output_file_paths(app)
+    for (_, f) in paths.items():
+        location = fs.get_task_file_path(app, "tmp/" + f)
         nose.assert_true(os.path.isfile(location))
-
 
 def test_copy_output_files():
     app = app_helper.mock_short_read_assembler_state(intermediates = True)
     run.copy_output_files(app)
-    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/log.txt'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/e0e8af3790'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/7e9f760161'))
 
 
@@ -52,4 +50,4 @@ def test_complete_run_through():
 
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/01eb7cec61'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json.gz'))
-    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/log.txt'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/1099992390'))
