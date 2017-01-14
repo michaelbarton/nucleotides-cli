@@ -6,7 +6,7 @@ Feature: Processing a short read assembly benchmark
     And I set the environment variables to:
       | variable           | value                             |
       | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
-    And I copy the file "../../data/short_read_assembler.json" to "nucleotides/5/metadata.json"
+    And I copy the file "../../example_data/tasks/short_read_assembler.json" to "nucleotides/5/metadata.json"
 
 
   Scenario: Executing a short read assembler docker image
