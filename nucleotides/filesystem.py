@@ -61,7 +61,7 @@ def get_output_biobox_file_contents(app):
         return yaml.load(f.read())['arguments']
 
 
-def get_file_from_biobox_yaml_lookup(app, yaml_path):
+def get_biobox_yaml_value(app, yaml_path):
     """
     Given an xpath-type look up, returns the value in the biobox.yaml file
     """

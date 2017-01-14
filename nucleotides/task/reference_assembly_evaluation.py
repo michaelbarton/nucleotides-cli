@@ -1,4 +1,4 @@
-import os
+import os, funcy
 import ruamel.yaml          as yaml
 import boltons.fileutils    as fu
 import biobox.image.volume  as vol
@@ -7,8 +7,19 @@ import nucleotides.util               as util
 import nucleotides.filesystem         as fs
 import nucleotides.command.run_image  as run
 
+def is_quast(app):
+    return run.image_name(app) == "bioboxes/quast"
+
+
+def is_quast_output(app):
+    # The 'combined_quast_output/report.tsv' file is not listed in the biobox YAML
+    return fs.get_biobox_yaml_value(app, [0]) == "combined_quast_output/report.html"
+
+
 def before_container_hook(app):
-    fu.mkdir_p(fs.get_task_dir_path(app, 'tmp/assembly_metrics'))
+    if is_quast(app):
+        fu.mkdir_p(fs.get_task_dir_path(app, 'tmp/assembly_metrics'))
+
 
 def biobox_args(app):
     contigs    = fs.get_task_path_file_without_name(app, 'inputs/contig_fasta')
@@ -17,11 +28,17 @@ def biobox_args(app):
             {"fasta_dir" : [{"id" : 1 , "value" : references, "type": "references"}]}]
 
 
+def output_file_paths(app):
+    if is_quast_output(app):
+        return {'assembly_metrics' : 'report.tsv'}
+    else:
+        f = funcy.partial(fs.get_biobox_yaml_value, app)
+        return funcy.walk_values(f, OUTPUTS)
+
+
 def successful_event_outputs():
     return set(["assembly_metrics"])
 
-def copy_output_files(app):
-    fs.copy_tmp_file_to_outputs(app, 'combined_quast_output/report.tsv', 'assembly_metrics')
 
 def parse_quast_value(x):
     if x == "-":

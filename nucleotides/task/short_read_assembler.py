@@ -12,7 +12,7 @@ def biobox_args(app):
 
 
 def output_file_paths(app):
-    f = funcy.partial(fs.get_file_from_biobox_yaml_lookup, app)
+    f = funcy.partial(fs.get_biobox_yaml_value, app)
     return funcy.walk_values(f, OUTPUTS)
 
 
