@@ -141,7 +141,17 @@ test-data := \
 data-url = https://raw.githubusercontent.com/nucleotides/nucleotides-data/$(DATA-BRANCH)/
 
 
+# Copy dummy input files into testing directory
+tmp/data/db_fixture/%: example_data/%
+	@mkdir -p $(dir $@)
+	@printf $(WIDTH) "  --> Copying example input file '$*'"
+	@cp $< $@
+	@$(OK)
+
+
 # Fetch metadata files from github
+# Keep this dependency target below `tmp/data/db_fixture/%` so that example data
+# files are copied over first
 tmp/data/db_fixture/controlled_vocabulary/%:
 	@mkdir -p $(dir $@)
 	@printf $(WIDTH) "  --> Fetching nucleotides metadata file '$*'"
@@ -149,22 +159,6 @@ tmp/data/db_fixture/controlled_vocabulary/%:
 	@$(OK)
 
 
-tmp/data/db_fixture/inputs/image.yml: example_data/inputs/image.yml
-	@mkdir -p $(dir $@)
-	@printf $(WIDTH) "  --> Creating example 'image.yml' file"
-	@cp $< $@
-	@wget --quiet $(data-url)/inputs/image.yml --output-document - \
-		| tail -n +2 >> $@
-	@$(OK)
-
-
-
-# Copy dummy input files into testing directory
-tmp/data/db_fixture/inputs/%: example_data/inputs/%
-	@mkdir -p $(dir $@)
-	@printf $(WIDTH) "  --> Copying example input file '$*'"
-	@cp $< $@
-	@$(OK)
 
 
 # Create an SQL which can be used to reset the database to an example state
