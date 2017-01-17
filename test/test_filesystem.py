@@ -20,7 +20,7 @@ def test_copy_container_output_files_with_no_files():
 
 def test_copy_container_output_files_with_intermediates():
     app = app_helper.mock_reference_evaluator_state(intermediates = True)
-    input_files = {'container_log' : 'meta/log.txt', 'assembly_metrics' : 'tmp/combined_quast_output/report.tsv'}
+    input_files = {'container_log' : 'meta/log.txt', 'assembly_metrics' : 'tmp/report.tsv'}
     output_files = ['assembly_metrics/67ba437ffa', 'container_log/e0e8af3790']
 
     fs.copy_container_output_files(app, input_files)

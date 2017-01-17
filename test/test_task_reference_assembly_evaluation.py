@@ -21,7 +21,6 @@ def test_create_container():
     image_helper.clean_up_container(cnt["Id"])
 
 
-@attr('slow')
 def test_run_container():
     app = app_helper.mock_reference_evaluator_state()
     id_ = run.create_container(app)['Id']
@@ -31,7 +30,6 @@ def test_run_container():
     image_helper.clean_up_container(id_)
 
 
-@attr('wip')
 def test_quast_complete_run_through():
     app = app_helper.mock_reference_evaluator_state()
     image_helper.execute_image(app)
