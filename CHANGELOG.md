@@ -5,6 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 0.5.0 - DATE
 
+### Changed
+
+  * The testing suite used to ensure the nucleotides client works as expected
+    was significatly refactored to reduce the overall run time which was
+    running for around 7 mins prior to refactoring. Most of the work done to
+    reduce the run time was using the bioboxes/crash-test-biobox image, which
+    outputs the expected files without doing any computational work.
 
 ## 0.4.0 - 2016-10-03
 
