@@ -16,9 +16,9 @@ Feature: Processing a short read assembly benchmark
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
-    And the file "nucleotides/5/outputs/contig_fasta/7e9f760161" should exist
+    And the file "nucleotides/5/outputs/contig_fasta/01eb7cec61" should exist
     And the file "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz" should exist
-    And the file "nucleotides/5/outputs/container_log/log.txt" should exist
+    And the file "nucleotides/5/outputs/container_log/1099992390" should exist
     And the file "nucleotides/5/benchmark.log" should exist
 
 
