@@ -105,7 +105,10 @@ slow_feature: Gemfile.lock $(credentials) test-build
 
 feature: Gemfile.lock $(credentials) test-build
 	@$(path) $(params) TMPDIR=$(abspath tmp/aruba) \
-		bundle exec cucumber --exclude features/all_commands.feature $(ARGS)
+		bundle exec cucumber \
+		--require features/support/ \
+		--require features/steps/ \
+		--exclude features/all_commands.feature $(ARGS)
 
 test:
 	@$(test) $(ARGS)

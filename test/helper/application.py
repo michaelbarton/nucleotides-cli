@@ -57,7 +57,7 @@ def mock_reference_evaluator_state(inputs = True, intermediates = False, outputs
     import json, shutil
     app = mock_app()
 
-    shutil.copy('example_data/tasks/reference_assembly_evaluation.json', app['path'] + '/metadata.json')
+    shutil.copy('example_data/tasks/quast.json', app['path'] + '/metadata.json')
     with open(app['path'] + '/metadata.json', 'r') as f:
         app["task"] = json.loads(f.read())
 
