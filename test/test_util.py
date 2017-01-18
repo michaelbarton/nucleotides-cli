@@ -5,6 +5,8 @@ import nose.tools         as nose
 import nucleotides.main   as main
 import nucleotides.util   as util
 
+from nose.plugins.attrib import attr
+
 def test_get_task_metadata_with_no_metadata_json():
     app = app_helper.mock_short_read_assembler_state(task = False)
     metadata = util.get_task_metadata("1", app)
@@ -18,3 +20,17 @@ def test_get_task_metadata_with_existing_metadata_json():
     app["api"] = None # Ensure data is not collected from the API
     metadata = util.get_task_metadata("1", app)
     nose.assert_in("id", metadata)
+
+
+def test_parse_args_with_no_polling_interval_provided():
+    args = ["run_image", "5"]
+    parsed = util.parse(main.__doc__, args, True)
+    nose.assert_in("--polling", parsed)
+    nose.assert_equal(parsed["--polling"], '15')
+
+
+def test_parse_args_with_polling_interval_provided():
+    args = ["--polling=1", "run_image", "5"]
+    parsed = util.parse(main.__doc__, args, True)
+    nose.assert_in("--polling", parsed)
+    nose.assert_equal(parsed["--polling"], '1')

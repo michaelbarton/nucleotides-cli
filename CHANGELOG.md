@@ -5,6 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 0.5.0 - DATE
 
+### Added
+
+  * Added the command line flag `--polling`. This can be used to adjust how
+    often the running Docker container is queried for cgroup data.
+
 ### Changed
 
   * The testing suite used to ensure the nucleotides client works as expected
