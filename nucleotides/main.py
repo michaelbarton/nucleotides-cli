@@ -4,9 +4,15 @@ nucleotides - Command line interface for running nucleotides benchmarks
 Usage:
     nucleotides <command> <task>
 
+Options:
+    task            The numeric ID of a nucleotides benchmarking task
+
 Commands:
-    fetch-data       Download all data necessary to perform a benchmarking task
-    all              Execute all nucleotides benchmark commands in order
+    fetch-data      Download all data necessary to perform a benchmarking task
+    run-image       Start the docker image defined in the benchmarking task
+    post-data       Send the metrics collected from running the image to nucleotides API
+    clean-up        Remove files created from running the benchmarking task
+    all             Run all of the above nucleotides benchmark commands in order
 """
 
 import funcy, string, sys
