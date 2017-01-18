@@ -36,8 +36,8 @@ Feature: Running a reference assembly benchmark task
 
 
   Scenario: Posting a successful benchmark
-    Given I copy the file "../../data/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../data/log.txt" to "nucleotides/6/outputs/container_log/log.txt"
+    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
+    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/6/outputs/container_log/log.txt"
     And I copy the file "../data/assembly_metrics.tsv" to "nucleotides/6/outputs/assembly_metrics/67ba437ffa"
     When I run `nucleotides post-data 6`
     And I get the url "/tasks/6"
@@ -100,7 +100,7 @@ Feature: Running a reference assembly benchmark task
 
 
   Scenario: Posting a benchmark when QUAST output includes non numeric values
-    Given I copy the file "../../data/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
+    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
     And the directory "nucleotides/6/outputs/assembly_metrics/"
     And I run the bash command:
       """

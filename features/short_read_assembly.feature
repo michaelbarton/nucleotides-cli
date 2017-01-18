@@ -22,8 +22,8 @@ Feature: Processing a short read assembly benchmark
 
 
   Scenario: Posting a successful benchmark
-    Given I copy the file "../../data/cgroup_metrics.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../data/log.txt" to "nucleotides/5/outputs/container_log/log.txt"
+    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
+    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/5/outputs/container_log/log.txt"
     And I copy the file "../data/contigs.fa" to "nucleotides/5/outputs/contig_fasta/5887df3630"
     When I run `nucleotides post-data 5`
     And I get the url "/tasks/5"
@@ -52,8 +52,8 @@ Feature: Processing a short read assembly benchmark
 
 
   Scenario: Posting a failed benchmark
-    Given I copy the file "../../data/cgroup_metrics.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../data/log.txt" to "nucleotides/5/outputs/container_log/log.txt"
+    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
+    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/5/outputs/container_log/log.txt"
     When I run `nucleotides post-data 5`
     And I get the url "/tasks/5"
     Then the stderr should not contain anything
@@ -77,8 +77,8 @@ Feature: Processing a short read assembly benchmark
     And the file "nucleotides/5/benchmark.log" should exist
 
   Scenario: Posting a benchmark with missing cgroup data
-    Given I copy the file "../../data/cgroup_metrics_incomplete.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../data/log.txt" to "nucleotides/5/outputs/container_log/log.txt"
+    Given I copy the file "../../example_data/generated_files/cgroup_metrics_incomplete.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
+    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/5/outputs/container_log/log.txt"
     And I copy the file "../data/contigs.fa" to "nucleotides/5/outputs/contig_fasta/5887df3630"
     When I run `nucleotides post-data 5`
     And I get the url "/tasks/5"
