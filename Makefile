@@ -99,8 +99,13 @@ $(dist): $(shell find bin nucleotides) requirements/default.txt setup.py MANIFES
 
 test = $(params) tox -e py27-unit
 
+slow_feature: Gemfile.lock $(credentials) test-build
+	@$(path) $(params) TMPDIR=$(abspath tmp/aruba) \
+		bundle exec cucumber features/all_commands.feature
+
 feature: Gemfile.lock $(credentials) test-build
-	@$(path) $(params) TMPDIR=$(abspath tmp/aruba) bundle exec cucumber $(ARGS)
+	@$(path) $(params) TMPDIR=$(abspath tmp/aruba) \
+		bundle exec cucumber --exclude features/all_commands.feature $(ARGS)
 
 test:
 	@$(test) $(ARGS)

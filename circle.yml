@@ -19,6 +19,8 @@ test:
     - ./script/test
     - ./script/feature '--format json --out $$CIRCLE_TEST_REPORTS/cucumber/tests.cucumber --format pretty':
         timeout: 600
+    - make slow_feature:
+        timeout: 600
 
 deployment:
   deploy:
