@@ -1,4 +1,4 @@
-Feature: Use the `all` sub-command to execute all steps in benchmarking
+Feature: Use the `all` sub-command to execute all steps in benchmarking with realistic data
 
   Background:
     Given a clean set of benchmarks
@@ -29,7 +29,7 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
       | tasks/0/events/0/files/0/type  | "container_log"             |
       | tasks/0/events/0/files/1/type  | "container_runtime_metrics" |
       | tasks/0/events/0/files/2/type  | "contig_fasta"              |
-      | tasks/1/events/0/metrics/nga50 | 25079.0                     |
+      | tasks/1/events/0/metrics/nga50 | 6456.0                      |
       | tasks/1/events/0/files/0/type  | "assembly_metrics"          |
       | tasks/1/events/0/files/1/type  | "container_log"             |
       | tasks/1/events/0/files/2/type  | "container_runtime_metrics" |
@@ -52,13 +52,13 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
 
     Examples:
       | task_1 | task_2 | url                              |
-      | 5      | 6      | 98c1d2a9d58ce748c08cf65dd3354676 |
+      | 1      | 2      | 2f221a18eb86380369570b2ed147d8b4 |
 
 
   Scenario: Executing a short read assembly task that fails whilst producing a log
     Given the default aruba exit timeout is 900 seconds
-    When I run `nucleotides all 3`
-    And I get the url "/tasks/3"
+    When I run `nucleotides all 4`
+    And I get the url "/tasks/4"
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
@@ -71,8 +71,8 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking
 
   Scenario: Executing a short read assembly task that fails without producing a log
     Given the default aruba exit timeout is 900 seconds
-    When I run `nucleotides all 1`
-    And I get the url "/tasks/1"
+    When I run `nucleotides all 6`
+    And I get the url "/tasks/6"
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0

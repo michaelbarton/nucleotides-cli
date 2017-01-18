@@ -14,7 +14,7 @@ def test_get_task_metadata_with_no_metadata_json():
 def test_get_task_metadata_with_existing_metadata_json():
     import json, shutil
     app = app_helper.mock_short_read_assembler_state(task = False)
-    shutil.copy('data/short_read_assembler.json', app['path'] + '/metadata.json')
+    shutil.copy('example_data/tasks/short_read_assembler.json', app['path'] + '/metadata.json')
     app["api"] = None # Ensure data is not collected from the API
     metadata = util.get_task_metadata("1", app)
     nose.assert_in("id", metadata)

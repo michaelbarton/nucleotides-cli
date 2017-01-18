@@ -9,7 +9,6 @@ import nucleotides.command.fetch_data as fetch
 
 from nose.plugins.attrib import attr
 
-@attr('slow')
 def test_fetch_short_read_assembler_input_files():
     db_helper.reset_database()
     app = app_helper.mock_short_read_assembler_state()
@@ -17,7 +16,6 @@ def test_fetch_short_read_assembler_input_files():
     file_helper.assert_is_file(app["path"] + "/inputs/short_read_fastq/24b5b01b08482053d7d13acd514e359fb0b726f1e8ae36aa194b6ddc07335298.fq.gz")
 
 
-@attr('slow')
 def test_fetch_reference_assembler_input_files():
     db_helper.reset_database()
     app = app_helper.mock_reference_evaluator_state(inputs = False)

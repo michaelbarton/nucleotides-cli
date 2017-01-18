@@ -21,7 +21,6 @@ def test_create_container():
     image_helper.clean_up_container(cnt["Id"])
 
 
-@attr('slow')
 def test_run_container():
     app = app_helper.mock_reference_evaluator_state()
     id_ = run.create_container(app)['Id']
@@ -31,12 +30,11 @@ def test_run_container():
     image_helper.clean_up_container(id_)
 
 
-@attr('slow')
-def test_complete_run_through():
+def test_quast_complete_run_through():
     app = app_helper.mock_reference_evaluator_state()
-    run.execute_image(app)
-    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/assembly_metrics/718b9ad933'))
-    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/log.txt'))
+    image_helper.execute_image(app)
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/assembly_metrics/684281f282'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/86bbc499b0'))
 
 
 def test_create_event_request_with_a_successful_event():
@@ -55,7 +53,7 @@ def test_create_event_request_with_non_numeric_quast_values():
     app = app_helper.mock_reference_evaluator_state(outputs = True)
 
     import fileinput
-    for line in fileinput.input(app['path'] + '/outputs/assembly_metrics/outputs.csv', inplace = True):
+    for line in fileinput.input(app['path'] + '/outputs/assembly_metrics/67ba437ffa', inplace = True):
         if 'NGA50' in line:
             print line.replace("25079", "-"),
 
