@@ -12,4 +12,4 @@ def execute_image(app):
     #
     # Adding a warmup time slightly longer than the crash-test-biobox takes to
     # complete also ensures the stats collection should return relatively quickly.
-    run.execute_image(app, docker_timeout = 0.5, metric_warmup = 2, metric_interval = 1)
+    run.execute_image(app, docker_timeout = 1, metric_warmup = 2, metric_interval = 1)
