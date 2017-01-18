@@ -84,7 +84,7 @@ def post(app):
     api.post_event(create_event_request(app, outputs), app)
 
 
-def run(task):
+def run(task, args):
     app = util.application_state(task)
     app["s3-upload"] = util.get_environment_variable("NUCLEOTIDES_S3_URL")
     app['logger'].info("Uploading all event data for task {}".format(task))

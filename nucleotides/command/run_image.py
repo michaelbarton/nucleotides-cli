@@ -56,7 +56,7 @@ def copy_output_files(app):
     fs.copy_container_output_files(app, output_files)
 
 
-def execute_image(app, docker_timeout = 15, metric_interval = 15, metric_warmup = 1):
+def execute_image(app, docker_timeout = 15, metric_interval = 15, metric_warmup = 2):
     setup(app)
     biobox = create_container(app)
     id_ = biobox['Id']
@@ -68,9 +68,10 @@ def execute_image(app, docker_timeout = 15, metric_interval = 15, metric_warmup 
     copy_output_files(app)
 
 
-def run(task):
+def run(task, args):
     app = util.application_state(task)
     image = image_version(app)
+    interval = int(args['--polling'])
     app['logger'].info("Starting image execution for {}".format(image))
-    execute_image(app)
+    execute_image(app, docker_timeout = interval, metric_interval = interval)
     app['logger'].info("Finished image execution for {}".format(image))
