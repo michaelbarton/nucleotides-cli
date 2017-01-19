@@ -1,5 +1,5 @@
 version: 0.9.0
-results:
+arguments:
   - name: HTML
     type: html
     inline: false

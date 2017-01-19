@@ -26,6 +26,7 @@ Feature: Running a QUAST-based reference assembly benchmark task
     Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
     And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/6/outputs/container_log/log.txt"
     And I copy the file "../data/assembly_metrics.tsv" to "nucleotides/6/outputs/assembly_metrics/67ba437ffa"
+    And I copy the file "../../example_data/biobox/quast.yaml" to "nucleotides/6/tmp/biobox.yaml"
     When I run `nucleotides post-data 6`
     And I get the url "/tasks/6"
     Then the stderr should not contain anything
@@ -88,6 +89,7 @@ Feature: Running a QUAST-based reference assembly benchmark task
 
   Scenario: Posting a benchmark when the QUAST output includes non numeric values
     Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
+    And I copy the file "../../example_data/biobox/quast.yaml" to "nucleotides/6/tmp/biobox.yaml"
     And the directory "nucleotides/6/outputs/assembly_metrics/"
     And I run the bash command:
       """
