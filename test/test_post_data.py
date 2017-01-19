@@ -12,7 +12,7 @@ import nucleotides.command.post_data as post
 from nose.plugins.attrib import attr
 
 def test_list_outputs():
-    app = app_helper.mock_short_read_assembler_state(outputs = True)
+    app = app_helper.setup_app_state('sra', 'outputs')
     app["s3-upload"] = "s3://url/"
     outputs = post.list_outputs(app)
     nose.assert_equal(len(outputs), 3)
@@ -25,7 +25,7 @@ def test_list_outputs():
 
 
 def test_upload_output_file():
-    app  = app_helper.mock_short_read_assembler_state()
+    app  = app_helper.setup_app_state('sra', 'task')
     url  = "s3://nucleotides-testing/upload/"
     path = file_helper.create_benchmark_file(app, '/outputs/contig_fasta/d1b2a59fbe', 'contents')
     post.upload_output_file(app, post.output_file_metadata(url, path))
@@ -41,7 +41,7 @@ def test_upload_output_file():
 ############################################
 
 def test_short_read_assembler_successful_event():
-    app = app_helper.mock_short_read_assembler_state(outputs = True)
+    app  = app_helper.setup_app_state('sra', 'outputs')
     outputs = [{
         "type"     : "contig_fasta",
         "location" : "/local/path",
@@ -67,7 +67,7 @@ def test_short_read_assembler_successful_event():
 
 
 def test_short_read_assembler_unsuccessful_event():
-    app = app_helper.mock_short_read_assembler_state(outputs = False)
+    app  = app_helper.setup_app_state('sra', 'task')
     outputs = []
     event = post.create_event_request(app, outputs)
     nose.assert_equal(event, {"task" : 5, "success" : False, "files" : [], "metrics" : {}})

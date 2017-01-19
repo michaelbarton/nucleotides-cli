@@ -13,7 +13,7 @@ def test_failing_image_with_no_outputs():
         "task"   : "exit-1",
         "type"   : "short_read_assembler"
     }
-    app  = app_helper.mock_short_read_assembler_state(reads = True)
+    app  = app_helper.setup_app_state('sra', 'inputs')
     app["task"]["image"] = image
     app_helper.rewrite_app_task(app)
     image_helper.execute_image(app)
@@ -27,7 +27,7 @@ def test_failing_image_with_log_output():
         "task"   : "exit-1-with-log",
         "type"   : "short_read_assembler"
     }
-    app  = app_helper.mock_short_read_assembler_state(reads = True)
+    app  = app_helper.setup_app_state('sra', 'inputs')
     app["task"]["image"] = image
     app_helper.rewrite_app_task(app)
     image_helper.execute_image(app)

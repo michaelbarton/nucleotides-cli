@@ -15,14 +15,14 @@ from nose.plugins.attrib import attr
 
 
 def test_create_container():
-    app = app_helper.mock_short_read_assembler_state(reads = True)
+    app = app_helper.setup_app_state('sra', 'inputs')
     cnt = run.create_container(app)
     assert "Id" in cnt
     image_helper.clean_up_container(cnt["Id"])
 
 
 def test_run_container():
-    app = app_helper.mock_short_read_assembler_state(reads = True)
+    app = app_helper.setup_app_state('sra', 'inputs')
     id_ = run.create_container(app)['Id']
     docker.client().start(id_)
     docker.client().wait(id_)
@@ -31,21 +31,21 @@ def test_run_container():
 
 
 def test_output_file_paths():
-    app   = app_helper.mock_short_read_assembler_state(intermediates = True)
+    app = app_helper.setup_app_state('sra', 'intermediates')
     paths = task.output_file_paths(app)
     for (_, f) in paths.items():
         location = fs.get_task_file_path(app, "tmp/" + f)
         nose.assert_true(os.path.isfile(location))
 
 def test_copy_output_files():
-    app = app_helper.mock_short_read_assembler_state(intermediates = True)
+    app = app_helper.setup_app_state('sra', 'intermediates')
     run.copy_output_files(app)
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/e0e8af3790'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/7e9f760161'))
 
 
 def test_complete_run_through():
-    app = app_helper.mock_short_read_assembler_state(dummy_reads = True)
+    app = app_helper.setup_app_state('sra', 'inputs')
     image_helper.execute_image(app)
 
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/01eb7cec61'))

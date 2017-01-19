@@ -15,14 +15,14 @@ from nose.plugins.attrib import attr
 
 
 def test_create_container():
-    app = app_helper.mock_reference_evaluator_state()
+    app = app_helper.setup_app_state('quast', 'inputs')
     cnt = run.create_container(app)
     assert "Id" in cnt
     image_helper.clean_up_container(cnt["Id"])
 
 
 def test_run_container():
-    app = app_helper.mock_reference_evaluator_state()
+    app = app_helper.setup_app_state('quast', 'inputs')
     id_ = run.create_container(app)['Id']
     docker.client().start(id_)
     docker.client().wait(id_)
@@ -31,7 +31,7 @@ def test_run_container():
 
 
 def test_quast_complete_run_through():
-    app = app_helper.mock_reference_evaluator_state()
+    app = app_helper.setup_app_state('quast', 'inputs')
     image_helper.execute_image(app)
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/assembly_metrics/684281f282'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/86bbc499b0'))
@@ -45,7 +45,7 @@ def test_gaet_complete_run_through():
 
 
 def test_create_event_request_with_a_successful_event():
-    app = app_helper.mock_reference_evaluator_state(outputs = True)
+    app = app_helper.setup_app_state('quast', 'outputs')
     event = post.create_event_request(app, post.list_outputs(app))
     nose.assert_equal(event["task"], 6)
     nose.assert_equal(event["success"], True)
@@ -57,7 +57,7 @@ def test_create_event_request_with_a_successful_event():
 
 
 def test_create_event_request_with_non_numeric_quast_values():
-    app = app_helper.mock_reference_evaluator_state(outputs = True)
+    app = app_helper.setup_app_state('quast', 'outputs')
 
     import fileinput
     for line in fileinput.input(app['path'] + '/outputs/assembly_metrics/67ba437ffa', inplace = True):

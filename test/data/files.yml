@@ -1,8 +1,69 @@
+sra:
+  task:
+    - src: example_data/tasks/short_read_assembler.json
+      dst: metadata.json
+  inputs:
+    - src: example_data/tasks/short_read_assembler.json
+      dst: metadata.json
+    - src: tmp/data/dummy.reads.fq.gz
+      dst: inputs/short_read_fastq/24b5b01b08
+  intermediates:
+    - src: example_data/tasks/short_read_assembler.json
+      dst: metadata.json
+    - src: example_data/generated_files/log.txt
+      dst: meta/log.txt
+    - src: example_data/biobox/sra.yaml
+      dst: tmp/biobox.yaml
+    - src: tmp/data/contigs.fa
+      dst: tmp/contigs.fa
+  outputs:
+    - src: example_data/tasks/short_read_assembler.json
+      dst: metadata.json
+    - src: tmp/data/contigs.fa
+      dst: outputs/contig_fasta/7e9f760161
+    - src: example_data/generated_files/log.txt
+      dst: outputs/container_log/e0e8af3790
+    - src: example_data/generated_files/cgroup_metrics.json.gz
+      dst: outputs/container_runtime_metrics/metrics.json.gz
+
+
 gaet:
   inputs:
     - src: example_data/tasks/gaet.json
       dst: metadata.json
-    - src: tmp/data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414
+      # This file is large and could be swapped for a smaller one
+    - src: example_data/generated_files/reference.fa.gz
+      dst: inputs/reference_fasta/6bac51cc35.fa.gz
+      # This file is large and could be swapped for a smaller one
+    - src: tmp/data/contigs.fa
+      dst: inputs/contig_fasta/7e9f760161.fa
+
+quast:
+  task:
+    - src: example_data/tasks/quast.json
+      dst: metadata.json
+  inputs:
+    - src: example_data/tasks/quast.json
+      dst: metadata.json
+    - src: example_data/generated_files/reference.fa.gz
       dst: inputs/reference_fasta/6bac51cc35.fa.gz
     - src: tmp/data/contigs.fa
       dst: inputs/contig_fasta/7e9f760161.fa
+  intermediates:
+    - src: example_data/tasks/quast.json
+      dst: metadata.json
+    - src: example_data/generated_files/log.txt
+      dst: meta/log.txt
+    - src: tmp/data/assembly_metrics.tsv
+      dst: tmp/report.tsv
+    - src: example_data/biobox/reference_benchmark.yaml
+      dst: tmp/biobox.yaml
+  outputs:
+    - src: example_data/tasks/quast.json
+      dst: metadata.json
+    - src: tmp/data/assembly_metrics.tsv
+      dst: outputs/assembly_metrics/67ba437ffa
+    - src: example_data/generated_files/log.txt
+      dst: outputs/container_log/e0e8af3790
+    - src: example_data/generated_files/cgroup_metrics.json.gz
+      dst: outputs/container_runtime_metrics/metrics.json.gz
