@@ -1,0 +1,8 @@
+gaet:
+  inputs:
+    - src: example_data/tasks/gaet.json
+      dst: metadata.json
+    - src: tmp/data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414
+      dst: inputs/reference_fasta/6bac51cc35.fa.gz
+    - src: tmp/data/contigs.fa
+      dst: inputs/contig_fasta/7e9f760161.fa

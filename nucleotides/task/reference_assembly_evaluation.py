@@ -7,6 +7,8 @@ import nucleotides.util               as util
 import nucleotides.filesystem         as fs
 import nucleotides.command.run_image  as run
 
+OUTPUTS = {'assembly_metrics': [0]}
+
 def is_quast(app):
     return run.image_name(app) == "bioboxes/quast"
 

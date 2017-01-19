@@ -37,6 +37,13 @@ def test_quast_complete_run_through():
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/86bbc499b0'))
 
 
+def test_gaet_complete_run_through():
+    app = app_helper.setup_app_state('gaet', 'inputs')
+    image_helper.execute_image(app)
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/assembly_metrics/b0eeec7906'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/1661337965'))
+
+
 def test_create_event_request_with_a_successful_event():
     app = app_helper.mock_reference_evaluator_state(outputs = True)
     event = post.create_event_request(app, post.list_outputs(app))

@@ -1,5 +1,6 @@
 import os, shutil, json
 
+import ruamel.yaml           as yaml
 import boltons.fileutils     as fu
 import helper.file           as file_helper
 import nucleotides.log       as log
@@ -11,10 +12,12 @@ def mock_app():
            'path'   : path}
     return app
 
+
 def copy_to_directory(src_file, dst_dir, app):
     dir_ = os.path.join(app['path'], dst_dir)
     fu.mkdir_p(dir_)
     shutil.copy(src_file, dir_)
+
 
 def copy_to_file(src_file, dst_file, app):
     file_ = os.path.join(app['path'], dst_file)
@@ -22,9 +25,25 @@ def copy_to_file(src_file, dst_file, app):
     fu.mkdir_p(dir_)
     shutil.copy(src_file, file_)
 
+
 def rewrite_app_task(app):
     with open(app['path'] + '/metadata.json', 'w') as f:
         f.write(json.dumps(app["task"]))
+
+
+def setup_app_state(file_group, file_set):
+    with open('test/data/files.yml') as f:
+        config = yaml.load(f.read())
+
+    app = mock_app()
+    for f in config[file_group][file_set]:
+        copy_to_file(f['src'], f['dst'], app)
+
+    with open(app['path'] + '/metadata.json', 'r') as f:
+        app["task"] = json.loads(f.read())
+    return app
+
+
 
 def mock_short_read_assembler_state(task = True, dummy_reads = False, reads = False, intermediates = False, outputs = False):
     app = mock_app()
