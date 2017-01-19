@@ -19,8 +19,8 @@ def test_list_outputs():
     nose.assert_in({
         "type"     : "contig_fasta",
         "location" : fs.get_task_path_file_without_name(app, "outputs/contig_fasta"),
-        "sha256"   : "7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092",
-        "url"      : "s3://url/7e/7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092"},
+        "sha256"   : "de3d9f6d31285985139aedd9e3f4b4ad04dadb4274c3c0ce28261a8e8e542a0f",
+        "url"      : "s3://url/de/de3d9f6d31285985139aedd9e3f4b4ad04dadb4274c3c0ce28261a8e8e542a0f"},
         outputs)
 
 

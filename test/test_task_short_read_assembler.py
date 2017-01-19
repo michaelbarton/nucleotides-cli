@@ -41,7 +41,7 @@ def test_copy_output_files():
     app = app_helper.setup_app_state('sra', 'intermediates')
     run.copy_output_files(app)
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/e0e8af3790'))
-    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/7e9f760161'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/de3d9f6d31'))
 
 
 def test_complete_run_through():
