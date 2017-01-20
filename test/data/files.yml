@@ -41,7 +41,7 @@ gaet:
     - src: example_data/tasks/gaet.json
       dst: metadata.json
     - src: example_data/generated_files/gaet_metrics.tsv
-      dst: outputs/assembly_metrics/d70c163200
+      dst: outputs/assembly_metrics/af9bc02c71
     - src: example_data/generated_files/log.txt
       dst: outputs/container_log/e0e8af3790
     - src: example_data/generated_files/cgroup_metrics.json.gz
