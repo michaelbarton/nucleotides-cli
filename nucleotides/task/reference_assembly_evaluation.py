@@ -1,4 +1,4 @@
-import os, funcy
+import os, funcy, csv
 import ruamel.yaml          as yaml
 import boltons.fileutils    as fu
 import biobox.image.volume  as vol
@@ -6,6 +6,8 @@ import biobox.image.volume  as vol
 import nucleotides.util               as util
 import nucleotides.filesystem         as fs
 import nucleotides.command.run_image  as run
+
+OUTPUTS = {'assembly_metrics': [0]}
 
 def is_quast(app):
     return run.image_name(app) == "bioboxes/quast"
@@ -40,20 +42,27 @@ def successful_event_outputs():
     return set(["assembly_metrics"])
 
 
-def parse_quast_value(x):
-    if x == "-":
-        return 0
+def rename_quast_metrics(raw_metrics):
+    mapping_file = os.path.join('mappings', 'quast.yml')
+    mapping = yaml.safe_load(util.get_asset_file_contents(mapping_file))
+    return map(lambda (x, y): (mapping[x], y),
+        filter(lambda (x, _): x in mapping, raw_metrics))
+
+
+def parse_assembly_metric(m):
+    mapping = {'-' : 0.0, 'true' : 1.0, 'false' : 0.0}
+    if m in mapping:
+        return mapping[m]
     else:
-        return float(x)
+        return float(m)
 
 
 def collect_metrics(app):
-    mapping_file = os.path.join('mappings', 'quast.yml')
-    mapping = yaml.safe_load(util.get_asset_file_contents(mapping_file))
-
     path = fs.get_task_path_file_without_name(app, 'outputs/assembly_metrics')
     with open(path, 'r') as f:
-        raw_metrics = map(lambda x: x.split("\t"), f.read().strip().split("\n"))
+        raw_metrics = list(csv.reader(f, delimiter = '\t'))
 
-    return dict(map(lambda (x,y): (mapping[x], parse_quast_value(y)),
-        filter(lambda (x,_): x in mapping, raw_metrics)))
+    if is_quast_output(app):
+       raw_metrics = rename_quast_metrics(raw_metrics)
+
+    return dict(map(lambda (k, v): [k.lower(), parse_assembly_metric(v)], raw_metrics))

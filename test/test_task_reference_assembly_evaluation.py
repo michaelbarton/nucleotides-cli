@@ -15,14 +15,14 @@ from nose.plugins.attrib import attr
 
 
 def test_create_container():
-    app = app_helper.mock_reference_evaluator_state()
+    app = app_helper.setup_app_state('quast', 'inputs')
     cnt = run.create_container(app)
     assert "Id" in cnt
     image_helper.clean_up_container(cnt["Id"])
 
 
 def test_run_container():
-    app = app_helper.mock_reference_evaluator_state()
+    app = app_helper.setup_app_state('quast', 'inputs')
     id_ = run.create_container(app)['Id']
     docker.client().start(id_)
     docker.client().wait(id_)
@@ -30,15 +30,22 @@ def test_run_container():
     image_helper.clean_up_container(id_)
 
 
+#################################################
+#
+# QUAST specific tests
+#
+#################################################
+
+
 def test_quast_complete_run_through():
-    app = app_helper.mock_reference_evaluator_state()
+    app = app_helper.setup_app_state('quast', 'inputs')
     image_helper.execute_image(app)
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/assembly_metrics/684281f282'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/86bbc499b0'))
 
 
-def test_create_event_request_with_a_successful_event():
-    app = app_helper.mock_reference_evaluator_state(outputs = True)
+def test_create_event_request_with_a_successful_quast_event():
+    app = app_helper.setup_app_state('quast', 'outputs')
     event = post.create_event_request(app, post.list_outputs(app))
     nose.assert_equal(event["task"], 6)
     nose.assert_equal(event["success"], True)
@@ -50,7 +57,7 @@ def test_create_event_request_with_a_successful_event():
 
 
 def test_create_event_request_with_non_numeric_quast_values():
-    app = app_helper.mock_reference_evaluator_state(outputs = True)
+    app = app_helper.setup_app_state('quast', 'outputs')
 
     import fileinput
     for line in fileinput.input(app['path'] + '/outputs/assembly_metrics/67ba437ffa', inplace = True):
@@ -60,3 +67,27 @@ def test_create_event_request_with_non_numeric_quast_values():
     event = post.create_event_request(app, post.list_outputs(app))
     nose.assert_in("nga50", event["metrics"])
     nose.assert_equal(event["metrics"]["nga50"], 0.0)
+
+
+#################################################
+#
+# GAET specific tests
+#
+#################################################
+
+
+def test_gaet_complete_run_through():
+    app = app_helper.setup_app_state('gaet', 'inputs')
+    image_helper.execute_image(app)
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/assembly_metrics/d70c163200'))
+    file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/1661337965'))
+
+def test_create_event_request_with_a_successful_gaet_event():
+    app = app_helper.setup_app_state('gaet', 'outputs')
+    event = post.create_event_request(app, post.list_outputs(app))
+    nose.assert_equal(event["task"], 6)
+    nose.assert_equal(event["success"], True)
+    nose.assert_equal(event["files"][0]["type"], "assembly_metrics")
+    nose.assert_in("assembly.size_metrics.all.n50", event["metrics"])
+    nose.assert_equal(event["metrics"]["assembly.size_metrics.all.n50"], 777.0)
+    nose.assert_equal(event["metrics"]["comparison.gene_set_agreement.trna"], 1.0)

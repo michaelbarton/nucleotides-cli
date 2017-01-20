@@ -1,0 +1,80 @@
+sra:
+  task:
+    - src: example_data/tasks/short_read_assembler.json
+      dst: metadata.json
+  inputs:
+    - src: example_data/tasks/short_read_assembler.json
+      dst: metadata.json
+    - src: example_data/generated_files/reads.fq.gz
+      dst: inputs/short_read_fastq/24b5b01b08
+  intermediates:
+    - src: example_data/tasks/short_read_assembler.json
+      dst: metadata.json
+    - src: example_data/generated_files/log.txt
+      dst: meta/log.txt
+    - src: example_data/biobox/sra.yaml
+      dst: tmp/biobox.yaml
+    - src: example_data/generated_files/contigs.fa
+      dst: tmp/contigs.fa
+  outputs:
+    - src: example_data/tasks/short_read_assembler.json
+      dst: metadata.json
+    - src: example_data/generated_files/contigs.fa
+      dst: outputs/contig_fasta/de3d9f6d31
+    - src: example_data/generated_files/log.txt
+      dst: outputs/container_log/e0e8af3790
+    - src: example_data/generated_files/cgroup_metrics.json.gz
+      dst: outputs/container_runtime_metrics/metrics.json.gz
+
+
+gaet:
+  inputs:
+    - src: example_data/tasks/gaet.json
+      dst: metadata.json
+    - src: example_data/generated_files/reference.fa.gz
+      dst: inputs/reference_fasta/6bac51cc35.fa.gz
+    - src: example_data/generated_files/contigs.fa
+      dst: inputs/contig_fasta/de3d9f6d31.fa
+  outputs:
+    - src: example_data/biobox/gaet.yaml
+      dst: tmp/biobox.yaml
+    - src: example_data/tasks/gaet.json
+      dst: metadata.json
+    - src: example_data/generated_files/gaet_metrics.tsv
+      dst: outputs/assembly_metrics/af9bc02c71
+    - src: example_data/generated_files/log.txt
+      dst: outputs/container_log/e0e8af3790
+    - src: example_data/generated_files/cgroup_metrics.json.gz
+      dst: outputs/container_runtime_metrics/metrics.json.gz
+
+quast:
+  task:
+    - src: example_data/tasks/quast.json
+      dst: metadata.json
+  inputs:
+    - src: example_data/tasks/quast.json
+      dst: metadata.json
+    - src: example_data/generated_files/reference.fa.gz
+      dst: inputs/reference_fasta/6bac51cc35.fa.gz
+    - src: example_data/generated_files/contigs.fa
+      dst: inputs/contig_fasta/de3d9f6d31.fa
+  intermediates:
+    - src: example_data/tasks/quast.json
+      dst: metadata.json
+    - src: example_data/generated_files/log.txt
+      dst: meta/log.txt
+    - src: tmp/data/assembly_metrics.tsv
+      dst: tmp/report.tsv
+    - src: example_data/biobox/quast.yaml
+      dst: tmp/biobox.yaml
+  outputs:
+    - src: example_data/biobox/quast.yaml
+      dst: tmp/biobox.yaml
+    - src: example_data/tasks/quast.json
+      dst: metadata.json
+    - src: tmp/data/assembly_metrics.tsv
+      dst: outputs/assembly_metrics/67ba437ffa
+    - src: example_data/generated_files/log.txt
+      dst: outputs/container_log/e0e8af3790
+    - src: example_data/generated_files/cgroup_metrics.json.gz
+      dst: outputs/container_runtime_metrics/metrics.json.gz

@@ -5,15 +5,21 @@
     - sha256: a8f03646039e9264265ec5e04dff5a6e88326b67c7a4178ee50057ecaaa14943
       tasks:  ["default"]
       name: "36.38"
-- image_type: reference_assembly_evaluation
-  name: bioboxes/quast
-  versions:
-    - sha256: 5af634ee3f1bc3f80a749ce768883a20f793e1791f8f404a316d7d7012423cb9
-      tasks: ["default"]
-      name: "4.2"
 - image_type: short_read_assembler
   name: bioboxes/crash-test-biobox
   versions:
     - sha256: 531107520c3a131b714b23d5c58920f216a4e897a1db9a1c20ef960c2ed688f0
       tasks: ["exit-1-with-log", "exit-1"]
       name: "version_name"
+- image_type: reference_assembly_evaluation
+  name: bioboxes/quast
+  versions:
+    - sha256: 5af634ee3f1bc3f80a749ce768883a20f793e1791f8f404a316d7d7012423cb9
+      tasks: ["default"]
+      name: "4.2"
+- image_type: reference_assembly_evaluation
+  name: bioboxes/gaet
+  versions:
+    - sha256: 5de9119ab7451034d28102c3dac3cfc450ed4c10f22310adf010be65103128a5
+      tasks: ["default"]
+      name: "gaet-0.3.0 / mash-1.1.1 / dpred-0.1.0"

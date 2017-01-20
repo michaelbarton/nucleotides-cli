@@ -105,7 +105,10 @@ slow_feature: Gemfile.lock $(credentials) test-build
 
 feature: Gemfile.lock $(credentials) test-build
 	@$(path) $(params) TMPDIR=$(abspath tmp/aruba) \
-		bundle exec cucumber --exclude features/all_commands.feature $(ARGS)
+		bundle exec cucumber \
+		--require features/support/ \
+		--require features/steps/ \
+		--exclude features/all_commands.feature $(ARGS)
 
 test:
 	@$(test) $(ARGS)
@@ -199,13 +202,9 @@ bootstrap: \
 	Gemfile.lock \
 	.api_container \
 	.deploy_image \
-	tmp/data/dummy.reads.fq.gz \
 	tmp/data/assembly_metrics.tsv \
-	tmp/data/contigs.fa \
-	tmp/data/fixtures.sql \
-	tmp/data/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533 \
-	tmp/data/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414
-	docker pull bioboxes/crash-test-biobox
+	tmp/data/fixtures.sql
+	@docker pull bioboxes/crash-test-biobox 2>&1 > /dev/null
 
 # Fetch example input data from S3
 tmp/data/%: ./plumbing/fetch_s3_file Gemfile.lock

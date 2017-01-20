@@ -5,10 +5,11 @@ Feature: Reporting useful error messages
       | variable           | value                             |
       | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
 
+
   Scenario Outline: Reporting errors when environment variables are not set
     Given the nucleotides directory is available on the path
     And I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../data/contigs.fa" to "nucleotides/5/outputs/contig_fasta/5887df3630"
+    And I copy the file "../../example_data/generated_files/contigs.fa" to "nucleotides/6/inputs/contig_fasta/de3d9f6d31.fa"
     And I copy the file "../../example_data/tasks/short_read_assembler.json" to "nucleotides/5/metadata.json"
     When I run the bash command:
       """
@@ -25,3 +26,30 @@ Feature: Reporting useful error messages
       | variable           |
       | NUCLEOTIDES_S3_URL |
       | NUCLEOTIDES_API    |
+
+
+  Scenario: Executing a short read assembly task that fails whilst producing a log
+    Given the default aruba exit timeout is 180 seconds
+    When I run `nucleotides all 4`
+    And I get the url "/tasks/4"
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the JSON should have the following:
+      | complete               | true                        |
+      | success                | false                       |
+      | events/0/files/0/type  | "container_log"             |
+      | events/0/files/1/type  | "container_runtime_metrics" |
+
+
+  Scenario: Executing a short read assembly task that fails without producing a log
+    Given the default aruba exit timeout is 180 seconds
+    When I run `nucleotides all 7`
+    And I get the url "/tasks/7"
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the JSON should have the following:
+      | complete               | true                        |
+      | success                | false                       |
+      | events/0/files/0/type  | "container_runtime_metrics" |
