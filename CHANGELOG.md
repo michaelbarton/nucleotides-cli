@@ -12,6 +12,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
+  * Cgroup metrics are no longer collected during a 'produce' benchmark task
+    when the Docker container fails to complete successfully. This is to
+    standardise the client when no metrics are collected for any type of
+    benchmark when the Docker container exits with an error.
+
   * The testing suite used to ensure the nucleotides client works as expected
     was significatly refactored to reduce the overall run time which was
     running for around 7 mins prior to refactoring. Most of the work done to

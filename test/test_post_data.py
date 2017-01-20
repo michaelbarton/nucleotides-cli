@@ -71,3 +71,9 @@ def test_short_read_assembler_unsuccessful_event():
     outputs = []
     event = post.create_event_request(app, outputs)
     nose.assert_equal(event, {"task" : 5, "success" : False, "files" : [], "metrics" : {}})
+
+
+def test_assembly_benchmark_unsuccessful_event():
+    app = app_helper.setup_app_state('quast', 'task') # No tmp/biobox.yaml
+    event = post.create_event_request(app, post.list_outputs(app))
+    nose.assert_equal(event, {"task" : 6, "success" : False, "files" : [], "metrics" : {}})

@@ -4,7 +4,7 @@ directory. Each nucleotides benchmarking task takes place in a directory named f
 the nucleotides task ID. This module functions to simplify getting the location of
 where input files can be found, and where output files should be created.
 """
-import os.path, json, funcy
+import os.path, json, funcy, sys
 
 import ruamel.yaml        as yaml
 import boltons.fileutils  as fu
@@ -42,8 +42,16 @@ def get_task_path_file_without_name(app, name):
     directory. Used to get file paths from directories when the file name is not
     known.
     """
-    path = get_task_dir_path(app, name)
-    return os.path.join(path, os.listdir(path)[0])
+    path  = get_task_dir_path(app, name)
+    files = os.listdir(path)
+    if len(files) == 1:
+        return os.path.join(path, files[0])
+    elif len(files) == 0:
+        app['logger'].fatal("No files found in {}".format(path))
+        sys.exit(1)
+    else:
+        app['logger'].fatal("Multiple files found in path {}".format(path))
+        sys.exit(1)
 
 
 def biobox_yaml_exists(app):

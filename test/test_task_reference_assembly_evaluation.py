@@ -29,6 +29,7 @@ def test_run_container():
     nose.assert_equal(container.did_exit_succcessfully(id_), True)
     image_helper.clean_up_container(id_)
 
+
 #################################################
 #
 # QUAST specific tests

@@ -13,3 +13,12 @@ Feature: Docker images should run as expected when run using `nucleoides run_ima
     And the file "nucleotides/6/outputs/assembly_metrics/684281f282" should exist
     And the file "nucleotides/6/benchmark.log" should exist
     And the exit status should be 0
+
+  Scenario: Removing all created files using the `clean-up` command
+    When I run `nucleotides fetch-data 1`
+    And I run `nucleotides clean-up 1`
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the directory "nucleotides/1" should not exist
+

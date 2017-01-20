@@ -64,17 +64,10 @@ Feature: Processing a short read assembly benchmark
     And the JSON should have the following:
       | success                                                   | false                       |
       | complete                                                  | true                        |
-      | events/0/metrics/total_cpu_usage_in_seconds               | 53.546                      |
-      | events/0/metrics/total_cpu_usage_in_seconds_in_kernelmode | 1.75                        |
-      | events/0/metrics/total_cpu_usage_in_seconds_in_usermode   | 11.11                       |
-      | events/0/metrics/total_memory_usage_in_mibibytes          | 175.348                     |
-      | events/0/metrics/total_rss_in_mibibytes                   | 80.543                      |
-      | events/0/metrics/total_read_io_in_mibibytes               | 38.641                      |
-      | events/0/metrics/total_write_io_in_mibibytes              | 0.0                         |
-      | events/0/metrics/total_wall_clock_time_in_seconds         | 0.0                         |
       | events/0/files/0/type                                     | "container_log"             |
       | events/0/files/1/type                                     | "container_runtime_metrics" |
     And the file "nucleotides/5/benchmark.log" should exist
+
 
   Scenario: Posting a benchmark with missing cgroup data
     Given I copy the file "../../example_data/generated_files/cgroup_metrics_incomplete.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
