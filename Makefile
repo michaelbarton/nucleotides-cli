@@ -58,10 +58,16 @@ docker_db := @docker run \
 
 #################################################
 #
-# Build and upload python package
+# Build, upload the python package, rebuild the AMI
 #
 #################################################
 
+rebuild-ami:
+	@curl \
+		-v \
+		-X POST \
+		https://circleci.com/api/v1/project/nucleotides/nucleotides-ami/tree/master?circle-token=$(CIRCLE_TOKEN) \
+		2>&1 > .ami_trigger_build
 
 publish: $(dist)
 	@mkdir -p tmp/dist
