@@ -67,7 +67,7 @@ rebuild-ami:
 		-v \
 		-X POST \
 		https://circleci.com/api/v1/project/nucleotides/nucleotides-ami/tree/master?circle-token=$(CIRCLE_TOKEN) \
-		2>&1 > .ami_trigger_build
+		&> .ami_trigger_build
 
 publish: $(dist)
 	@mkdir -p tmp/dist
