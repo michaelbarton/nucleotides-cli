@@ -3,9 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 0.5.0 - DATE
+## 0.5.0 - 2017-01-30
 
 ### Added
+
+  * A successful build and publication of the nucleotides client triggers a
+    rebuild of the nucleotides Amazon machine image (AMI).
 
   * Added support for running benchmark 'evaluate' task using the bioboxes/gaet
     Docker image.
