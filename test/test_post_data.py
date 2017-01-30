@@ -12,20 +12,20 @@ import nucleotides.command.post_data as post
 from nose.plugins.attrib import attr
 
 def test_list_outputs():
-    app = app_helper.mock_short_read_assembler_state(outputs = True)
+    app = app_helper.setup_app_state('sra', 'outputs')
     app["s3-upload"] = "s3://url/"
     outputs = post.list_outputs(app)
     nose.assert_equal(len(outputs), 3)
     nose.assert_in({
         "type"     : "contig_fasta",
         "location" : fs.get_task_path_file_without_name(app, "outputs/contig_fasta"),
-        "sha256"   : "7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092",
-        "url"      : "s3://url/7e/7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092"},
+        "sha256"   : "de3d9f6d31285985139aedd9e3f4b4ad04dadb4274c3c0ce28261a8e8e542a0f",
+        "url"      : "s3://url/de/de3d9f6d31285985139aedd9e3f4b4ad04dadb4274c3c0ce28261a8e8e542a0f"},
         outputs)
 
 
 def test_upload_output_file():
-    app  = app_helper.mock_short_read_assembler_state()
+    app  = app_helper.setup_app_state('sra', 'task')
     url  = "s3://nucleotides-testing/upload/"
     path = file_helper.create_benchmark_file(app, '/outputs/contig_fasta/d1b2a59fbe', 'contents')
     post.upload_output_file(app, post.output_file_metadata(url, path))
@@ -41,7 +41,7 @@ def test_upload_output_file():
 ############################################
 
 def test_short_read_assembler_successful_event():
-    app = app_helper.mock_short_read_assembler_state(outputs = True)
+    app  = app_helper.setup_app_state('sra', 'outputs')
     outputs = [{
         "type"     : "contig_fasta",
         "location" : "/local/path",
@@ -67,7 +67,13 @@ def test_short_read_assembler_successful_event():
 
 
 def test_short_read_assembler_unsuccessful_event():
-    app = app_helper.mock_short_read_assembler_state(outputs = False)
+    app  = app_helper.setup_app_state('sra', 'task')
     outputs = []
     event = post.create_event_request(app, outputs)
     nose.assert_equal(event, {"task" : 5, "success" : False, "files" : [], "metrics" : {}})
+
+
+def test_assembly_benchmark_unsuccessful_event():
+    app = app_helper.setup_app_state('quast', 'task') # No tmp/biobox.yaml
+    event = post.create_event_request(app, post.list_outputs(app))
+    nose.assert_equal(event, {"task" : 6, "success" : False, "files" : [], "metrics" : {}})

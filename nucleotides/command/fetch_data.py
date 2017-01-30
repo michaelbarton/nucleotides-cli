@@ -24,7 +24,7 @@ def create_input_files(app):
         app['logger'].debug("Downloading S3 file '{}' to '{}'".format(f['url'], dst))
         s3.fetch_file(f['url'], dst)
 
-def run(task):
+def run(task, args):
     app = util.application_state(task)
     app['logger'].info("Fetching input files for task {}".format(task))
     create_input_files(app)

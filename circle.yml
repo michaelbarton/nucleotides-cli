@@ -11,15 +11,15 @@ dependencies:
   cache_directories:
     - "vendor/bundle"
   override:
-    - pip install tox
     - ./script/bootstrap
-    - docker pull bioboxes/velvet
     - mkdir -p $CIRCLE_TEST_REPORTS/cucumber
 
 test:
   override:
     - ./script/test
     - ./script/feature '--format json --out $$CIRCLE_TEST_REPORTS/cucumber/tests.cucumber --format pretty':
+        timeout: 600
+    - make slow_feature:
         timeout: 600
 
 deployment:

@@ -1,0 +1,13 @@
+---
+version: 0.9.0
+arguments:
+  - name: metrics
+    type: tsv
+    inline: false
+    value: metrics.tsv
+    description: Gene-based assembly evaluation metrics
+  - name: metrics
+    type: yaml
+    inline: false
+    value: metrics.yaml
+    description: Gene-based assembly evaluation metrics

@@ -5,7 +5,7 @@ import nucleotides.metrics as met
 from nose.plugins.attrib import attr
 
 def test_extract_metric():
-    with gzip.open('data/cgroup_metrics_incomplete.json.gz') as f:
+    with gzip.open('example_data/generated_files/cgroup_metrics_incomplete.json.gz') as f:
         metrics = met.parse_runtime_metrics(json.loads(f.read()))
 
     metrics = [{"variable" : 1}] * 10
@@ -16,7 +16,7 @@ def test_extract_metric():
 
 
 def test_parse_runtime_metrics():
-    with gzip.open('data/cgroup_metrics.json.gz') as f:
+    with gzip.open('example_data/generated_files/cgroup_metrics.json.gz') as f:
         metrics = met.parse_runtime_metrics(json.loads(f.read()))
 
     expected = {
@@ -35,7 +35,7 @@ def test_parse_runtime_metrics():
                 "Exected {} to equal {} but was {}.".format(k, v, metrics[k]))
 
 def test_parse_incomplete_runtime_metrics():
-    with gzip.open('data/cgroup_metrics_incomplete.json.gz') as f:
+    with gzip.open('example_data/generated_files/cgroup_metrics_incomplete.json.gz') as f:
         metrics = met.parse_runtime_metrics(json.loads(f.read()))
 
     nose.assert_not_in('total_rss_in_mibibytes', metrics)

@@ -3,9 +3,9 @@
     "complete": false,
     "id": 6,
     "image": {
-        "name": "bioboxes/quast",
-        "sha256": "5af634ee3f1bc3f80a749ce768883a20f793e1791f8f404a316d7d7012423cb9",
-        "task": "default",
+        "name": "bioboxes/crash-test-biobox",
+        "sha256": "fdfdda8192dd919e6cac37366784ec8cfbf52c6fec53fe942a7f1940bd7642e8",
+        "task": "gaet",
         "type": "reference_assembly_evaluation"
     },
     "inputs": [

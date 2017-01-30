@@ -66,12 +66,14 @@ def create_event_request(app, outputs):
 
     task = util.select_task(app["task"]["image"]["type"])
     created_files = map(lambda x: x['type'], outputs)
+    is_succesful  = task.successful_event_outputs().issubset(created_files)
+    metrics       = task.collect_metrics(app) if is_succesful else {}
 
     return {
         "task"    : app["task"]["id"],
-        "success" : task.successful_event_outputs().issubset(created_files),
+        "success" : is_succesful,
         "files"   : map(remove_loc, outputs),
-        "metrics" : task.collect_metrics(app) }
+        "metrics" : metrics}
 
 
 def post(app):
@@ -84,7 +86,7 @@ def post(app):
     api.post_event(create_event_request(app, outputs), app)
 
 
-def run(task):
+def run(task, args):
     app = util.application_state(task)
     app["s3-upload"] = util.get_environment_variable("NUCLEOTIDES_S3_URL")
     app['logger'].info("Uploading all event data for task {}".format(task))

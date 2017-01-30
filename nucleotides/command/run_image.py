@@ -38,36 +38,42 @@ def create_container(app):
 
 
 def copy_output_files(app):
-    avail.get_image(image_version(app))
+    """
+    Creates a list of source file paths and destination directory names. Copies each
+    the source file to destination directory.
+    """
+    path = lambda x: os.path.abspath(fs.get_task_file_path(app, x))
 
-    if os.path.isfile(fs.get_task_file_path(app, 'meta/log.txt')):
-        fs.copy_log_file_to_outputs(app)
+    output_files  = {'container_log' : path('meta/log.txt')}
 
-    if os.path.isfile(fs.get_task_file_path(app, 'tmp/biobox.yaml')):
-        if (image_name(app) == 'bioboxes/quast'):          # Quast also does not produce
-            return image_type(app).copy_output_files(app)   # a standard biobox.yaml
-        else:
-            paths = image_type(app).output_files()
-            args  = fs.get_output_biobox_file_arguments(app)
-            for (dst, path) in paths:
-                src = funcy.get_in(args, path + ['value'])
-                fs.copy_tmp_file_to_outputs(app, src, dst)
+    if fs.biobox_yaml_exists(app):
+        tmp_files    = funcy.walk_values(lambda x: path("tmp/" + x), image_type(app).output_file_paths(app))
+        output_files = funcy.merge(output_files, tmp_files)
+    else:
+        msg = "No biobox.yaml file created, cannot find paths of any container generated files"
+        app['logger'].warn(msg)
+
+    fs.copy_container_output_files(app, output_files)
 
 
-def execute_image(app):
+def execute_image(app, docker_timeout = 15, metric_interval = 15, metric_warmup = 2):
     setup(app)
-    biobox = create_container(app)
-    id_ = biobox['Id']
+    image  = image_version(app)
 
-    docker.client(timeout = 15).start(id_)
-    metrics = cgroup.collect_runtime_metrics(id_)
+    app['logger'].info("Creating Docker container from image {}".format(image))
+    biobox = create_container(app)
+    id_    = biobox['Id']
+
+    app['logger'].info("Starting Docker container {}".format(id_))
+    docker.client(docker_timeout).start(id_)
+    metrics = cgroup.collect_runtime_metrics(id_, metric_interval, metric_warmup)
+    app['logger'].info("Docker container {} finished".format(id_))
 
     fs.create_runtime_metric_file(app, metrics)
     copy_output_files(app)
 
-def run(task):
+
+def run(task, args):
     app = util.application_state(task)
-    image = image_version(app)
-    app['logger'].info("Starting image execution for {}".format(image))
-    execute_image(app)
-    app['logger'].info("Finished image execution for {}".format(image))
+    interval = int(args['--polling'])
+    execute_image(app, docker_timeout = interval, metric_interval = interval)

@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.5.0 - 2017-01-30
+
+### Added
+
+  * A successful build and publication of the nucleotides client triggers a
+    rebuild of the nucleotides Amazon machine image (AMI).
+
+  * Added support for running benchmark 'evaluate' task using the bioboxes/gaet
+    Docker image.
+
+  * Added the command line flag `--polling`. This can be used to adjust how
+    often the running Docker container is queried for cgroup data.
+
+### Changed
+
+  * Cgroup metrics are no longer collected during a 'produce' benchmark task
+    when the Docker container fails to complete successfully. This is to
+    standardise the client when no metrics are collected for any type of
+    benchmark when the Docker container exits with an error.
+
+  * The testing suite used to ensure the nucleotides client works as expected
+    was significantly refactored to reduce the overall run time which was
+    running for around 7 mins prior to refactoring. Most of the work done to
+    reduce the run time was using the bioboxes/crash-test-biobox image, which
+    outputs the expected files without doing any computational work.
+
 ## 0.4.0 - 2016-10-03
 
 ### Added
@@ -14,7 +40,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
     (15s).
 
   * Additional cgroup metrics are collected from the running container. These
-    metrics are io reads, io writes, total resident set size (rss), CPU usage
+    metrics are I/O reads, I/O writes, total resident set size (RSS), CPU usage
     in kernel mode, CPU usage in user mode. These are in additional to total
     memory usage and total CPU time.
 
