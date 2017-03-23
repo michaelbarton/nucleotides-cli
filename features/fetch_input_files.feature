@@ -28,10 +28,27 @@ Feature: Fetching input data files for benchmarking
     And the file "nucleotides/1/inputs/short_read_fastq/11948b41d44931c6a25cabe58b138a4fc7ecc1ac628c40dcf1ad006e558fb533.fq.gz" should exist
 
 
-  Scenario: Fetching input data files for assembly benchmarking task
+  Scenario: Fetching input data files for an assembly benchmarking task
     When I run `nucleotides fetch-data 2`
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
     And the file "nucleotides/2/inputs/reference_fasta/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414.fa.gz" should exist
     And the file "nucleotides/2/benchmark.log" should exist
+
+
+  Scenario: Fetching input data files with short contigs for an assembly benchmarking task
+    Given I set the environment variables to:
+      | variable           | value                             |
+      | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
+    And I copy the file "../../example_data/tasks/short_read_assembler.json" to "nucleotides/4/metadata.json"
+    And I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz"
+    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/4/outputs/container_log/log.txt"
+    And I copy the file "../../example_data/generated_files/short_contigs.fa" to "nucleotides/4/outputs/contig_fasta/1ff29bcb69"
+    And I run `nucleotides post-data 4`
+    When I run `nucleotides fetch-data 5`
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the file "nucleotides/5/inputs/reference_fasta/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414.fa.gz" should exist
+    And the file "nucleotides/5/inputs/contig_fasta/de3d9f6d31285985139aedd9e3f4b4ad04dadb4274c3c0ce28261a8e8e542a0f.fa" should exist
