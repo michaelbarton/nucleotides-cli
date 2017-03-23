@@ -34,7 +34,7 @@ Feature: Running a GAET-based reference assembly benchmark task
     And the exit status should be 0
     And the file "nucleotides/6/benchmark.log" should exist
     And the S3 bucket "nucleotides-testing" should contain the files:
-      | uploads/af/af9bc02c71a21061d19aca19e9536d828944c346b7b83912efb2c84414e02651 |
+      | uploads/42/4222372031d3d09abf572f6e87f5ad4e364925f63f521592a96075a9e7fed5a1 |
       | uploads/e0/e0e8af37908fb7c275a9467c3ddbba0994c9a33dbf691496a60f4b0bec975f0a |
       | uploads/f8/f8efa7d0bcace3be05f4fff453e414efae0e7d5f680bf215f8374b0a9fdaf9c4 |
     And the JSON should have the following:
