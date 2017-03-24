@@ -15,9 +15,9 @@
             "url": "s3://nucleotides-testing/short-read-assembler/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414"
         },
         {
-            "sha256": "7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092",
+            "sha256": "57601ff10b7faf7fcf53a7268e3615db58088db34eb8e8bf31cb475c24381451",
             "type": "contig_fasta",
-            "url": "s3://nucleotides-testing/short-read-assembler/7e9f760161e13ffdd4f81fdfec2222ccd3c568f4abcbcadcb10487d43b2a0092"
+            "url": "s3://nucleotides-testing/short-read-assembler/57601ff10b7faf7fcf53a7268e3615db58088db34eb8e8bf31cb475c24381451"
         }
     ],
     "type": "evaluate"

@@ -4,8 +4,8 @@
     "id": 6,
     "image": {
         "name": "bioboxes/crash-test-biobox",
-        "sha256": "fdfdda8192dd919e6cac37366784ec8cfbf52c6fec53fe942a7f1940bd7642e8",
-        "task": "gaet",
+        "sha256": "531107520c3a131b714b23d5c58920f216a4e897a1db9a1c20ef960c2ed688f0",
+        "task": "quast",
         "type": "reference_assembly_evaluation"
     },
     "inputs": [
@@ -15,9 +15,9 @@
             "url": "s3://nucleotides-testing/short-read-assembler/6bac51cc35ee2d11782e7e31ea1bfd7247de2bfcdec205798a27c820b2810414"
         },
         {
-            "sha256": "57601ff10b7faf7fcf53a7268e3615db58088db34eb8e8bf31cb475c24381451",
+            "sha256": "1ff29bcb6940b7d629d2d070fd67b23604e3459c9fd0167cdb6d1dcb26966c87",
             "type": "contig_fasta",
-            "url": "s3://nucleotides-testing/short-read-assembler/57601ff10b7faf7fcf53a7268e3615db58088db34eb8e8bf31cb475c24381451"
+            "url": "s3://nucleotides-testing/short-read-assembler/1ff29bcb6940b7d629d2d070fd67b23604e3459c9fd0167cdb6d1dcb26966c87"
         }
     ],
     "type": "evaluate"

@@ -78,3 +78,9 @@ quast:
       dst: outputs/container_log/e0e8af3790
     - src: example_data/generated_files/cgroup_metrics.json.gz
       dst: outputs/container_runtime_metrics/metrics.json.gz
+
+
+quast_short_contigs:
+  task:
+    - src: example_data/tasks/quast_short_contigs.json
+      dst: metadata.json

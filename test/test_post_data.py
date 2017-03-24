@@ -49,7 +49,7 @@ def test_short_read_assembler_successful_event():
         "url"      : "s3://url/dir/file"}]
     event = post.create_event_request(app, outputs)
     nose.assert_equal({
-        "task" : 5,
+        "task" : 4,
         "success" : True,
         "metrics" : {
             "total_cpu_usage_in_seconds"               : 53.546,
@@ -70,7 +70,7 @@ def test_short_read_assembler_unsuccessful_event():
     app  = app_helper.setup_app_state('sra', 'task')
     outputs = []
     event = post.create_event_request(app, outputs)
-    nose.assert_equal(event, {"task" : 5, "success" : False, "files" : [], "metrics" : {}})
+    nose.assert_equal(event, {"task" : 4, "success" : False, "files" : [], "metrics" : {}})
 
 
 def test_assembly_benchmark_unsuccessful_event():
