@@ -5,7 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 0.5.1 - UNRELEASED
 
+### Added
 
+  * Filter contigs less than 1000bp when fetching `contig_fasta` files from s3.
+    This effectively removes all small contigs from being included in the
+    assembly evaluation tasks.
 
 ## 0.5.0 - 2017-01-30
 
