@@ -38,6 +38,10 @@ Feature: Fetching input data files for benchmarking
 
 
   Scenario: Fetching input data files with short contigs for an assembly benchmarking task
+    # A contig fasta file is posted to the API containing short contigs.
+    # Subsequently the same file is pulled from the nucleotides API. The sha256 of
+    # the pulled file should be different than the uploaded file because the short
+    # contigs have been removed.
     Given I set the environment variables to:
       | variable           | value                             |
       | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
