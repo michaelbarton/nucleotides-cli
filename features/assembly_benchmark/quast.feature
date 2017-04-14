@@ -104,3 +104,22 @@ Feature: Running a QUAST-based reference assembly benchmark task
        | events/0/metrics/nga50  | 0.0  |
        | complete                | true |
        | success                 | true |
+
+
+  Scenario: Posting a benchmark when QUAST was unable to calculate any alignments
+    Given I run the bash command:
+      """
+      sed /name/s/crash-test-biobox/quast/ ../../example_data/tasks/quast.json > nucleotides/6/metadata.json
+      """
+    And I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
+    And I copy the file "../../example_data/biobox/quast.yaml" to "nucleotides/6/tmp/biobox.yaml"
+    And I copy the file "../../example_data/generated_files/quast_metrics_alignment_missing.tsv" to "nucleotides/6/outputs/assembly_metrics/9fd2e1f53b"
+    When I run `nucleotides post-data 6`
+    And I get the url "/tasks/6"
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the JSON should have the following:
+      | complete         | true  |
+      | success          | false |
+      | events/0/metrics | {}    |
