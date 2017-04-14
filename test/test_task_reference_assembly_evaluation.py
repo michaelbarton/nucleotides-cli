@@ -56,6 +56,12 @@ def test_create_event_request_with_a_successful_quast_event():
     nose.assert_equal(event["metrics"]["ng50"], 25079.0)
 
 
+def test_assembly_benchmark_unsuccessful_event():
+    app = app_helper.setup_app_state('quast', 'task') # No tmp/biobox.yaml
+    event = post.create_event_request(app, post.list_outputs(app))
+    nose.assert_equal(event, {"task" : 6, "success" : False, "files" : [], "metrics" : {}})
+
+
 def test_create_event_request_with_non_numeric_quast_values():
     app = app_helper.setup_app_state('quast', 'outputs')
 
@@ -67,6 +73,13 @@ def test_create_event_request_with_non_numeric_quast_values():
     event = post.create_event_request(app, post.list_outputs(app))
     nose.assert_in("nga50", event["metrics"])
     nose.assert_equal(event["metrics"]["nga50"], 0.0)
+
+@attr('wip')
+def test_create_event_request_with_missing_alignment_values():
+    app = app_helper.setup_app_state('quast', 'missing_alignment')
+    event = post.create_event_request(app, post.list_outputs(app))
+    nose.assert_equal(event, {"task" : 6, "success" : False, "files" : [], "metrics" : {}})
+
 
 
 #################################################
