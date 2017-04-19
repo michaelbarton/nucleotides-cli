@@ -7,9 +7,10 @@ import helper.file        as file_helper
 import helper.image       as image_helper
 
 import nucleotides.filesystem                as fs
-import nucleotides.task.short_read_assembler as task
 import nucleotides.command.run_image         as run
 import nucleotides.command.post_data         as post
+
+from nucleotides.task.short_read_assembler import ShortReadAssemblerTask as task
 
 from nose.plugins.attrib import attr
 
@@ -34,7 +35,7 @@ def test_run_container():
 
 def test_output_file_paths():
     app = app_helper.setup_app_state('sra', 'intermediates')
-    paths = task.output_file_paths(app)
+    paths = task().output_file_paths(app)
     for (_, f) in paths.items():
         location = fs.get_task_file_path(app, "tmp/" + f)
         nose.assert_true(os.path.isfile(location))

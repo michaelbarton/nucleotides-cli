@@ -4,11 +4,13 @@ nucleotides API.
 """
 
 import os, glob
-import nucleotides.util       as util
-import nucleotides.api_client as api
-import nucleotides.s3         as s3
+import nucleotides.util                as util
+import nucleotides.api_client          as api
+import nucleotides.s3                  as s3
+import nucleotides.task.task_interface as interface
 
 from functools import partial
+
 
 def s3_file_url(s3_path, digest):
     """
@@ -64,7 +66,7 @@ def create_event_request(app, outputs):
         d.pop("location")
         return d
 
-    task = util.select_task(app["task"]["image"]["type"])
+    task = interface.select_task(app["task"]["image"]["type"])()
     created_files = map(lambda x: x['type'], outputs)
     is_succesful  = task.successful_event_outputs().issubset(created_files)
     metrics       = task.collect_metrics(app) if is_succesful else {}

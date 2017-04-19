@@ -7,19 +7,6 @@ from nucleotides.task.task_interface import TaskInterface
 
 OUTPUTS = {'contig_fasta' : [0, 'fasta', 0]}
 
-def collect_metrics(app):
-    import json, gzip
-    path = fs.get_task_file_path(app, "outputs/container_runtime_metrics/metrics.json.gz")
-    if os.path.isfile(path):
-        with gzip.open(path) as f:
-            return met.parse_runtime_metrics(json.loads(f.read()))
-    else:
-        return {}
-
-def successful_event_outputs():
-    return set(["contig_fasta"])
-
-
 class ShortReadAssemblerTask(TaskInterface):
 
     def biobox_args(self, app):
@@ -27,6 +14,20 @@ class ShortReadAssemblerTask(TaskInterface):
         return [{"fastq" : [
             {"id" : 0 , "value" : path, "type": "paired"}]}]
 
+
     def output_file_paths(self, app):
         f = funcy.partial(fs.get_biobox_yaml_value, app)
         return funcy.walk_values(f, OUTPUTS)
+
+
+    def collect_metrics(self, app):
+        import json, gzip
+        path = fs.get_task_file_path(app, "outputs/container_runtime_metrics/metrics.json.gz")
+        if os.path.isfile(path):
+            with gzip.open(path) as f:
+                return met.parse_runtime_metrics(json.loads(f.read()))
+        else:
+            return {}
+
+    def successful_event_outputs(self):
+        return set(["contig_fasta"])

@@ -9,7 +9,6 @@ import biobox.container   as container
 import nucleotides.filesystem                         as fs
 import nucleotides.command.post_data                  as post
 import nucleotides.command.run_image                  as run
-import nucleotides.task.reference_assembly_evaluation as task
 
 from nose.plugins.attrib import attr
 

@@ -33,10 +33,6 @@ def before_container_hook(app):
         fu.mkdir_p(fs.get_task_dir_path(app, 'tmp/assembly_metrics'))
 
 
-def successful_event_outputs():
-    return set(["assembly_metrics"])
-
-
 def rename_quast_metrics(raw_metrics):
     mapping_file = os.path.join('mappings', 'quast.yml')
     mapping = yaml.safe_load(util.get_asset_file_contents(mapping_file))
@@ -51,16 +47,6 @@ def parse_assembly_metric(m):
     else:
         return float(m)
 
-
-def collect_metrics(app):
-    path = fs.get_task_path_file_without_name(app, 'outputs/assembly_metrics')
-    with open(path, 'r') as f:
-        raw_metrics = list(csv.reader(f, delimiter = '\t'))
-
-    if is_quast_output(app):
-       raw_metrics = rename_quast_metrics(raw_metrics)
-
-    return dict(map(lambda (k, v): [k.lower(), parse_assembly_metric(v)], raw_metrics))
 
 class ReferenceAssemblyEvaluationTask(TaskInterface):
 
@@ -77,3 +63,20 @@ class ReferenceAssemblyEvaluationTask(TaskInterface):
         else:
             f = funcy.partial(fs.get_biobox_yaml_value, app)
             return funcy.walk_values(f, OUTPUTS)
+
+
+    def collect_metrics(self, app):
+        path = fs.get_task_path_file_without_name(app, 'outputs/assembly_metrics')
+        with open(path, 'r') as f:
+            raw_metrics = list(csv.reader(f, delimiter = '\t'))
+
+        if is_quast_output(app):
+           raw_metrics = rename_quast_metrics(raw_metrics)
+
+        return dict(map(lambda (k, v): [k.lower(), parse_assembly_metric(v)], raw_metrics))
+
+
+    def successful_event_outputs(self):
+        return set(["assembly_metrics"])
+
+
