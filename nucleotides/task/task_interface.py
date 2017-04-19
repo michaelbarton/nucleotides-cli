@@ -19,3 +19,13 @@ class TaskInterface(object):
         to the biobox Docker image.
         """
         return
+
+
+    @abc.abstractmethod
+    def output_file_paths(self, app):
+        """
+        List the paths of the generated biobox files. These are the files that
+        should be collected and uploaded to nucleotides after the task has been
+        completed.
+        """
+        return

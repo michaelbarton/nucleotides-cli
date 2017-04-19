@@ -52,7 +52,7 @@ def copy_output_files(app):
     output_files  = {'container_log' : path('meta/log.txt')}
 
     if fs.biobox_yaml_exists(app):
-        tmp_files    = funcy.walk_values(lambda x: path("tmp/" + x), image_type(app).output_file_paths(app))
+        tmp_files    = funcy.walk_values(lambda x: path("tmp/" + x), replacement_image_type(app).output_file_paths(app))
         output_files = funcy.merge(output_files, tmp_files)
     else:
         msg = "No biobox.yaml file created, cannot find paths of any container generated files"

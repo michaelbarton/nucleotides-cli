@@ -33,14 +33,6 @@ def before_container_hook(app):
         fu.mkdir_p(fs.get_task_dir_path(app, 'tmp/assembly_metrics'))
 
 
-def output_file_paths(app):
-    if is_quast_output(app):
-        return {'assembly_metrics' : 'report.tsv'}
-    else:
-        f = funcy.partial(fs.get_biobox_yaml_value, app)
-        return funcy.walk_values(f, OUTPUTS)
-
-
 def successful_event_outputs():
     return set(["assembly_metrics"])
 
@@ -79,3 +71,9 @@ class ReferenceAssemblyEvaluationTask(TaskInterface):
                 {"fasta_dir" : [{"id" : 1 , "value" : references, "type": "references"}]}]
 
 
+    def output_file_paths(self, app):
+        if is_quast_output(app):
+            return {'assembly_metrics' : 'report.tsv'}
+        else:
+            f = funcy.partial(fs.get_biobox_yaml_value, app)
+            return funcy.walk_values(f, OUTPUTS)
