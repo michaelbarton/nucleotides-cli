@@ -14,7 +14,14 @@ def is_quast(app):
 
 
 def is_quast_output(app):
-    # The 'combined_quast_output/report.tsv' file is not listed in the biobox YAML
+    """
+    Check whether the output is from QUAST. This workaround is required because
+    'combined_quast_output/report.tsv' file is not currently listed in the biobox
+    YAML produced by QUAST.
+
+    This method should be removed once all assembly evaluation bioboxes return a
+    metrics field in their biobox.yaml output.
+    """
     return fs.get_biobox_yaml_value(app, [0]) == "combined_quast_output/report.html"
 
 
