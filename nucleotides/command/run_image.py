@@ -23,10 +23,6 @@ def image_version(app):
 def image_task(app):
     return funcy.get_in(app, ["task", "image", "task"])
 
-def setup(app):
-    task = image_type(app)
-    if hasattr(task, 'before_container_hook'):
-        task.before_container_hook(app)
 
 def create_container(app):
     avail.get_image(image_version(app))
@@ -59,8 +55,9 @@ def copy_output_files(app):
 
 
 def execute_image(app, docker_timeout = 15, metric_interval = 15, metric_warmup = 2):
-    setup(app)
-    image  = image_version(app)
+    task  = image_type(app)
+    task.before_container_hook(app)
+    image = image_version(app)
 
     app['logger'].info("Creating Docker container from image {}".format(image))
     biobox = create_container(app)

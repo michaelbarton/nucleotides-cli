@@ -13,7 +13,6 @@ import nucleotides.command.run_image                  as run
 from nose.plugins.attrib import attr
 
 
-@attr('wip')
 def test_create_container():
     app = app_helper.setup_app_state('quast', 'inputs')
     cnt = run.create_container(app)
@@ -21,7 +20,6 @@ def test_create_container():
     image_helper.clean_up_container(cnt["Id"])
 
 
-@attr('wip')
 def test_run_container():
     app = app_helper.setup_app_state('quast', 'inputs')
     id_ = run.create_container(app)['Id']
@@ -75,12 +73,14 @@ def test_create_event_request_with_non_numeric_quast_values():
     nose.assert_in("nga50", event["metrics"])
     nose.assert_equal(event["metrics"]["nga50"], 0.0)
 
+
 def test_create_event_request_with_missing_alignment_values():
     app = app_helper.setup_app_state('quast', 'missing_alignment')
+    # Quast hook in request body post processing is keyed off the image name
+    app["task"]["image"]["name"] = "bioboxes/quast"
     event = post.create_event_request(app, post.list_outputs(app))
-    nose.assert_equal(event, {"task" : 6, "success" : False, "files" : [], "metrics" : {}})
-
-
+    nose.assert_equal(event["success"], False)
+    nose.assert_equal(event["metrics"], {})
 
 #################################################
 #

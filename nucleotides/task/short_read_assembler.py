@@ -29,5 +29,5 @@ class ShortReadAssemblerTask(TaskInterface):
         else:
             return {}
 
-    def successful_event_outputs(self):
+    def successful_event_output_files(self):
         return set(["contig_fasta"])

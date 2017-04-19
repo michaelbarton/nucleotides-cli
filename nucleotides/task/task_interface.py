@@ -12,6 +12,22 @@ def select_task(c):
 class TaskInterface(object):
     __metaclass__ = abc.ABCMeta
 
+    def before_container_hook(self, app):
+        """
+        Hook into process of creating a Docker container before launch. Can be used
+        to perform any specific actions required before launching
+        """
+        return
+
+
+    def request_body_post_hook(self, app, request_body):
+        """
+        Hook to do any specific post processing of the request body before it is
+        sent to the nucleotides API.
+        """
+        return request_body
+
+
     @abc.abstractmethod
     def biobox_args(self, app):
         """
@@ -41,7 +57,7 @@ class TaskInterface(object):
 
 
     @abc.abstractmethod
-    def successful_event_outputs(self):
+    def successful_event_output_files(self):
         """
         List the files that should be produced upon successful completion of the
         biobox container execution

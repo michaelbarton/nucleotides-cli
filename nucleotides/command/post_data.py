@@ -8,6 +8,7 @@ import nucleotides.util                as util
 import nucleotides.api_client          as api
 import nucleotides.s3                  as s3
 import nucleotides.task.task_interface as interface
+import nucleotides.command.run_image   as run_image
 
 from functools import partial
 
@@ -56,8 +57,7 @@ def upload_output_file(app, f):
     s3.post_file(f["location"], f["url"])
 
 
-
-def create_event_request(app, outputs):
+def create_event_request(app, output_files):
     """
     Given a list of output file metadata dictionaries, creates the JSON body that
     should be posted to the nucleotides event API.
@@ -66,16 +66,17 @@ def create_event_request(app, outputs):
         d.pop("location")
         return d
 
-    task = interface.select_task(app["task"]["image"]["type"])()
-    created_files = map(lambda x: x['type'], outputs)
-    is_succesful  = task.successful_event_outputs().issubset(created_files)
+    task = run_image.image_type(app)
+    created_files = map(lambda x: x['type'], output_files)
+    is_succesful  = task.successful_event_output_files().issubset(created_files)
     metrics       = task.collect_metrics(app) if is_succesful else {}
 
-    return {
+    request_body = {
         "task"    : app["task"]["id"],
         "success" : is_succesful,
-        "files"   : map(remove_loc, outputs),
+        "files"   : map(remove_loc, output_files),
         "metrics" : metrics}
+    return task.request_body_post_hook(app, request_body)
 
 
 def post(app):
@@ -83,9 +84,10 @@ def post(app):
     Fetches list of output files, uploads each to S3 and posts event status to
     the nucleotides API.
     """
-    outputs = list_outputs(app)
-    map(partial(upload_output_file, app), outputs)
-    api.post_event(create_event_request(app, outputs), app)
+    output_files = list_outputs(app)
+    map(partial(upload_output_file, app), output_files)
+    request_body = create_event_request(app, output_files)
+    api.post_event(request_body, app)
 
 
 def run(task, args):

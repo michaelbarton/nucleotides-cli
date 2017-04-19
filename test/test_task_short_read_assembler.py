@@ -15,7 +15,6 @@ from nucleotides.task.short_read_assembler import ShortReadAssemblerTask as task
 from nose.plugins.attrib import attr
 
 
-@attr('wip')
 def test_create_container():
     app = app_helper.setup_app_state('sra', 'inputs')
     cnt = run.create_container(app)
@@ -23,7 +22,6 @@ def test_create_container():
     image_helper.clean_up_container(cnt["Id"])
 
 
-@attr('wip')
 def test_run_container():
     app = app_helper.setup_app_state('sra', 'inputs')
     id_ = run.create_container(app)['Id']
