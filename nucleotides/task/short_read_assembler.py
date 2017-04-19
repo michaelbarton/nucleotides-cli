@@ -5,7 +5,7 @@ import nucleotides.filesystem as fs
 
 from nucleotides.task.task_interface import TaskInterface
 
-OUTPUTS = {'contig_fasta' : [0, 'fasta', 0]}
+OUTPUT_PATH = {'contig_fasta' : [0, 'fasta', 0]}
 
 class ShortReadAssemblerTask(TaskInterface):
 
@@ -17,7 +17,7 @@ class ShortReadAssemblerTask(TaskInterface):
 
     def output_file_paths(self, app):
         f = funcy.partial(fs.get_biobox_yaml_value, app)
-        return funcy.walk_values(f, OUTPUTS)
+        return funcy.walk_values(f, OUTPUT_PATH)
 
 
     def collect_metrics(self, app):

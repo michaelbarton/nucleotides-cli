@@ -9,11 +9,8 @@ import nucleotides.filesystem          as fs
 import nucleotides.util                as util
 import nucleotides.task.task_interface as interface
 
-def replacement_image_type(app):
-    return interface.select_task(funcy.get_in(app, ["task", "image", "type"]))()
-
 def image_type(app):
-    return util.select_task(funcy.get_in(app, ["task", "image", "type"]))
+    return interface.select_task(funcy.get_in(app, ["task", "image", "type"]))()
 
 def image_name(app):
     return funcy.get_in(app, ["task", "image", "name"])
@@ -27,9 +24,9 @@ def image_task(app):
     return funcy.get_in(app, ["task", "image", "task"])
 
 def setup(app):
-    biobox = image_type(app)
-    if hasattr(biobox, 'before_container_hook'):
-        biobox.before_container_hook(app)
+    task = image_type(app)
+    if hasattr(task, 'before_container_hook'):
+        task.before_container_hook(app)
 
 def create_container(app):
     avail.get_image(image_version(app))
@@ -37,7 +34,7 @@ def create_container(app):
             "metadata" : fs.get_task_dir_path(app, 'meta')}
     return image.create_container(
             image_version(app),
-            replacement_image_type(app).biobox_args(app),
+            image_type(app).biobox_args(app),
             dirs,
             image_task(app))
 
@@ -52,7 +49,7 @@ def copy_output_files(app):
     output_files  = {'container_log' : path('meta/log.txt')}
 
     if fs.biobox_yaml_exists(app):
-        tmp_files    = funcy.walk_values(lambda x: path("tmp/" + x), replacement_image_type(app).output_file_paths(app))
+        tmp_files    = funcy.walk_values(lambda x: path("tmp/" + x), image_type(app).output_file_paths(app))
         output_files = funcy.merge(output_files, tmp_files)
     else:
         msg = "No biobox.yaml file created, cannot find paths of any container generated files"

@@ -10,7 +10,7 @@ import nucleotides.command.run_image  as run
 
 from nucleotides.task.task_interface import TaskInterface
 
-OUTPUTS = {'assembly_metrics': [0]}
+OUTPUT_PATH = {'assembly_metrics': [0]}
 
 def is_quast(app):
     return run.image_name(app) == "bioboxes/quast"
@@ -26,11 +26,6 @@ def is_quast_output(app):
     metrics field in their biobox.yaml output.
     """
     return fs.get_biobox_yaml_value(app, [0]) == "combined_quast_output/report.html"
-
-
-def before_container_hook(app):
-    if is_quast(app):
-        fu.mkdir_p(fs.get_task_dir_path(app, 'tmp/assembly_metrics'))
 
 
 def rename_quast_metrics(raw_metrics):
@@ -57,12 +52,17 @@ class ReferenceAssemblyEvaluationTask(TaskInterface):
                 {"fasta_dir" : [{"id" : 1 , "value" : references, "type": "references"}]}]
 
 
+    def before_container_hook(self, app):
+        if is_quast(app):
+            fu.mkdir_p(fs.get_task_dir_path(app, 'tmp/assembly_metrics'))
+
+
     def output_file_paths(self, app):
         if is_quast_output(app):
             return {'assembly_metrics' : 'report.tsv'}
         else:
             f = funcy.partial(fs.get_biobox_yaml_value, app)
-            return funcy.walk_values(f, OUTPUTS)
+            return funcy.walk_values(f, OUTPUT_PATH)
 
 
     def collect_metrics(self, app):
@@ -78,5 +78,3 @@ class ReferenceAssemblyEvaluationTask(TaskInterface):
 
     def successful_event_outputs(self):
         return set(["assembly_metrics"])
-
-
