@@ -1,15 +1,11 @@
 import os.path, shutil, funcy
 
-import nucleotides.metrics     as met
-import nucleotides.filesystem  as fs
+import nucleotides.metrics    as met
+import nucleotides.filesystem as fs
+
+from nucleotides.task.task_interface import TaskInterface
 
 OUTPUTS = {'contig_fasta' : [0, 'fasta', 0]}
-
-def biobox_args(app):
-    path = fs.get_task_path_file_without_name(app, 'inputs/short_read_fastq')
-    return [{"fastq" : [
-        {"id" : 0 , "value" : path, "type": "paired"}]}]
-
 
 def output_file_paths(app):
     f = funcy.partial(fs.get_biobox_yaml_value, app)
@@ -27,3 +23,13 @@ def collect_metrics(app):
 
 def successful_event_outputs():
     return set(["contig_fasta"])
+
+
+
+class ShortReadAssemblerTask(TaskInterface):
+
+    def biobox_args(self, app):
+        path = fs.get_task_path_file_without_name(app, 'inputs/short_read_fastq')
+        return [{"fastq" : [
+            {"id" : 0 , "value" : path, "type": "paired"}]}]
+

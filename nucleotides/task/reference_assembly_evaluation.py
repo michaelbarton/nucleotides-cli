@@ -7,6 +7,9 @@ import nucleotides.util               as util
 import nucleotides.filesystem         as fs
 import nucleotides.command.run_image  as run
 
+
+from nucleotides.task.task_interface import TaskInterface
+
 OUTPUTS = {'assembly_metrics': [0]}
 
 def is_quast(app):
@@ -28,13 +31,6 @@ def is_quast_output(app):
 def before_container_hook(app):
     if is_quast(app):
         fu.mkdir_p(fs.get_task_dir_path(app, 'tmp/assembly_metrics'))
-
-
-def biobox_args(app):
-    contigs    = fs.get_task_path_file_without_name(app, 'inputs/contig_fasta')
-    references = fs.get_task_dir_path(app, 'inputs/reference_fasta')
-    return [{"fasta"     : [{"id" : 0 , "value" : contigs,    "type": "contig"}]},
-            {"fasta_dir" : [{"id" : 1 , "value" : references, "type": "references"}]}]
 
 
 def output_file_paths(app):
@@ -73,3 +69,13 @@ def collect_metrics(app):
        raw_metrics = rename_quast_metrics(raw_metrics)
 
     return dict(map(lambda (k, v): [k.lower(), parse_assembly_metric(v)], raw_metrics))
+
+class ReferenceAssemblyEvaluationTask(TaskInterface):
+
+    def biobox_args(self, app):
+        contigs    = fs.get_task_path_file_without_name(app, 'inputs/contig_fasta')
+        references = fs.get_task_dir_path(app, 'inputs/reference_fasta')
+        return [{"fasta"     : [{"id" : 0 , "value" : contigs,    "type": "contig"}]},
+                {"fasta_dir" : [{"id" : 1 , "value" : references, "type": "references"}]}]
+
+

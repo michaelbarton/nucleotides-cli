@@ -1,11 +1,16 @@
 import funcy, os
-import nucleotides.filesystem    as fs
 import biobox.util               as docker
 import biobox.container          as container
 import biobox.cgroup             as cgroup
 import biobox.image.availability as avail
 import biobox.image.execute      as image
-import nucleotides.util          as util
+
+import nucleotides.filesystem          as fs
+import nucleotides.util                as util
+import nucleotides.task.task_interface as interface
+
+def replacement_image_type(app):
+    return interface.select_task(funcy.get_in(app, ["task", "image", "type"]))()
 
 def image_type(app):
     return util.select_task(funcy.get_in(app, ["task", "image", "type"]))
@@ -32,7 +37,7 @@ def create_container(app):
             "metadata" : fs.get_task_dir_path(app, 'meta')}
     return image.create_container(
             image_version(app),
-            image_type(app).biobox_args(app),
+            replacement_image_type(app).biobox_args(app),
             dirs,
             image_task(app))
 

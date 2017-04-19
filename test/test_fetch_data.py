@@ -16,7 +16,6 @@ def test_fetch_short_read_assembler_input_files():
     file_helper.assert_is_file(app["path"] + "/inputs/short_read_fastq/24b5b01b08482053d7d13acd514e359fb0b726f1e8ae36aa194b6ddc07335298.fq.gz")
 
 
-@attr('wip')
 def test_fetch_reference_assembler_input_files():
     db_helper.reset_database()
     app = app_helper.setup_app_state('quast', 'task')
