@@ -49,10 +49,10 @@ def test_create_event_request_with_a_successful_quast_event():
     nose.assert_equal(event["task"], 6)
     nose.assert_equal(event["success"], True)
     nose.assert_equal(event["files"][0]["type"], "assembly_metrics")
-    nose.assert_in("ng50", event["metrics"])
+    nose.assert_in("total_aligned_length", event["metrics"])
     nose.assert_in("lga75", event["metrics"])
-    nose.assert_equal(event["metrics"]["lga75"], 16.0)
-    nose.assert_equal(event["metrics"]["ng50"], 25079.0)
+    nose.assert_equal(event["metrics"]["lga75"], 70.0)
+    nose.assert_equal(event["metrics"]["total_aligned_length"], 679979.0)
 
 
 def test_assembly_benchmark_unsuccessful_event():
@@ -67,7 +67,7 @@ def test_create_event_request_with_non_numeric_quast_values():
     import fileinput
     for line in fileinput.input(app['path'] + '/outputs/assembly_metrics/67ba437ffa', inplace = True):
         if 'NGA50' in line:
-            print line.replace("25079", "-"),
+            print line.replace("6456", "-"),
 
     event = post.create_event_request(app, post.list_outputs(app))
     nose.assert_in("nga50", event["metrics"])

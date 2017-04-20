@@ -21,7 +21,7 @@ def test_copy_container_output_files_with_no_files():
 def test_copy_container_output_files_with_intermediates():
     app = app_helper.setup_app_state('quast', 'intermediates')
     input_files = {'container_log' : 'meta/log.txt', 'assembly_metrics' : 'tmp/report.tsv'}
-    output_files = ['assembly_metrics/67ba437ffa', 'container_log/e0e8af3790']
+    output_files = ['assembly_metrics/63d2a18fa1', 'container_log/e0e8af3790']
 
     fs.copy_container_output_files(app, input_files)
     for f in output_files:

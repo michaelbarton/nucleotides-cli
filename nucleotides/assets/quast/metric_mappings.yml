@@ -42,3 +42,4 @@
 "Total length (>= 5000 bp)"   : "total_length_gt_5000"
 "Total length (>= 50000 bp)"  : "total_length_gt_50000"
 "Unaligned length"            : "unaligned_length"
+"Total aligned length"        : "total_aligned_length"

@@ -63,7 +63,7 @@ quast:
       dst: metadata.json
     - src: example_data/generated_files/log.txt
       dst: meta/log.txt
-    - src: tmp/data/assembly_metrics.tsv
+    - src: example_data/generated_files/quast_metrics.tsv
       dst: tmp/report.tsv
     - src: example_data/biobox/quast.yaml
       dst: tmp/biobox.yaml
@@ -72,7 +72,7 @@ quast:
       dst: tmp/biobox.yaml
     - src: example_data/tasks/quast.json
       dst: metadata.json
-    - src: tmp/data/assembly_metrics.tsv
+    - src: example_data/generated_files/quast_metrics.tsv
       dst: outputs/assembly_metrics/67ba437ffa
     - src: example_data/generated_files/log.txt
       dst: outputs/container_log/e0e8af3790
