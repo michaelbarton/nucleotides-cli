@@ -9,6 +9,7 @@ def select_task(c):
             }[c]
 
 
+
 class TaskInterface(object):
     __metaclass__ = abc.ABCMeta
 
@@ -20,12 +21,16 @@ class TaskInterface(object):
         return
 
 
-    def request_body_post_hook(self, app, request_body):
+    def was_successful(self, app, output_files):
         """
-        Hook to do any specific post processing of the request body before it is
-        sent to the nucleotides API.
+        Given the current state of the nucleotides directory, and a list of output
+        files determines if the benchmarking task was successful. Return a tuple
+        containing a boolean and a dictionary of benchmarking metrics.
         """
-        return request_body
+        created_files = map(lambda x: x['type'], output_files)
+        is_successful = self.successful_event_output_files().issubset(created_files)
+        metrics = self.collect_metrics(app) if is_successful else {}
+        return (is_successful, metrics)
 
 
     @abc.abstractmethod

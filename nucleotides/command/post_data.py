@@ -67,16 +67,24 @@ def create_event_request(app, output_files):
         return d
 
     task = run_image.image_type(app)
-    created_files = map(lambda x: x['type'], output_files)
-    is_succesful  = task.successful_event_output_files().issubset(created_files)
-    metrics       = task.collect_metrics(app) if is_succesful else {}
+    #created_files = map(lambda x: x['type'], output_files)
+    (is_successful, metrics) = task.was_successful(app, output_files)
+
+    #= task.successful_event_output_files().issubset(created_files)
+
+    #if is_successful and task.outputs_are_valid(app):
+        #metrics       = task.collect_metrics(app)
+    #else:
+        #is_successful = False
+        #metrics       = {}
+
 
     request_body = {
         "task"    : app["task"]["id"],
-        "success" : is_succesful,
+        "success" : is_successful,
         "files"   : map(remove_loc, output_files),
         "metrics" : metrics}
-    return task.request_body_post_hook(app, request_body)
+    return request_body
 
 
 def post(app):

@@ -35,7 +35,6 @@ def test_run_container():
 #
 #################################################
 
-
 def test_quast_complete_run_through():
     app = app_helper.setup_app_state('quast', 'inputs')
     image_helper.execute_image(app)
@@ -43,6 +42,7 @@ def test_quast_complete_run_through():
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/86bbc499b0'))
 
 
+@attr('wip')
 def test_create_event_request_with_a_successful_quast_event():
     app = app_helper.setup_app_state('quast', 'outputs')
     event = post.create_event_request(app, post.list_outputs(app))
@@ -55,12 +55,14 @@ def test_create_event_request_with_a_successful_quast_event():
     nose.assert_equal(event["metrics"]["total_aligned_length"], 679979.0)
 
 
+@attr('wip')
 def test_assembly_benchmark_unsuccessful_event():
     app = app_helper.setup_app_state('quast', 'task') # No tmp/biobox.yaml
     event = post.create_event_request(app, post.list_outputs(app))
     nose.assert_equal(event, {"task" : 6, "success" : False, "files" : [], "metrics" : {}})
 
 
+@attr('wip')
 def test_create_event_request_with_non_numeric_quast_values():
     app = app_helper.setup_app_state('quast', 'outputs')
 
@@ -95,6 +97,7 @@ def test_gaet_complete_run_through():
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/assembly_metrics/d70c163200'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/1661337965'))
 
+@attr('wip')
 def test_create_event_request_with_a_successful_gaet_event():
     app = app_helper.setup_app_state('gaet', 'outputs')
     event = post.create_event_request(app, post.list_outputs(app))

@@ -4,6 +4,25 @@ import nucleotides.metrics as met
 
 from nose.plugins.attrib import attr
 
+def test_parse_metrics_with_only_path():
+    metrics = {"old_name": 1}
+    mapping = [{"key": "new_name", "path" : "old_name"}]
+    nose.assert_equal(met.parse_metrics(metrics, mapping), {"new_name": 1})
+
+def test_parse_metrics_with_missing_value():
+    metrics = {}
+    mapping = [{"key": "new_name", "path" : "old_name"}]
+    nose.assert_equal(met.parse_metrics(metrics, mapping), {"new_name": None})
+
+def test_parse_metrics_with_lift():
+    metrics = {"old_name": "-"}
+    mapping = [{"key": "new_name", "path" : "old_name", "lift" : ["parse_quast_value"]}]
+    parsed  = met.parse_metrics(metrics, mapping)
+    nose.assert_equal(parsed, {"new_name": 0.0})
+    nose.assert_is_instance(parsed["new_name"], float)
+
+
+
 def test_extract_metric():
     with gzip.open('example_data/generated_files/cgroup_metrics_incomplete.json.gz') as f:
         metrics = met.parse_runtime_metrics(json.loads(f.read()))

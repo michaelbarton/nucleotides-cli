@@ -12,6 +12,9 @@ from functools import partial
 
 import biobox.cgroup as cgroup
 
+
+
+
 SAMPLING_INTERVAL      = 15
 BYTE_TO_MIBIBYTE       = 1.0 / 1024 ** 2
 SECONDS                = 1
@@ -31,6 +34,35 @@ CGROUP_JMESPATHS = {
     "total_read_io_in_mibibytes"               : [funcy.last, "sum(blkio_stats.io_service_bytes_recursive[?op=='Read'].value)", BYTE_TO_MIBIBYTE],
     "total_write_io_in_mibibytes"              : [funcy.last, "sum(blkio_stats.io_service_bytes_recursive[?op=='Write'].value)", BYTE_TO_MIBIBYTE],
     "total_wall_clock_time_in_seconds"         : [time_diff,  "read", SECONDS]}
+
+
+def parse_quast_value(x):
+    quast_mapping = {'-' : 0.0, 'true' : 1.0, 'false' : 0.0}
+    return quast_mapping[x] if x in quast_mapping else x
+
+
+def parse_metrics(metrics, mappings):
+    """
+    Given a dictionary of metrics, and an array of mappings for those metrics,
+    convert the input dictionary of metrics using these mappings.
+    """
+    function_list = globals()
+    def f(mapping):
+        import jmespath
+        key   = mapping["key"]
+        value = jmespath.compile(mapping['path']).search(metrics)
+
+        if value is None:
+            return (key, value)
+
+        if "lift" in mapping:
+            lift  = map(lambda name: function_list[name], mapping["lift"])
+            value = reduce(lambda x, f: f(x), lift, value)
+
+        return (key, float(value))
+
+    return dict(map(f, mappings))
+
 
 
 def extract_metric(doc, path):
