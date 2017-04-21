@@ -21,18 +21,6 @@ class TaskInterface(object):
         return
 
 
-    def was_successful(self, app, output_files):
-        """
-        Given the current state of the nucleotides directory, and a list of output
-        files determines if the benchmarking task was successful. Return a tuple
-        containing a boolean and a dictionary of benchmarking metrics.
-        """
-        created_files = map(lambda x: x['type'], output_files)
-        is_successful = self.successful_event_output_files().issubset(created_files)
-        metrics = self.collect_metrics(app) if is_successful else {}
-        return (is_successful, metrics)
-
-
     @abc.abstractmethod
     def biobox_args(self, app):
         """
@@ -66,5 +54,14 @@ class TaskInterface(object):
         """
         List the files that should be produced upon successful completion of the
         biobox container execution
+        """
+        return
+
+
+    @abc.abstractmethod
+    def metric_mapping_file(self, app):
+        """
+        Return the name of the metric mapping that should be used for parsing and
+        validating the metrics.
         """
         return

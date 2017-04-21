@@ -52,3 +52,44 @@ def test_complete_run_through():
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/01eb7cec61'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json.gz'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/1099992390'))
+
+
+############################################
+#
+# Posting results
+#
+############################################
+
+@attr('wip')
+def test_short_read_assembler_successful_event():
+    app  = app_helper.setup_app_state('sra', 'outputs')
+    outputs = [{
+        "type"     : "contig_fasta",
+        "location" : "/local/path",
+        "sha256"   : "digest_1",
+        "url"      : "s3://url/dir/file"}]
+    event = post.create_event_request(app, outputs)
+    nose.assert_equal({
+        "task" : 4,
+        "success" : True,
+        "metrics" : {
+            "total_cpu_usage_in_seconds"               : 53.546,
+            "total_cpu_usage_in_seconds_in_kernelmode" : 1.75,
+            "total_cpu_usage_in_seconds_in_usermode"   : 11.11,
+            "total_memory_usage_in_mibibytes"          : 175.348,
+            "total_rss_in_mibibytes"                   : 80.543,
+            "total_read_io_in_mibibytes"               : 38.641,
+            "total_write_io_in_mibibytes"              : 0.0,
+            "total_wall_clock_time_in_seconds"         : 0.0},
+        "files" : [
+            {"url"    : "s3://url/dir/file",
+             "sha256" : "digest_1",
+             "type"   : "contig_fasta"}]}, event)
+
+
+@attr('wip')
+def test_short_read_assembler_unsuccessful_event():
+    app  = app_helper.setup_app_state('sra', 'task')
+    outputs = []
+    event = post.create_event_request(app, outputs)
+    nose.assert_equal(event, {"task" : 4, "success" : False, "files" : [], "metrics" : {}})

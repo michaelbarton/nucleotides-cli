@@ -7,6 +7,7 @@ import os, glob
 import nucleotides.util                as util
 import nucleotides.api_client          as api
 import nucleotides.s3                  as s3
+import nucleotides.metrics             as met
 import nucleotides.task.task_interface as interface
 import nucleotides.command.run_image   as run_image
 
@@ -67,24 +68,21 @@ def create_event_request(app, output_files):
         return d
 
     task = run_image.image_type(app)
-    #created_files = map(lambda x: x['type'], output_files)
-    (is_successful, metrics) = task.was_successful(app, output_files)
 
-    #= task.successful_event_output_files().issubset(created_files)
+    created_file_types = map(lambda x: x['type'], output_files)
+    required_files_were_created = task.successful_event_output_files().issubset(created_file_types)
+    metrics = task.collect_metrics(app) if required_files_were_created else {}
 
-    #if is_successful and task.outputs_are_valid(app):
-        #metrics       = task.collect_metrics(app)
-    #else:
-        #is_successful = False
-        #metrics       = {}
+    expected_metrics  = met.get_expected_keys_from_mapping_file(task.metric_mapping_file(app))
+    metrics_are_valid = met.are_metrics_complete(app, expected_metrics, metrics.keys())
 
+    metrics       = metrics if metrics_are_valid else {}
+    is_successful = required_files_were_created and metrics_are_valid
 
-    request_body = {
-        "task"    : app["task"]["id"],
-        "success" : is_successful,
-        "files"   : map(remove_loc, output_files),
-        "metrics" : metrics}
-    return request_body
+    return {"task"    : app["task"]["id"],
+            "success" : is_successful,
+            "files"   : map(remove_loc, output_files),
+            "metrics" : metrics}
 
 
 def post(app):

@@ -1,0 +1,9 @@
+---
+- key: "total_memory_usage_in_mibibytes"
+- key: "total_rss_in_mibibytes"
+- key: "total_cpu_usage_in_seconds"
+- key: "total_cpu_usage_in_seconds_in_kernelmode"
+- key: "total_cpu_usage_in_seconds_in_usermode"
+- key: "total_read_io_in_mibibytes"
+- key: "total_write_io_in_mibibytes"
+- key: "total_wall_clock_time_in_seconds"

@@ -7,10 +7,13 @@ the Docker container into metrics that may be uploaded to the nucleotides API.
 Interval in seconds in which cgroup data is collected
 """
 
-import funcy
+import funcy, os
+import ruamel.yaml as yaml
+
 from functools import partial
 
-import biobox.cgroup as cgroup
+import biobox.cgroup    as cgroup
+import nucleotides.util as util
 
 
 
@@ -34,6 +37,15 @@ CGROUP_JMESPATHS = {
     "total_read_io_in_mibibytes"               : [funcy.last, "sum(blkio_stats.io_service_bytes_recursive[?op=='Read'].value)", BYTE_TO_MIBIBYTE],
     "total_write_io_in_mibibytes"              : [funcy.last, "sum(blkio_stats.io_service_bytes_recursive[?op=='Write'].value)", BYTE_TO_MIBIBYTE],
     "total_wall_clock_time_in_seconds"         : [time_diff,  "read", SECONDS]}
+
+
+def get_expected_keys_from_mapping_file(name):
+    """
+    Returns the list of metrics that should be collected based on the metric file name
+    """
+    path = os.path.join('mappings', name + '.yml')
+    mappings = yaml.safe_load(util.get_asset_file_contents(path))
+    return list(map(lambda x: x['key'], mappings))
 
 
 def parse_quast_value(x):
@@ -63,6 +75,20 @@ def parse_metrics(metrics, mappings):
 
     return dict(map(f, mappings))
 
+
+def are_metrics_complete(app, expected, collected):
+    """
+    Determine if the required metrics are found.
+    """
+    expected  = set(expected)
+    collected = set(collected)
+
+    missing_metrics = expected.difference(collected)
+    if missing_metrics:
+        msg = "Expected metrics not found: {}"
+        app["logger"].info(msg.format(",".join(missing_metrics)))
+
+    return not missing_metrics
 
 
 def extract_metric(doc, path):

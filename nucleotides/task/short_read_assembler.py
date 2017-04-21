@@ -31,3 +31,6 @@ class ShortReadAssemblerTask(TaskInterface):
 
     def successful_event_output_files(self):
         return set(["contig_fasta"])
+
+    def metric_mapping_file(self, app):
+        return 'cgroup_runtime_metrics'

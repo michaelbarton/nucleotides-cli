@@ -28,8 +28,8 @@ sra:
 
 
 gaet:
-  inputs:
-    - src: example_data/tasks/gaet.json
+  execute:
+    - src: example_data/tasks/gaet_crash_test.json
       dst: metadata.json
     - src: example_data/generated_files/reference.fa.gz
       dst: inputs/reference_fasta/6bac51cc35.fa.gz
@@ -51,8 +51,8 @@ quast:
   task:
     - src: example_data/tasks/quast.json
       dst: metadata.json
-  inputs:
-    - src: example_data/tasks/quast.json
+  execute:
+    - src: example_data/tasks/quast_crash_test.json
       dst: metadata.json
     - src: example_data/generated_files/reference.fa.gz
       dst: inputs/reference_fasta/6bac51cc35.fa.gz

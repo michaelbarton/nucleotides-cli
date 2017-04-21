@@ -12,7 +12,7 @@ def test_get_output_biobox_file_contents():
 
 
 def test_copy_container_output_files_with_no_files():
-    app = app_helper.setup_app_state('quast', 'inputs')
+    app = app_helper.setup_app_state('quast', 'execute')
     input_files = {'container_log' : 'meta/log.txt', 'assembly_metrics' : 'tmp/combined_quast_output/report.tsv'}
     fs.copy_container_output_files(app, input_files)
     # Should do nothing if files don't exist
@@ -30,7 +30,7 @@ def test_copy_container_output_files_with_intermediates():
 
 
 def test_biobox_yaml_exists():
-    app = app_helper.setup_app_state('quast', 'inputs')
+    app = app_helper.setup_app_state('quast', 'execute')
     assert not fs.biobox_yaml_exists(app)
     app = app_helper.setup_app_state('quast', 'intermediates')
     assert fs.biobox_yaml_exists(app)
