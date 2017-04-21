@@ -60,7 +60,6 @@ def test_complete_run_through():
 #
 ############################################
 
-@attr('wip')
 def test_short_read_assembler_successful_event():
     app  = app_helper.setup_app_state('sra', 'outputs')
     outputs = [{
@@ -87,7 +86,6 @@ def test_short_read_assembler_successful_event():
              "type"   : "contig_fasta"}]}, event)
 
 
-@attr('wip')
 def test_short_read_assembler_unsuccessful_event():
     app  = app_helper.setup_app_state('sra', 'task')
     outputs = []

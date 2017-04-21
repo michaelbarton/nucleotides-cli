@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 0.5.1 - UNRELEASED
+## 0.6.0 - UNRELEASED
 
 ### Added
 
@@ -11,8 +11,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
     This effectively removes all small contigs from being included in the
     assembly evaluation tasks.
 
-  * QUAST benchmarking task is set failed if the alignment metrics are not
-    present in the set of metrics generated.
+  * Benchmarking tasks fail if not all the required metrics are produced or if
+    any are null.
 
 ## 0.5.0 - 2017-01-30
 

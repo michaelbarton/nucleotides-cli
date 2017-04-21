@@ -9,10 +9,12 @@ def test_parse_metrics_with_only_path():
     mapping = [{"key": "new_name", "path" : "old_name"}]
     nose.assert_equal(met.parse_metrics(metrics, mapping), {"new_name": 1})
 
+
 def test_parse_metrics_with_missing_value():
     metrics = {}
     mapping = [{"key": "new_name", "path" : "old_name"}]
-    nose.assert_equal(met.parse_metrics(metrics, mapping), {"new_name": None})
+    nose.assert_equal(met.parse_metrics(metrics, mapping), {})
+
 
 def test_parse_metrics_with_lift():
     metrics = {"old_name": "-"}

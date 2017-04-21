@@ -59,7 +59,7 @@ def parse_metrics(metrics, mappings):
     convert the input dictionary of metrics using these mappings.
     """
     function_list = globals()
-    def f(mapping):
+    def parse(mapping):
         import jmespath
         key   = mapping["key"]
         value = jmespath.compile(mapping['path']).search(metrics)
@@ -73,7 +73,12 @@ def parse_metrics(metrics, mappings):
 
         return (key, float(value))
 
-    return dict(map(f, mappings))
+    create_key_value_dict = funcy.rcompose(
+            partial(map, parse),
+            dict,
+            partial(funcy.select_values, funcy.notnone))
+
+    return create_key_value_dict(mappings)
 
 
 def are_metrics_complete(app, expected, collected):

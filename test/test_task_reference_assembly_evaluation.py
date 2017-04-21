@@ -67,8 +67,11 @@ def test_create_event_request_with_non_numeric_quast_values():
     for line in fileinput.input(app['path'] + '/outputs/assembly_metrics/67ba437ffa', inplace = True):
         if 'NGA50' in line:
             print line.replace("6456", "-"),
+        else:
+            print line.replace("\n", "")
 
     event = post.create_event_request(app, post.list_outputs(app))
+    nose.assert_equal(event["success"], True)
     nose.assert_in("nga50", event["metrics"])
     nose.assert_equal(event["metrics"]["nga50"], 0.0)
 

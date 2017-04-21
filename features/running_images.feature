@@ -3,7 +3,7 @@ Feature: Docker images should run as expected when run using `nucleoides run_ima
   Scenario: Executing a benchmark task when the required image has not been pulled
     Given I copy the file "../../example_data/generated_files/reference.fa.gz" to "nucleotides/6/inputs/reference_fasta/6bac51cc35.fa.gz"
     And I copy the file "../../example_data/generated_files/contigs.fa" to "nucleotides/6/inputs/contig_fasta/de3d9f6d31.fa"
-    And I copy the file "../../example_data/tasks/quast.json" to "nucleotides/6/metadata.json"
+    And I copy the file "../../example_data/tasks/quast_crash_test.json" to "nucleotides/6/metadata.json"
     And the image "bioboxes/crash-test-biobox" is not installed
     When I run `nucleotides --polling=1 run-image 6`
     Then the stderr should not contain anything
