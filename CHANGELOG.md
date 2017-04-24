@@ -11,8 +11,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
     This effectively removes all small contigs from being included in the
     assembly evaluation tasks.
 
-  * Benchmarking tasks fail if not all the required metrics are produced or if
-    any are null.
+  * Reference assembly benchmarking tasks fail if not all the required metrics
+    are produced, or if any are null.
 
 ## 0.5.0 - 2017-01-30
 

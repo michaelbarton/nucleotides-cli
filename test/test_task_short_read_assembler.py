@@ -60,7 +60,7 @@ def test_complete_run_through():
 #
 ############################################
 
-def test_short_read_assembler_successful_event():
+def test_short_read_assembler_successful_event_with_cgroup_data():
     app  = app_helper.setup_app_state('sra', 'outputs')
     outputs = [{
         "type"     : "contig_fasta",
@@ -84,6 +84,31 @@ def test_short_read_assembler_successful_event():
             {"url"    : "s3://url/dir/file",
              "sha256" : "digest_1",
              "type"   : "contig_fasta"}]}, event)
+
+
+def test_short_read_assembler_successful_event_without_cgroup_data():
+    """
+    It is possible that an assembler could finish before the first set of cgroup
+    metrics are collected. In this case, we would not want the task to be considered
+    failed as long as contig files have been produced.
+    """
+    app  = app_helper.setup_app_state('sra', 'missing_cgroup')
+    outputs = [{
+        "type"     : "contig_fasta",
+        "location" : "/local/path",
+        "sha256"   : "digest_1",
+        "url"      : "s3://url/dir/file"}]
+    event = post.create_event_request(app, outputs)
+    nose.assert_equal({
+        "task" : 4,
+        "success" : True,
+        "metrics" : {},
+        "files" : [
+            {"url"    : "s3://url/dir/file",
+             "sha256" : "digest_1",
+             "type"   : "contig_fasta"}]}, event)
+
+
 
 
 def test_short_read_assembler_unsuccessful_event():

@@ -4,7 +4,7 @@ import boltons.fileutils   as fu
 import biobox.image.volume as vol
 
 import nucleotides.util               as util
-import nucleotides.metrics            as metrics
+import nucleotides.metrics            as met
 import nucleotides.filesystem         as fs
 import nucleotides.command.run_image  as run
 
@@ -60,7 +60,7 @@ class ReferenceAssemblyEvaluationTask(TaskInterface):
         if is_quast_output(app):
             mapping_file = os.path.join('mappings', 'quast.yml')
             mapping      = yaml.safe_load(util.get_asset_file_contents(mapping_file))
-            return metrics.parse_metrics(dict(raw_metrics), mapping)
+            return met.parse_metrics(dict(raw_metrics), mapping)
         else:
             return dict(map(lambda (k, v): [k, float(v)], raw_metrics))
 
@@ -73,3 +73,8 @@ class ReferenceAssemblyEvaluationTask(TaskInterface):
         return {'bioboxes/quast' : 'quast',
                 'bioboxes/gaet'  : 'gaet'
                 }[run.image_name(app)]
+
+
+    def are_generated_metrics_valid(self, app, metrics):
+        expected_metrics  = met.get_expected_keys_from_mapping_file(self.metric_mapping_file(app))
+        return met.are_metrics_complete(app, expected_metrics, metrics.keys())

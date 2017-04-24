@@ -25,6 +25,13 @@ sra:
       dst: outputs/container_log/e0e8af3790
     - src: example_data/generated_files/cgroup_metrics.json.gz
       dst: outputs/container_runtime_metrics/metrics.json.gz
+  missing_cgroup:
+    - src: example_data/tasks/short_read_assembler.json
+      dst: metadata.json
+    - src: example_data/generated_files/contigs.fa
+      dst: outputs/contig_fasta/de3d9f6d31
+    - src: example_data/generated_files/log.txt
+      dst: outputs/container_log/e0e8af3790
 
 
 gaet:

@@ -36,7 +36,8 @@ class TaskInterface(object):
     def before_container_hook(self, app):
         """
         Hook into process of creating a Docker container before launch. Can be used
-        to perform any specific actions required before launching.
+        to perform any specific actions required before launching. This is optional
+        if nothing needs to be done before launching the container.
         """
         return
 
@@ -100,4 +101,10 @@ class TaskInterface(object):
         return
 
 
-
+    def are_generated_metrics_valid(self, app, metrics):
+        """
+        Optionally implemented method that is used to check that the collected
+        metrics are valid. If returns False, the benchmarking task state will be
+        success state will be set to False and considered to have failed.
+        """
+        return True

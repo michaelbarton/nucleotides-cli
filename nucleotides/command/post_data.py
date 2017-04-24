@@ -7,7 +7,6 @@ import os, glob
 import nucleotides.util                as util
 import nucleotides.api_client          as api
 import nucleotides.s3                  as s3
-import nucleotides.metrics             as met
 import nucleotides.task.task_interface as interface
 import nucleotides.command.run_image   as run_image
 
@@ -70,13 +69,25 @@ def create_event_request(app, output_files):
     task = run_image.image_type(app)
 
     created_file_types = map(lambda x: x['type'], output_files)
+
+    # Check expected files were generated
     required_files_were_created = task.successful_event_output_files().issubset(created_file_types)
-    metrics = task.collect_metrics(app) if required_files_were_created else {}
+    if required_files_were_created:
 
-    expected_metrics  = met.get_expected_keys_from_mapping_file(task.metric_mapping_file(app))
-    metrics_are_valid = met.are_metrics_complete(app, expected_metrics, metrics.keys())
+        # Check if the collected metrics are valid
+        metrics = task.collect_metrics(app)
+        metrics_are_valid = task.are_generated_metrics_valid(app, metrics)
+        if not metrics_are_valid:
+            metrics = {}
 
-    metrics       = metrics if metrics_are_valid else {}
+    else:
+        metrics = {}
+
+
+
+
+
+
     is_successful = required_files_were_created and metrics_are_valid
 
     return {"task"    : app["task"]["id"],
