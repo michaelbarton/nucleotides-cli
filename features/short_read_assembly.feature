@@ -86,5 +86,5 @@ Feature: Processing a short read assembly benchmark
       | success                                     | true   |
       | complete                                    | true   |
       | events/0/metrics/total_cpu_usage_in_seconds | 53.546 |
-    And the JSON response should not have "events/0/metrics/total_rss_in_mibibytes"
+      | events/0/metrics/total_rss_in_mibibytes     | 0.0    |
     And the file "nucleotides/4/benchmark.log" should exist

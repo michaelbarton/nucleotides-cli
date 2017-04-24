@@ -14,6 +14,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   * Reference assembly benchmarking tasks fail if not all the required metrics
     are produced, or if any are null.
 
+  * Short read assembler tasks return 0 for any cgroup metric for which at
+    least 85% of the data points could not be collected.
+
 ## 0.5.0 - 2017-01-30
 
 ### Added
