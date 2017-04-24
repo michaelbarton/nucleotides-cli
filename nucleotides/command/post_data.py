@@ -83,11 +83,6 @@ def create_event_request(app, output_files):
     else:
         metrics = {}
 
-
-
-
-
-
     is_successful = required_files_were_created and metrics_are_valid
 
     return {"task"    : app["task"]["id"],

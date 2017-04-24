@@ -60,7 +60,7 @@ class ReferenceAssemblyEvaluationTask(TaskInterface):
         if is_quast_output(app):
             mapping_file = os.path.join('mappings', 'quast.yml')
             mapping      = yaml.safe_load(util.get_asset_file_contents(mapping_file))
-            return met.parse_metrics(dict(raw_metrics), mapping)
+            return met.parse_metrics(app, dict(raw_metrics), mapping)
         else:
             return dict(map(lambda (k, v): [k, float(v)], raw_metrics))
 

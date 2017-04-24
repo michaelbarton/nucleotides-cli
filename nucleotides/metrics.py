@@ -53,7 +53,7 @@ def parse_quast_value(x):
     return quast_mapping[x] if x in quast_mapping else x
 
 
-def parse_metrics(metrics, mappings):
+def parse_metrics(app, metrics, mappings):
     """
     Given a dictionary of metrics, and an array of mappings for those metrics,
     convert the input dictionary of metrics using these mappings.
@@ -62,16 +62,24 @@ def parse_metrics(metrics, mappings):
     def parse(mapping):
         import jmespath
         key   = mapping["key"]
-        value = jmespath.compile(mapping['path']).search(metrics)
+        raw_value = jmespath.compile(mapping['path']).search(metrics)
 
-        if value is None:
-            return (key, value)
+        if raw_value is None:
+            return (key, raw_value)
+
+        lift = [float]
 
         if "lift" in mapping:
-            lift  = map(lambda name: function_list[name], mapping["lift"])
-            value = reduce(lambda x, f: f(x), lift, value)
+            lift = map(lambda name: function_list[name], mapping["lift"]) + lift
 
-        return (key, float(value))
+        try:
+            value = reduce(lambda x, f: f(x), lift, raw_value)
+        except ValueError:
+            msg = "Error, unparsable value for {}: {}".format(key, raw_value)
+            app['logger'].warn(msg)
+            value = None
+
+        return (key, value)
 
     create_key_value_dict = funcy.rcompose(
             partial(map, parse),
