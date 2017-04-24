@@ -7,9 +7,10 @@ import helper.file        as file_helper
 import helper.image       as image_helper
 
 import nucleotides.filesystem                as fs
-import nucleotides.task.short_read_assembler as task
 import nucleotides.command.run_image         as run
 import nucleotides.command.post_data         as post
+
+from nucleotides.task.short_read_assembler import ShortReadAssemblerTask as task
 
 from nose.plugins.attrib import attr
 
@@ -32,7 +33,7 @@ def test_run_container():
 
 def test_output_file_paths():
     app = app_helper.setup_app_state('sra', 'intermediates')
-    paths = task.output_file_paths(app)
+    paths = task().output_file_paths(app)
     for (_, f) in paths.items():
         location = fs.get_task_file_path(app, "tmp/" + f)
         nose.assert_true(os.path.isfile(location))
@@ -51,3 +52,77 @@ def test_complete_run_through():
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/contig_fasta/01eb7cec61'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_runtime_metrics/metrics.json.gz'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/1099992390'))
+
+
+############################################
+#
+# Posting results
+#
+############################################
+
+def test_short_read_assembler_successful_event_with_cgroup_data():
+    app  = app_helper.setup_app_state('sra', 'outputs')
+    outputs = [{
+        "type"     : "contig_fasta",
+        "location" : "/local/path",
+        "sha256"   : "digest_1",
+        "url"      : "s3://url/dir/file"}]
+    event = post.create_event_request(app, outputs)
+    nose.assert_equal({
+        "task" : 4,
+        "success" : True,
+        "metrics" : {
+            "total_cpu_usage_in_seconds"               : 53.546,
+            "total_cpu_usage_in_seconds_in_kernelmode" : 1.75,
+            "total_cpu_usage_in_seconds_in_usermode"   : 11.11,
+            "total_memory_usage_in_mibibytes"          : 175.348,
+            "total_rss_in_mibibytes"                   : 80.543,
+            "total_read_io_in_mibibytes"               : 38.641,
+            "total_write_io_in_mibibytes"              : 0.0,
+            "total_wall_clock_time_in_seconds"         : 0.0},
+        "files" : [
+            {"url"    : "s3://url/dir/file",
+             "sha256" : "digest_1",
+             "type"   : "contig_fasta"}]}, event)
+
+
+@attr('wip')
+def test_short_read_assembler_successful_event_with_incomplete_cgroup_data():
+    app  = app_helper.setup_app_state('sra', 'incomplete_cgroup')
+    outputs = [{
+        "type"     : "contig_fasta",
+        "location" : "/local/path",
+        "sha256"   : "digest_1",
+        "url"      : "s3://url/dir/file"}]
+    event = post.create_event_request(app, outputs)
+    nose.assert_equal(event['metrics']['total_rss_in_mibibytes'], 0.0)
+
+@attr('wip')
+def test_short_read_assembler_successful_event_without_cgroup_data():
+    """
+    It is possible that an assembler could finish before the first set of cgroup
+    metrics are collected. In this case, we would not want the task to be considered
+    failed as long as contig files have been produced.
+    """
+    app  = app_helper.setup_app_state('sra', 'missing_cgroup')
+    outputs = [{
+        "type"     : "contig_fasta",
+        "location" : "/local/path",
+        "sha256"   : "digest_1",
+        "url"      : "s3://url/dir/file"}]
+    event = post.create_event_request(app, outputs)
+    nose.assert_equal({
+        "task" : 4,
+        "success" : True,
+        "metrics" : {},
+        "files" : [
+            {"url"    : "s3://url/dir/file",
+             "sha256" : "digest_1",
+             "type"   : "contig_fasta"}]}, event)
+
+
+def test_short_read_assembler_unsuccessful_event():
+    app  = app_helper.setup_app_state('sra', 'task')
+    outputs = []
+    event = post.create_event_request(app, outputs)
+    nose.assert_equal(event, {"task" : 4, "success" : False, "files" : [], "metrics" : {}})

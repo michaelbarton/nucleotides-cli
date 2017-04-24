@@ -1,44 +1,133 @@
 ---
-"# N's per 100 kbp"           : "n_per_100_kbp"
-"# contigs (>= 0 bp)"         : "n_contigs_gt_0"
-"# contigs (>= 1000 bp)"      : "n_contigs_gt_1000"
-"# contigs (>= 10000 bp)"     : "n_contigs_gt_10000"
-"# contigs (>= 25000 bp)"     : "n_contigs_gt_25000"
-"# contigs (>= 5000 bp)"      : "n_contigs_gt_5000"
-"# contigs (>= 50000 bp)"     : "n_contigs_gt_50000"
-"# indels per 100 kbp"        : "indels_per_100_kbp"
-"# local misassemblies"       : "n_local_misassemblies"
-"# misassembled contigs"      : "n_misassembled_contigs"
-"# misassemblies"             : "n_misassemblies"
-"# mismatches per 100 kbp"    : "mismatches_per_100_kbp"
-"Duplication ratio"           : "duplication_ratio"
-"GC (%)"                      : "perc_gc"
-"Genome fraction (%)"         : "perc_genome_fraction"
-"L50"                         : "l50"
-"L75"                         : "l75"
-"LA50"                        : "la50"
-"LA75"                        : "la75"
-"LG50"                        : "lg50"
-"LG75"                        : "lg75"
-"LGA50"                       : "lga50"
-"LGA75"                       : "lga75"
-"Largest alignment"           : "largest_alignment"
-"Largest contig"              : "largest_contig"
-"Misassembled contigs length" : "misassembled_contigs_length"
-"N50"                         : "n50"
-"N75"                         : "n75"
-"NA50"                        : "na50"
-"NA75"                        : "na75"
-"NG50"                        : "ng50"
-"NG75"                        : "ng75"
-"NGA50"                       : "nga50"
-"NGA75"                       : "nga75"
-"Reference GC (%)"            : "perc_ref_gc"
-"Reference length"            : "reference_length"
-"Total length (>= 0 bp)"      : "total_length_gt_0"
-"Total length (>= 1000 bp)"   : "total_length_gt_1000"
-"Total length (>= 10000 bp)"  : "total_length_gt_10000"
-"Total length (>= 25000 bp)"  : "total_length_gt_25000"
-"Total length (>= 5000 bp)"   : "total_length_gt_5000"
-"Total length (>= 50000 bp)"  : "total_length_gt_50000"
-"Unaligned length"            : "unaligned_length"
+- path: '"# N''s per 100 kbp"'
+  lift: ['parse_quast_value']
+  key: 'n_per_100_kbp'
+- path: '"# contigs (>= 0 bp)"'
+  lift: ['parse_quast_value']
+  key: 'n_contigs_gt_0'
+- path: '"# contigs (>= 1000 bp)"'
+  lift: ['parse_quast_value']
+  key: 'n_contigs_gt_1000'
+- path: '"# contigs (>= 10000 bp)"'
+  lift: ['parse_quast_value']
+  key: 'n_contigs_gt_10000'
+- path: '"# contigs (>= 25000 bp)"'
+  lift: ['parse_quast_value']
+  key: 'n_contigs_gt_25000'
+- path: '"# contigs (>= 5000 bp)"'
+  lift: ['parse_quast_value']
+  key: 'n_contigs_gt_5000'
+- path: '"# contigs (>= 50000 bp)"'
+  lift: ['parse_quast_value']
+  key: 'n_contigs_gt_50000'
+- path: '"# indels per 100 kbp"'
+  lift: ['parse_quast_value']
+  key: 'indels_per_100_kbp'
+- path: '"# local misassemblies"'
+  lift: ['parse_quast_value']
+  key: 'n_local_misassemblies'
+- path: '"# misassembled contigs"'
+  lift: ['parse_quast_value']
+  key: 'n_misassembled_contigs'
+- path: '"# misassemblies"'
+  lift: ['parse_quast_value']
+  key: 'n_misassemblies'
+- path: '"# mismatches per 100 kbp"'
+  lift: ['parse_quast_value']
+  key: 'mismatches_per_100_kbp'
+- path: '"Duplication ratio"'
+  lift: ['parse_quast_value']
+  key: 'duplication_ratio'
+- path: '"GC (%)"'
+  lift: ['parse_quast_value']
+  key: 'perc_gc'
+- path: '"Genome fraction (%)"'
+  lift: ['parse_quast_value']
+  key: 'perc_genome_fraction'
+- path: '"L50"'
+  lift: ['parse_quast_value']
+  key: 'l50'
+- path: 'L75'
+  lift: ['parse_quast_value']
+  key: 'l75'
+- path: 'LA50'
+  lift: ['parse_quast_value']
+  key: 'la50'
+- path: 'LA75'
+  lift: ['parse_quast_value']
+  key: 'la75'
+- path: 'LG50'
+  lift: ['parse_quast_value']
+  key: 'lg50'
+- path: 'LG75'
+  lift: ['parse_quast_value']
+  key: 'lg75'
+- path: 'LGA50'
+  lift: ['parse_quast_value']
+  key: 'lga50'
+- path: 'LGA75'
+  lift: ['parse_quast_value']
+  key: 'lga75'
+- path: '"Largest alignment"'
+  lift: ['parse_quast_value']
+  key: 'largest_alignment'
+- path: '"Largest contig"'
+  lift: ['parse_quast_value']
+  key: 'largest_contig'
+- path: '"Misassembled contigs length"'
+  lift: ['parse_quast_value']
+  key: 'misassembled_contigs_length'
+- path: 'N50'
+  lift: ['parse_quast_value']
+  key: 'n50'
+- path: 'N75'
+  lift: ['parse_quast_value']
+  key: 'n75'
+- path: 'NA50'
+  lift: ['parse_quast_value']
+  key: 'na50'
+- path: 'NA75'
+  lift: ['parse_quast_value']
+  key: 'na75'
+- path: 'NG50'
+  lift: ['parse_quast_value']
+  key: 'ng50'
+- path: 'NG75'
+  lift: ['parse_quast_value']
+  key: 'ng75'
+- path: 'NGA50'
+  lift: ['parse_quast_value']
+  key: 'nga50'
+- path: 'NGA75'
+  lift: ['parse_quast_value']
+  key: 'nga75'
+- path: '"Reference GC (%)"'
+  lift: ['parse_quast_value']
+  key: 'perc_ref_gc'
+- path: '"Reference length"'
+  lift: ['parse_quast_value']
+  key: 'reference_length'
+- path: '"Total length (>= 0 bp)"'
+  lift: ['parse_quast_value']
+  key: 'total_length_gt_0'
+- path: '"Total length (>= 1000 bp)"'
+  lift: ['parse_quast_value']
+  key: 'total_length_gt_1000'
+- path: '"Total length (>= 10000 bp)"'
+  lift: ['parse_quast_value']
+  key: 'total_length_gt_10000'
+- path: '"Total length (>= 25000 bp)"'
+  lift: ['parse_quast_value']
+  key: 'total_length_gt_25000'
+- path: '"Total length (>= 5000 bp)"'
+  lift: ['parse_quast_value']
+  key: 'total_length_gt_5000'
+- path: '"Total length (>= 50000 bp)"'
+  lift: ['parse_quast_value']
+  key: 'total_length_gt_50000'
+- path: '"Unaligned length"'
+  lift: ['parse_quast_value']
+  key: 'unaligned_length'
+- path: '"Total aligned length"'
+  lift: ['parse_quast_value']
+  key: 'total_aligned_length'

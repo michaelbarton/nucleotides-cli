@@ -1,0 +1,48 @@
+Assembly	0
+# contigs (>= 0 bp)	140
+# contigs (>= 1000 bp)	140
+# contigs (>= 5000 bp)	46
+# contigs (>= 10000 bp)	12
+# contigs (>= 25000 bp)	1
+# contigs (>= 50000 bp)	0
+Total length (>= 0 bp)	679979
+Total length (>= 1000 bp)	679979
+Total length (>= 5000 bp)	427266
+Total length (>= 10000 bp)	181867
+Total length (>= 25000 bp)	26642
+Total length (>= 50000 bp)	0
+# contigs	140
+Largest contig	26642
+Total length	679979
+Reference length	700000
+GC (%)	53.09
+Reference GC (%)	53.16
+N50	6484
+NG50	6456
+N75	3936
+NG75	3868
+L50	31
+LG50	33
+L75	66
+LG75	70
+# misassemblies	0
+# misassembled contigs	0
+Misassembled contigs length	0
+# local misassemblies	0
+# unaligned contigs	0 + 0 part
+Unaligned length	0
+Genome fraction (%)	96.467
+Duplication ratio	1.007
+# N's per 100 kbp	0.00
+# mismatches per 100 kbp	0.00
+# indels per 100 kbp	0.00
+Largest alignment	26642
+Total aligned length	679979
+NA50	6484
+NGA50	6456
+NA75	3936
+NGA75	3868
+LA50	31
+LGA50	33
+LA75	66
+LGA75	70

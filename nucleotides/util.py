@@ -8,14 +8,6 @@ def get_asset_file_contents(path):
     import pkg_resources, os
     return pkg_resources.resource_string(__name__, os.path.join("assets", path)).strip()
 
-def select_task(c):
-    import nucleotides.task.short_read_assembler
-    import nucleotides.task.reference_assembly_evaluation
-    return {
-            'short_read_assembler'          : nucleotides.task.short_read_assembler,
-            'reference_assembly_evaluation' : nucleotides.task.reference_assembly_evaluation
-            }[c]
-
 def parse(doc, argv, opts = False):
     from docopt              import docopt
     from nucleotides.version import __version__

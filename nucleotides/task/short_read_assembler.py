@@ -1,29 +1,44 @@
 import os.path, shutil, funcy
 
-import nucleotides.metrics     as met
-import nucleotides.filesystem  as fs
+import ruamel.yaml            as yaml
+import nucleotides.metrics    as met
+import nucleotides.util       as util
+import nucleotides.filesystem as fs
 
-OUTPUTS = {'contig_fasta' : [0, 'fasta', 0]}
+from nucleotides.task.task_interface import TaskInterface
 
-def biobox_args(app):
-    path = fs.get_task_path_file_without_name(app, 'inputs/short_read_fastq')
-    return [{"fastq" : [
-        {"id" : 0 , "value" : path, "type": "paired"}]}]
+OUTPUT_PATH = {'contig_fasta' : [0, 'fasta', 0]}
+
+class ShortReadAssemblerTask(TaskInterface):
+
+    def biobox_args(self, app):
+        path = fs.get_task_path_file_without_name(app, 'inputs/short_read_fastq')
+        return [{"fastq" : [
+            {"id" : 0 , "value" : path, "type": "paired"}]}]
 
 
-def output_file_paths(app):
-    f = funcy.partial(fs.get_biobox_yaml_value, app)
-    return funcy.walk_values(f, OUTPUTS)
+    def output_file_paths(self, app):
+        f = funcy.partial(fs.get_biobox_yaml_value, app)
+        return funcy.walk_values(f, OUTPUT_PATH)
 
 
-def collect_metrics(app):
-    import json, gzip
-    path = fs.get_task_file_path(app, "outputs/container_runtime_metrics/metrics.json.gz")
-    if os.path.isfile(path):
+    def collect_metrics(self, app):
+        import json, gzip
+        path = fs.get_task_file_path(app, "outputs/container_runtime_metrics/metrics.json.gz")
+
+        if not os.path.isfile(path):
+            return {}
+
         with gzip.open(path) as f:
-            return met.parse_runtime_metrics(json.loads(f.read()))
-    else:
-        return {}
+            raw_metrics = json.loads(f.read())
 
-def successful_event_outputs():
-    return set(["contig_fasta"])
+        mapping_file = os.path.join('mappings', self.metric_mapping_file(app) + '.yml')
+        mapping      = yaml.safe_load(util.get_asset_file_contents(mapping_file))
+        return met.parse_metrics(app, raw_metrics, mapping)
+
+
+    def successful_event_output_files(self):
+        return set(["contig_fasta"])
+
+    def metric_mapping_file(self, app):
+        return 'cgroup_runtime_metrics'

@@ -25,11 +25,27 @@ sra:
       dst: outputs/container_log/e0e8af3790
     - src: example_data/generated_files/cgroup_metrics.json.gz
       dst: outputs/container_runtime_metrics/metrics.json.gz
+  incomplete_cgroup:
+    - src: example_data/tasks/short_read_assembler.json
+      dst: metadata.json
+    - src: example_data/generated_files/contigs.fa
+      dst: outputs/contig_fasta/de3d9f6d31
+    - src: example_data/generated_files/log.txt
+      dst: outputs/container_log/e0e8af3790
+    - src: example_data/generated_files/cgroup_metrics_incomplete.json.gz
+      dst: outputs/container_runtime_metrics/metrics.json.gz
+  missing_cgroup:
+    - src: example_data/tasks/short_read_assembler.json
+      dst: metadata.json
+    - src: example_data/generated_files/contigs.fa
+      dst: outputs/contig_fasta/de3d9f6d31
+    - src: example_data/generated_files/log.txt
+      dst: outputs/container_log/e0e8af3790
 
 
 gaet:
-  inputs:
-    - src: example_data/tasks/gaet.json
+  execute:
+    - src: example_data/tasks/gaet_crash_test.json
       dst: metadata.json
     - src: example_data/generated_files/reference.fa.gz
       dst: inputs/reference_fasta/6bac51cc35.fa.gz
@@ -41,18 +57,19 @@ gaet:
     - src: example_data/tasks/gaet.json
       dst: metadata.json
     - src: example_data/generated_files/gaet_metrics.tsv
-      dst: outputs/assembly_metrics/af9bc02c71
+      dst: outputs/assembly_metrics/a5c753ccb2
     - src: example_data/generated_files/log.txt
       dst: outputs/container_log/e0e8af3790
     - src: example_data/generated_files/cgroup_metrics.json.gz
       dst: outputs/container_runtime_metrics/metrics.json.gz
 
+
 quast:
   task:
     - src: example_data/tasks/quast.json
       dst: metadata.json
-  inputs:
-    - src: example_data/tasks/quast.json
+  execute:
+    - src: example_data/tasks/quast_crash_test.json
       dst: metadata.json
     - src: example_data/generated_files/reference.fa.gz
       dst: inputs/reference_fasta/6bac51cc35.fa.gz
@@ -63,7 +80,7 @@ quast:
       dst: metadata.json
     - src: example_data/generated_files/log.txt
       dst: meta/log.txt
-    - src: tmp/data/assembly_metrics.tsv
+    - src: example_data/generated_files/quast_metrics.tsv
       dst: tmp/report.tsv
     - src: example_data/biobox/quast.yaml
       dst: tmp/biobox.yaml
@@ -72,8 +89,19 @@ quast:
       dst: tmp/biobox.yaml
     - src: example_data/tasks/quast.json
       dst: metadata.json
-    - src: tmp/data/assembly_metrics.tsv
+    - src: example_data/generated_files/quast_metrics.tsv
       dst: outputs/assembly_metrics/67ba437ffa
+    - src: example_data/generated_files/log.txt
+      dst: outputs/container_log/e0e8af3790
+    - src: example_data/generated_files/cgroup_metrics.json.gz
+      dst: outputs/container_runtime_metrics/metrics.json.gz
+  missing_alignment:
+    - src: example_data/biobox/quast.yaml
+      dst: tmp/biobox.yaml
+    - src: example_data/tasks/quast.json
+      dst: metadata.json
+    - src: example_data/generated_files/quast_metrics_alignment_missing.tsv
+      dst: outputs/assembly_metrics/9fd2e1f53b
     - src: example_data/generated_files/log.txt
       dst: outputs/container_log/e0e8af3790
     - src: example_data/generated_files/cgroup_metrics.json.gz

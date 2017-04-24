@@ -3,13 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 0.5.1 - UNRELEASED
+## 0.6.0 - UNRELEASED
 
 ### Added
 
   * Filter contigs less than 1000bp when fetching `contig_fasta` files from s3.
     This effectively removes all small contigs from being included in the
     assembly evaluation tasks.
+
+  * Reference assembly benchmarking tasks fail if not all the required metrics
+    are produced, or if any are null.
+
+  * Short read assembler tasks return 0 for any cgroup metric for which at
+    least 85% of the data points could not be collected.
 
 ## 0.5.0 - 2017-01-30
 
