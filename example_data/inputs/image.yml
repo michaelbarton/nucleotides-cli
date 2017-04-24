@@ -14,9 +14,9 @@
 - image_type: reference_assembly_evaluation
   name: bioboxes/quast
   versions:
-    - sha256: 5af634ee3f1bc3f80a749ce768883a20f793e1791f8f404a316d7d7012423cb9
+    - sha256: 224ea8e44b5f1f8d992d8559990a503289cfb3343b625aa453271f6d9c8301c1
       tasks: ["default"]
-      name: "4.2"
+      name: "4.4"
 - image_type: reference_assembly_evaluation
   name: bioboxes/gaet
   versions:
