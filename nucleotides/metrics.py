@@ -3,10 +3,6 @@ Provides functions for converting the streamed cgroup data produced from monitor
 the Docker container into metrics that may be uploaded to the nucleotides API.
 """
 
-"""
-Interval in seconds in which cgroup data is collected
-"""
-
 import funcy, os
 import ruamel.yaml as yaml
 
@@ -14,9 +10,6 @@ from functools import partial
 
 import biobox.cgroup    as cgroup
 import nucleotides.util as util
-
-
-
 
 SAMPLING_INTERVAL      = 15
 BYTE_TO_MIBIBYTE       = 1.0 / 1024 ** 2
@@ -26,6 +19,10 @@ NANOSECONDS_TO_SECONDS = 1e-9
 
 def time_diff(xs):
     return cgroup.time_diff_in_seconds(xs[0], xs[-1])
+
+def parse_quast_value(x):
+    quast_mapping = {'-' : 0.0, 'true' : 1.0, 'false' : 0.0}
+    return quast_mapping[x] if x in quast_mapping else x
 
 
 CGROUP_JMESPATHS = {
@@ -47,10 +44,6 @@ def get_expected_keys_from_mapping_file(name):
     mappings = yaml.safe_load(util.get_asset_file_contents(path))
     return list(map(lambda x: x['key'], mappings))
 
-
-def parse_quast_value(x):
-    quast_mapping = {'-' : 0.0, 'true' : 1.0, 'false' : 0.0}
-    return quast_mapping[x] if x in quast_mapping else x
 
 
 def parse_metrics(app, metrics, mappings):

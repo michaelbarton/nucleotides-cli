@@ -10,9 +10,8 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking with rea
   Scenario: A complete run through of an assembler benchmark
     Given the default aruba exit timeout is 900 seconds
     When I run `nucleotides all 1`
-    And I run `nucleotides fetch-data 3`
-    And I run `nucleotides run-image 3`
-    And I run `nucleotides post-data 3`
+    And I run `nucleotides all 2`
+    And I run `nucleotides all 3`
     And I get the url "/benchmarks/2f221a18eb86380369570b2ed147d8b4"
     Then the stderr should not contain anything
     And the stdout should not contain anything

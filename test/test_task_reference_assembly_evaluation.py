@@ -103,5 +103,5 @@ def test_create_event_request_with_a_successful_gaet_event():
     nose.assert_equal(event["success"], True)
     nose.assert_equal(event["files"][0]["type"], "assembly_metrics")
     nose.assert_in("assembly.size_metrics.all.n50", event["metrics"])
-    nose.assert_equal(event["metrics"]["assembly.size_metrics.all.n50"], 777.0)
+    nose.assert_equal(event["metrics"]["assembly.size_metrics.all.n50"], 1251.0)
     nose.assert_equal(event["metrics"]["comparison.gene_set_agreement.trna"], 1.0)
