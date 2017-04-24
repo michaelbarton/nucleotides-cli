@@ -14,6 +14,14 @@ def test_parse_metrics_with_only_path():
 
 
 @attr('wip')
+def test_parse_metrics_with_no_path():
+    app.mock_app()
+    metrics = {"metric": "1"}
+    mapping = [{"key": "metric"}]
+    nose.assert_equal(met.parse_metrics(app.mock_app(), metrics, mapping), {"metric": 1})
+
+
+@attr('wip')
 def test_parse_metrics_with_missing_value():
     metrics = {}
     mapping = [{"key": "new_name", "path" : "old_name"}]

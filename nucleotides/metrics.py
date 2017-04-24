@@ -62,7 +62,12 @@ def parse_metrics(app, metrics, mappings):
     def parse(mapping):
         import jmespath
         key   = mapping["key"]
-        raw_value = jmespath.compile(mapping['path']).search(metrics)
+
+        if "path" in mapping:
+            raw_value = jmespath.compile(mapping['path']).search(metrics)
+        else:
+            raw_value = metrics[key]
+
 
         if raw_value is None:
             return (key, raw_value)
@@ -99,7 +104,7 @@ def are_metrics_complete(app, expected, collected):
     missing_metrics = expected.difference(collected)
     if missing_metrics:
         msg = "Expected metrics not found: {}"
-        app["logger"].info(msg.format(",".join(missing_metrics)))
+        app["logger"].warn(msg.format(",".join(missing_metrics)))
 
     return not missing_metrics
 

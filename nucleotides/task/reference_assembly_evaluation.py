@@ -52,27 +52,25 @@ class ReferenceAssemblyEvaluationTask(TaskInterface):
             return funcy.walk_values(f, OUTPUT_PATH)
 
 
+    def metric_mapping_file(self, app):
+        return {'bioboxes/quast' : 'quast',
+                'bioboxes/gaet'  : 'gaet'
+                }[run.image_name(app)]
+
+
+
     def collect_metrics(self, app):
         path = fs.get_task_path_file_without_name(app, 'outputs/assembly_metrics')
         with open(path, 'r') as f:
             raw_metrics = list(csv.reader(f, delimiter = '\t'))
 
-        if is_quast_output(app):
-            mapping_file = os.path.join('mappings', 'quast.yml')
-            mapping      = yaml.safe_load(util.get_asset_file_contents(mapping_file))
-            return met.parse_metrics(app, dict(raw_metrics), mapping)
-        else:
-            return dict(map(lambda (k, v): [k, float(v)], raw_metrics))
+        mapping_file = os.path.join('mappings', self.metric_mapping_file(app) + '.yml')
+        mapping      = yaml.safe_load(util.get_asset_file_contents(mapping_file))
+        return met.parse_metrics(app, dict(raw_metrics), mapping)
 
 
     def successful_event_output_files(self):
         return set(["assembly_metrics"])
-
-
-    def metric_mapping_file(self, app):
-        return {'bioboxes/quast' : 'quast',
-                'bioboxes/gaet'  : 'gaet'
-                }[run.image_name(app)]
 
 
     def are_generated_metrics_valid(self, app, metrics):

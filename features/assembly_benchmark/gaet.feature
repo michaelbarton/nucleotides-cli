@@ -44,3 +44,28 @@ Feature: Running a GAET-based reference assembly benchmark task
        | events/0/metrics/reference.size_metrics.cds.n50              | 1287.0 |
        | events/0/metrics/comparison.gene_set_agreement.trna          | 1.0    |
        | events/0/metrics/assembly.gene_count.eukarya_rrna.5_8s_rrna	| 0.0    |
+
+
+  Scenario: Posting a GAET benchmark when the output includes non-mappable values
+    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
+    And I copy the file "../../example_data/tasks/gaet.json" to "nucleotides/6/metadata.json"
+    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/6/outputs/container_log/log.txt"
+    And I copy the file "../../example_data/biobox/gaet.yaml" to "nucleotides/6/tmp/biobox.yaml"
+    And the directory "nucleotides/6/outputs/assembly_metrics/"
+    And I run the bash command:
+      """
+      sed '/assembly.gene_count.bacteria_archea_rrna.16s_rrna/s/0/unknown/' ../../example_data/generated_files/gaet_metrics.tsv > nucleotides/6/outputs/assembly_metrics/af9bc02c71
+      """
+    When I run `nucleotides post-data 6`
+    And I get the url "/tasks/6"
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the JSON should have the following:
+       | complete          | true  |
+       | success           | false |
+       | events/0/metrics  | {}    |
+    And the file "nucleotides/6/benchmark.log" should contain:
+      """
+      Error, unparsable value for assembly.gene_count.bacteria_archea_rrna.16s_rrna: unknown
+      """

@@ -84,3 +84,27 @@ Feature: Running a QUAST-based reference assembly benchmark task
       | complete         | true  |
       | success          | false |
       | events/0/metrics | {}    |
+
+
+  Scenario: Posting a QUAST benchmark when the output includes non-mappable values
+    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
+    And I copy the file "../../example_data/tasks/quast.json" to "nucleotides/6/metadata.json"
+    And I copy the file "../../example_data/biobox/quast.yaml" to "nucleotides/6/tmp/biobox.yaml"
+    And the directory "nucleotides/6/outputs/assembly_metrics/"
+    And I run the bash command:
+      """
+      sed /NGA50/s/6456/unknown/ ../../example_data/generated_files/quast_metrics.tsv > nucleotides/6/outputs/assembly_metrics/67ba437ffa
+      """
+    When I run `nucleotides post-data 6`
+    And I get the url "/tasks/6"
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the JSON should have the following:
+       | complete          | true  |
+       | success           | false |
+       | events/0/metrics  | {}    |
+    And the file "nucleotides/6/benchmark.log" should contain:
+      """
+      Error, unparsable value for nga50: unknown
+      """
