@@ -95,13 +95,16 @@ def test_gaet_complete_run_through():
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/assembly_metrics/d70c163200'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/1661337965'))
 
-
+@attr('wip')
 def test_create_event_request_with_a_successful_gaet_event():
     app = app_helper.setup_app_state('gaet', 'outputs')
     event = post.create_event_request(app, post.list_outputs(app))
     nose.assert_equal(event["task"], 6)
     nose.assert_equal(event["success"], True)
     nose.assert_equal(event["files"][0]["type"], "assembly_metrics")
-    nose.assert_in("assembly.size_metrics.all.n50", event["metrics"])
-    nose.assert_equal(event["metrics"]["assembly.size_metrics.all.n50"], 1251.0)
-    nose.assert_equal(event["metrics"]["comparison.gene_set_agreement.trna"], 1.0)
+
+    nose.assert_in("comparison.gene_type_distance.cds.n_symmetric_difference", event["metrics"])
+    nose.assert_equal(event["metrics"]["comparison.gene_type_distance.cds.n_symmetric_difference"], 7.0)
+
+    nose.assert_in("assembly.minimum_gene_set.single_copy", event["metrics"])
+    nose.assert_equal(event["metrics"]["assembly.minimum_gene_set.single_copy"], 0.0)

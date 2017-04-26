@@ -35,15 +35,14 @@ Feature: Running a GAET-based reference assembly benchmark task
     And the exit status should be 0
     And the file "nucleotides/6/benchmark.log" should exist
     And the S3 bucket "nucleotides-testing" should contain the files:
-      | uploads/a5/a5c753ccb24053ea57a22c18a99db115f9520820db78ff8a58215c1f3404a173 |
-      | uploads/e0/e0e8af37908fb7c275a9467c3ddbba0994c9a33dbf691496a60f4b0bec975f0a |
       | uploads/f8/f8efa7d0bcace3be05f4fff453e414efae0e7d5f680bf215f8374b0a9fdaf9c4 |
+      | uploads/e0/e0e8af37908fb7c275a9467c3ddbba0994c9a33dbf691496a60f4b0bec975f0a |
+      | uploads/ff/ff9b3ce94aaac8738f382c2a027783f2b0794fae28e628f392f2a7b544e2dd6b |
     And the JSON should have the following:
-       | complete                                                     | true   |
-       | success                                                      | true   |
-       | events/0/metrics/reference.size_metrics.cds.n50              | 1473.0 |
-       | events/0/metrics/comparison.gene_set_agreement.trna          | 1.0    |
-       | events/0/metrics/assembly.gene_count.eukarya_rrna.5_8s_rrna	| 0.0    |
+      | complete                                                                  | true |
+      | success                                                                   | true |
+      | events/0/metrics/comparison.gene_type_distance.cds.n_symmetric_difference | 7.0  |
+      | events/0/metrics/assembly.minimum_gene_set.single_copy                    | 0.0  |
 
 
   Scenario: Posting a GAET benchmark when the output includes non-mappable values
@@ -54,7 +53,7 @@ Feature: Running a GAET-based reference assembly benchmark task
     And the directory "nucleotides/6/outputs/assembly_metrics/"
     And I run the bash command:
       """
-      sed '/assembly.gene_count.bacteria_archea_rRNA.16S_rRNA/s/0/unknown/' ../../example_data/generated_files/gaet_metrics.tsv > nucleotides/6/outputs/assembly_metrics/a5c753ccb2
+      sed '/assembly.gene_type_size.cds.sum_length/s/4233/unknown/' ../../example_data/generated_files/gaet_metrics.tsv > nucleotides/6/outputs/assembly_metrics/a5c753ccb2
       """
     When I run `nucleotides post-data 6`
     And I get the url "/tasks/6"
@@ -67,5 +66,5 @@ Feature: Running a GAET-based reference assembly benchmark task
        | events/0/metrics  | {}    |
     And the file "nucleotides/6/benchmark.log" should contain:
       """
-      Error, unparsable value for assembly.gene_count.bacteria_archea_rrna.16s_rrna: unknown
+      Error, unparsable value for assembly.gene_type_size.cds.sum_length: unknown
       """
