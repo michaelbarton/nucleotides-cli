@@ -17,6 +17,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   * Short read assembler tasks return 0 for any cgroup metric for which at
     least 85% of the data points could not be collected.
 
+### Changed
+
+  * Added support for version 0.3.0 of GAET.
+
 ## 0.5.0 - 2017-01-30
 
 ### Added
