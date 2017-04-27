@@ -37,7 +37,7 @@ Feature: Running a GAET-based reference assembly benchmark task
     And the S3 bucket "nucleotides-testing" should contain the files:
       | uploads/f8/f8efa7d0bcace3be05f4fff453e414efae0e7d5f680bf215f8374b0a9fdaf9c4 |
       | uploads/e0/e0e8af37908fb7c275a9467c3ddbba0994c9a33dbf691496a60f4b0bec975f0a |
-      | uploads/ff/ff9b3ce94aaac8738f382c2a027783f2b0794fae28e628f392f2a7b544e2dd6b |
+      | uploads/f9/f962ad068784f667bb763e0f0080a832f3966dd335930638477cd66267bb289e |
     And the JSON should have the following:
       | complete                                                                  | true |
       | success                                                                   | true |
