@@ -44,8 +44,9 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking with rea
        | tasks/2/events/0/files/0/type                                                     | "assembly_metrics"          |
        | tasks/2/events/0/files/1/type                                                     | "container_log"             |
        | tasks/2/events/0/files/2/type                                                     | "container_runtime_metrics" |
-       | tasks/2/events/0/metrics/comparison.gene_type_distance.cds.n_symmetric_difference | 329.0                         |
-       | tasks/2/events/0/metrics/assembly.minimum_gene_set.single_copy                    | 0.0                         |
+    And the JSON should have the following:
+       | tasks/2/events/0/metrics/comparison.gene_type_distance.cds.n_symmetric_difference |
+       | tasks/2/events/0/metrics/assembly.minimum_gene_set.single_copy                    |
 
     And the directory "nucleotides/1" should not exist
     And the directory "nucleotides/2" should not exist
