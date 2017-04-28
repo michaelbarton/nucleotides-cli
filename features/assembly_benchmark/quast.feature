@@ -22,6 +22,25 @@ Feature: Running a QUAST-based reference assembly benchmark task
     And the file "nucleotides/6/benchmark.log" should exist
 
 
+  Scenario: Executing a QUAST reference assembly benchmark task when there are no contigs
+    # When the contigs are empty because none were generated or because they
+    # were all too small and filtered out, then the client should not try to run the
+    # image. The client should instead skip trying to run the container.
+    Given the empty file "nucleotides/4/inputs/contig_fasta/0000000000.fa"
+    And I copy the example data files:
+      | tasks/quast_crash_test.json | nucleotides/4/metadata.json |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/reference.fa.gz | nucleotides/4/inputs/reference_fasta/ |
+    When I run `nucleotides --polling=1 run-image 4`
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the directory "nucleotides/4/outputs/container_runtime_metrics/" should not exist
+    And the directory "nucleotides/4/outputs/assembly_metrics/" should not exist
+    And the directory "nucleotides/4/outputs/container_log/" should not exist
+    And the file "nucleotides/4/benchmark.log" should exist
+
+
   Scenario: Posting successful QUAST benchmark results
     Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
     And I copy the file "../../example_data/tasks/quast.json" to "nucleotides/6/metadata.json"

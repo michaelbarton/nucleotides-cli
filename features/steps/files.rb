@@ -4,6 +4,13 @@ def last_json
   @document
 end
 
+Then(/^the directory "(.*?)" should be empty$/) do |dir|
+  path = ENV['TMPDIR'] + "/" + dir
+  files = Dir.entries(path) - [".", ".."]
+  files.should be_empty
+end
+
+
 Then(/^the file "(.*?)" should be a valid JSON document$/) do |file_path|
   @document = File.read(File.join("tmp", "aruba", file_path))
   expect{JSON.parse(@document)}.to_not raise_error
@@ -35,3 +42,5 @@ Given(/^I copy the example data files to their SHA256 named versions:$/) do |tab
     FileUtils.cp(src, dst)
   end
 end
+
+
