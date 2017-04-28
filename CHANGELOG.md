@@ -12,10 +12,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
     assembly evaluation tasks.
 
   * Reference assembly benchmarking tasks fail if not all the required metrics
-    are produced, or if any are null.
+    are produced, or if any are null. This prevents the situation where some
+    benchmarking tasks are marked as successful when in actuality an incomplete
+    set of the metrics are collected.
 
   * Short read assembler tasks return 0 for any cgroup metric for which at
-    least 85% of the data points could not be collected.
+    least 85% of the data points could not be collected. This prevents
+    inaccurate reporting of the Docker image performance if the cgroup data is
+    able to be reliably collected.
+
+### Fixed
+
+  * If there are no usable contigs for a reference assembly task, the client
+    will skip running the Docker image and continue as if the task was
+    unsuccessful. Previously the client would error out and the task would
+    remain incomplete.
 
 ### Changed
 
