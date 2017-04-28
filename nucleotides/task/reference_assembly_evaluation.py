@@ -29,12 +29,23 @@ def is_quast_output(app):
     """
     return fs.get_biobox_yaml_value(app, [0]) == "combined_quast_output/report.html"
 
+def is_contig_file_empty(app):
+    contigs = fs.get_task_path_file_without_name(app, 'inputs/contig_fasta')
+    return True if os.stat(contigs).st_size == 0 else False
+
 
 class ReferenceAssemblyEvaluationTask(TaskInterface):
 
     def before_container_hook(self, app):
         if is_quast(app):
             fu.mkdir_p(fs.get_task_dir_path(app, 'tmp/assembly_metrics'))
+
+
+    def does_task_pass_pre_execution_checks(self, app):
+        if is_contig_file_empty(app):
+            return (False, "Aborting Docker image exection because contig file is empty")
+        else:
+            return (True, "")
 
 
     def biobox_args(self, app):

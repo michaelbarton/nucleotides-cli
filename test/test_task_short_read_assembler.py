@@ -86,7 +86,6 @@ def test_short_read_assembler_successful_event_with_cgroup_data():
              "type"   : "contig_fasta"}]}, event)
 
 
-@attr('wip')
 def test_short_read_assembler_successful_event_with_incomplete_cgroup_data():
     app  = app_helper.setup_app_state('sra', 'incomplete_cgroup')
     outputs = [{
@@ -97,7 +96,6 @@ def test_short_read_assembler_successful_event_with_incomplete_cgroup_data():
     event = post.create_event_request(app, outputs)
     nose.assert_equal(event['metrics']['total_rss_in_mibibytes'], 0.0)
 
-@attr('wip')
 def test_short_read_assembler_successful_event_without_cgroup_data():
     """
     It is possible that an assembler could finish before the first set of cgroup
