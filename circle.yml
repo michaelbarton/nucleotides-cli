@@ -5,7 +5,7 @@ machine:
   post:
     - pip install --user tox==2.6.0
   ruby:
-    version: 2.2.3
+    version: 2.4.1
   services:
     - docker
 
