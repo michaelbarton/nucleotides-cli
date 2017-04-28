@@ -47,8 +47,8 @@ Feature: Fetching input data files for benchmarking
       | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
     And I copy the example data files:
       | tasks/short_read_assembler.json        | nucleotides/4/metadata.json                      |
+      | generated_files/cgroup_metrics.json.gz | nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz |
     And I copy the example data files to their SHA256 named versions:
-      | generated_files/cgroup_metrics.json.gz | nucleotides/4/outputs/container_runtime_metrics/ |
       | generated_files/log.txt                | nucleotides/4/outputs/container_log/             |
       | generated_files/short_contigs.fa       | nucleotides/4/outputs/contig_fasta/              |
     And I run `nucleotides post-data 4`

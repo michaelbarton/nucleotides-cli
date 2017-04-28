@@ -9,9 +9,13 @@ Feature: Running a QUAST-based reference assembly benchmark task
 
 
   Scenario: Executing a QUAST reference assembly benchmark task
-    Given I copy the file "../../example_data/generated_files/reference.fa.gz" to "nucleotides/6/inputs/reference_fasta/6bac51cc35.fa.gz"
-    And I copy the file "../../example_data/tasks/quast_crash_test.json" to "nucleotides/6/metadata.json"
-    And I copy the file "../../example_data/generated_files/contigs.fa" to "nucleotides/6/inputs/contig_fasta/de3d9f6d31.fa"
+    Given I copy the example data files:
+      | tasks/quast_crash_test.json | nucleotides/6/metadata.json |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/contigs.fa             | nucleotides/6/inputs/contig_fasta/              |
+      | generated_files/reference.fa.gz        | nucleotides/6/inputs/reference_fasta/           |
+    And I copy the example data files:
+      | generated_files/cgroup_metrics.json.gz | nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz |
     When I run `nucleotides --polling=1 run-image 6`
     Then the stderr should not contain anything
     And the stdout should not contain anything
@@ -42,11 +46,13 @@ Feature: Running a QUAST-based reference assembly benchmark task
 
 
   Scenario: Posting successful QUAST benchmark results
-    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/tasks/quast.json" to "nucleotides/6/metadata.json"
-    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/6/outputs/container_log/log.txt"
-    And I copy the file "../../example_data/generated_files/quast_metrics.tsv" to "nucleotides/6/outputs/assembly_metrics/67ba437ffa"
-    And I copy the file "../../example_data/biobox/quast.yaml" to "nucleotides/6/tmp/biobox.yaml"
+    Given I copy the example data files:
+      | tasks/quast.json  | nucleotides/6/metadata.json   |
+      | biobox/quast.yaml | nucleotides/6/tmp/biobox.yaml |
+      | generated_files/cgroup_metrics.json.gz | nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt                | nucleotides/6/outputs/container_log/             |
+      | generated_files/quast_metrics.tsv      | nucleotides/6/outputs/assembly_metrics/          |
     When I run `nucleotides post-data 6`
     And I get the url "/tasks/6"
     Then the stderr should not contain anything
@@ -70,9 +76,12 @@ Feature: Running a QUAST-based reference assembly benchmark task
 
 
   Scenario: Posting a benchmark when the QUAST output includes non numeric values
-    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/tasks/quast.json" to "nucleotides/6/metadata.json"
-    And I copy the file "../../example_data/biobox/quast.yaml" to "nucleotides/6/tmp/biobox.yaml"
+    Given I copy the example data files:
+      | tasks/quast.json  | nucleotides/6/metadata.json   |
+      | biobox/quast.yaml | nucleotides/6/tmp/biobox.yaml |
+      | generated_files/cgroup_metrics.json.gz              | nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt                | nucleotides/6/outputs/container_log/             |
     And the directory "nucleotides/6/outputs/assembly_metrics/"
     And I run the bash command:
       """
@@ -90,10 +99,13 @@ Feature: Running a QUAST-based reference assembly benchmark task
 
 
   Scenario: Posting a benchmark when QUAST was unable to calculate any alignments
-    Given I copy the file "../../example_data/tasks/quast.json" to "nucleotides/6/metadata.json"
-    And I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/biobox/quast.yaml" to "nucleotides/6/tmp/biobox.yaml"
-    And I copy the file "../../example_data/generated_files/quast_metrics_alignment_missing.tsv" to "nucleotides/6/outputs/assembly_metrics/9fd2e1f53b"
+    Given I copy the example data files:
+      | tasks/quast.json  | nucleotides/6/metadata.json   |
+      | biobox/quast.yaml | nucleotides/6/tmp/biobox.yaml |
+      | generated_files/cgroup_metrics.json.gz | nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt                             | nucleotides/6/outputs/container_log/             |
+      | generated_files/quast_metrics_alignment_missing.tsv | nucleotides/6/outputs/assembly_metrics/          |
     When I run `nucleotides post-data 6`
     And I get the url "/tasks/6"
     Then the stderr should not contain anything
@@ -106,9 +118,12 @@ Feature: Running a QUAST-based reference assembly benchmark task
 
 
   Scenario: Posting a QUAST benchmark when the output includes non-mappable values
-    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/tasks/quast.json" to "nucleotides/6/metadata.json"
-    And I copy the file "../../example_data/biobox/quast.yaml" to "nucleotides/6/tmp/biobox.yaml"
+    Given I copy the example data files:
+      | tasks/quast.json  | nucleotides/6/metadata.json   |
+      | biobox/quast.yaml | nucleotides/6/tmp/biobox.yaml |
+      | generated_files/cgroup_metrics.json.gz | nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt                             | nucleotides/6/outputs/container_log/             |
     And the directory "nucleotides/6/outputs/assembly_metrics/"
     And I run the bash command:
       """

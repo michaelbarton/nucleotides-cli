@@ -9,9 +9,11 @@ Feature: Running a GAET-based reference assembly benchmark task
 
 
   Scenario: Executing a GAET reference assembly benchmark task
-    Given I copy the file "../../example_data/generated_files/reference.fa.gz" to "nucleotides/6/inputs/reference_fasta/6bac51cc35.fa.gz"
-    And I copy the file "../../example_data/tasks/gaet_crash_test.json" to "nucleotides/6/metadata.json"
-    And I copy the file "../../example_data/generated_files/contigs.fa" to "nucleotides/6/inputs/contig_fasta/de3d9f6d31.fa"
+    Given I copy the example data files:
+      | tasks/gaet_crash_test.json | nucleotides/6/metadata.json |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/contigs.fa             | nucleotides/6/inputs/contig_fasta/     |
+      | generated_files/reference.fa.gz        | nucleotides/6/inputs/reference_fasta/  |
     When I run `nucleotides --polling=1 run-image 6`
     Then the stderr should not contain anything
     And the stdout should not contain anything
@@ -42,11 +44,13 @@ Feature: Running a GAET-based reference assembly benchmark task
 
 
   Scenario: Posting successful GAET benchmark results
-    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/tasks/gaet.json" to "nucleotides/6/metadata.json"
-    And I copy the file "../../example_data/generated_files/gaet_metrics.tsv" to "nucleotides/6/outputs/assembly_metrics/a5c753ccb2"
-    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/6/outputs/container_log/log.txt"
-    And I copy the file "../../example_data/biobox/gaet.yaml" to "nucleotides/6/tmp/biobox.yaml"
+    Given I copy the example data files:
+      | tasks/gaet.json  | nucleotides/6/metadata.json  |
+      | biobox/gaet.yaml | nucleotides/6/tmp/biobox.yaml |
+      | generated_files/cgroup_metrics.json.gz | nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt                | nucleotides/6/outputs/container_log/             |
+      | generated_files/gaet_metrics.tsv       | nucleotides/6/outputs/assembly_metrics/          |
     When I run `nucleotides post-data 6`
     And I get the url "/tasks/6"
     Then the stderr should not contain anything
@@ -65,10 +69,12 @@ Feature: Running a GAET-based reference assembly benchmark task
 
 
   Scenario: Posting a GAET benchmark when the output includes non-mappable values
-    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/tasks/gaet.json" to "nucleotides/6/metadata.json"
-    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/6/outputs/container_log/log.txt"
-    And I copy the file "../../example_data/biobox/gaet.yaml" to "nucleotides/6/tmp/biobox.yaml"
+    Given I copy the example data files:
+      | tasks/gaet.json  | nucleotides/6/metadata.json  |
+      | biobox/gaet.yaml | nucleotides/6/tmp/biobox.yaml |
+      | generated_files/cgroup_metrics.json.gz | nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt                | nucleotides/6/outputs/container_log/             |
     And the directory "nucleotides/6/outputs/assembly_metrics/"
     And I run the bash command:
       """

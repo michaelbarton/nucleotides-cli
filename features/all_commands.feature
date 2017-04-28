@@ -60,9 +60,9 @@ Feature: Use the `all` sub-command to execute all steps in benchmarking with rea
     # unsuccessful
     Given I copy the example data files:
       | tasks/short_read_assembler.json        | nucleotides/4/metadata.json                      |
+      | generated_files/cgroup_metrics.json.gz | nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz |
     And I copy the example data files to their SHA256 named versions:
       | generated_files/one_short_contig.fa    | nucleotides/4/outputs/contig_fasta/              |
-      | generated_files/cgroup_metrics.json.gz | nucleotides/4/outputs/container_runtime_metrics/ |
       | generated_files/log.txt                | nucleotides/4/outputs/container_log/             |
     And I run `nucleotides post-data 4`
     When I run `nucleotides all 5`

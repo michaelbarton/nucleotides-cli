@@ -10,7 +10,8 @@ Feature: Processing a short read assembly benchmark
 
 
   Scenario: Executing a short read assembler docker image
-    Given I copy the file "../../example_data/generated_files/reads.fq.gz" to "nucleotides/4/inputs/short_read_fastq/11948b41d4.fq.gz"
+    Given I copy the example data files to their SHA256 named versions:
+      | generated_files/reads.fq.gz | nucleotides/4/inputs/short_read_fastq/ |
     When I run `nucleotides --polling=1 run-image 4`
     Then the stderr should not contain anything
     And the stdout should not contain anything
@@ -22,9 +23,11 @@ Feature: Processing a short read assembly benchmark
 
 
   Scenario: Posting a successful benchmark
-    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/4/outputs/container_log/log.txt"
-    And I copy the file "../../example_data/generated_files/contigs.fa" to "nucleotides/4/outputs/contig_fasta/de3d9f6d31"
+    Given I copy the example data files:
+      | generated_files/cgroup_metrics.json.gz | nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt    | nucleotides/4/outputs/container_log/ |
+      | generated_files/contigs.fa | nucleotides/4/outputs/contig_fasta/  |
     When I run `nucleotides post-data 4`
     And I get the url "/tasks/4"
     Then the stderr should not contain anything
@@ -52,8 +55,10 @@ Feature: Processing a short read assembly benchmark
 
 
   Scenario: Posting a failed benchmark
-    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/4/outputs/container_log/log.txt"
+    Given I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt                | nucleotides/4/outputs/container_log/             |
+    And I copy the example data files:
+      | generated_files/cgroup_metrics.json.gz | nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz |
     When I run `nucleotides post-data 4`
     And I get the url "/tasks/4"
     Then the stderr should not contain anything
@@ -70,9 +75,11 @@ Feature: Processing a short read assembly benchmark
 
 
   Scenario: Posting a benchmark with missing cgroup data
-    Given I copy the file "../../example_data/generated_files/cgroup_metrics_incomplete.json.gz" to "nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/4/outputs/container_log/log.txt"
-    And I copy the file "../../example_data/generated_files/contigs.fa" to "nucleotides/4/outputs/contig_fasta/de3d9f6d31"
+    Given I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt                           | nucleotides/4/outputs/container_log/             |
+      | generated_files/contigs.fa                        | nucleotides/4/outputs/contig_fasta/              |
+    And I copy the example data files:
+      | generated_files/cgroup_metrics_incomplete.json.gz | nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz |
     When I run `nucleotides post-data 4`
     And I get the url "/tasks/4"
     Then the stderr should not contain anything
