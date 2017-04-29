@@ -42,6 +42,15 @@ class TaskInterface(object):
         return
 
 
+    def does_task_pass_pre_execution_checks(self, app):
+        """
+        Hook into process of checking the state of the task before launching the
+        container. If returns false, the Docker image will not be executed. Example
+        would be checking that the input files are valid.
+        """
+        return (True, "")
+
+
     @abc.abstractmethod
     def biobox_args(self, app):
         """

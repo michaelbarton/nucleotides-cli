@@ -29,6 +29,16 @@ def test_run_container():
     image_helper.clean_up_container(id_)
 
 
+def test_execution_with_empty_contig_file():
+    app = app_helper.setup_app_state('quast', 'execute')
+    input_contigs = fs.get_task_file_path(app, "inputs/contig_fasta/de3d9f6d31.fa")
+    open(input_contigs, "w").truncate()
+
+    image_helper.execute_image(app)
+    file_helper.assert_is_empty_directory(fs.get_task_file_path(app, 'outputs/assembly_metrics/'))
+    file_helper.assert_is_empty_directory(fs.get_task_file_path(app, 'outputs/container_log/'))
+
+
 #################################################
 #
 # QUAST specific tests
@@ -95,7 +105,6 @@ def test_gaet_complete_run_through():
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/assembly_metrics/d70c163200'))
     file_helper.assert_is_file(fs.get_task_file_path(app, 'outputs/container_log/1661337965'))
 
-@attr('wip')
 def test_create_event_request_with_a_successful_gaet_event():
     app = app_helper.setup_app_state('gaet', 'outputs')
     event = post.create_event_request(app, post.list_outputs(app))

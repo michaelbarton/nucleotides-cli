@@ -56,6 +56,13 @@ def copy_output_files(app):
 
 def execute_image(app, docker_timeout = 15, metric_interval = 15, metric_warmup = 2):
     task  = image_type(app)
+
+    (execution_ready, failure_msg) = task.does_task_pass_pre_execution_checks(app)
+
+    if not execution_ready:
+        app['logger'].critical(failure_msg)
+        return
+
     task.before_container_hook(app)
     image = image_version(app)
 
@@ -72,7 +79,7 @@ def execute_image(app, docker_timeout = 15, metric_interval = 15, metric_warmup 
     copy_output_files(app)
 
 
-def run(task, args):
-    app = util.application_state(task)
+def run(task_id, args):
+    app = util.application_state(task_id)
     interval = int(args['--polling'])
     execute_image(app, docker_timeout = interval, metric_interval = interval)

@@ -45,10 +45,12 @@ Feature: Fetching input data files for benchmarking
     Given I set the environment variables to:
       | variable           | value                             |
       | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
-    And I copy the file "../../example_data/tasks/short_read_assembler.json" to "nucleotides/4/metadata.json"
-    And I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/4/outputs/container_log/log.txt"
-    And I copy the file "../../example_data/generated_files/short_contigs.fa" to "nucleotides/4/outputs/contig_fasta/1ff29bcb69"
+    And I copy the example data files:
+      | tasks/short_read_assembler.json        | nucleotides/4/metadata.json                      |
+      | generated_files/cgroup_metrics.json.gz | nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt                | nucleotides/4/outputs/container_log/             |
+      | generated_files/short_contigs.fa       | nucleotides/4/outputs/contig_fasta/              |
     And I run `nucleotides post-data 4`
     When I run `nucleotides fetch-data 5`
     Then the stderr should not contain anything

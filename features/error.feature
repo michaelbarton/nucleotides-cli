@@ -1,6 +1,8 @@
 Feature: Reporting useful error messages
 
   Background:
+    Given a clean set of benchmarks
+    And no files in the S3 directory "s3://nucleotides-testing/uploads/"
     And I set the environment variables to:
       | variable           | value                             |
       | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
@@ -8,9 +10,11 @@ Feature: Reporting useful error messages
 
   Scenario Outline: Reporting errors when environment variables are not set
     Given the nucleotides directory is available on the path
-    And I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/generated_files/contigs.fa" to "nucleotides/4/inputs/contig_fasta/de3d9f6d31.fa"
-    And I copy the file "../../example_data/tasks/short_read_assembler.json" to "nucleotides/4/metadata.json"
+    And I copy the example data files:
+      | tasks/short_read_assembler.json | nucleotides/4/metadata.json |
+      | generated_files/cgroup_metrics.json.gz | nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/contigs.fa             | nucleotides/4/outputs/contig_fasta/              |
     When I run the bash command:
       """
       unset <variable> && nucleotides post-data 4
