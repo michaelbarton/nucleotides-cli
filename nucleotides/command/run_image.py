@@ -1,14 +1,16 @@
 import funcy, os
-import nucleotides.filesystem    as fs
 import biobox.util               as docker
 import biobox.container          as container
 import biobox.cgroup             as cgroup
 import biobox.image.availability as avail
 import biobox.image.execute      as image
-import nucleotides.util          as util
+
+import nucleotides.filesystem          as fs
+import nucleotides.util                as util
+import nucleotides.task.task_interface as interface
 
 def image_type(app):
-    return util.select_task(funcy.get_in(app, ["task", "image", "type"]))
+    return interface.select_task(funcy.get_in(app, ["task", "image", "type"]))()
 
 def image_name(app):
     return funcy.get_in(app, ["task", "image", "name"])
@@ -21,10 +23,6 @@ def image_version(app):
 def image_task(app):
     return funcy.get_in(app, ["task", "image", "task"])
 
-def setup(app):
-    biobox = image_type(app)
-    if hasattr(biobox, 'before_container_hook'):
-        biobox.before_container_hook(app)
 
 def create_container(app):
     avail.get_image(image_version(app))
@@ -57,8 +55,16 @@ def copy_output_files(app):
 
 
 def execute_image(app, docker_timeout = 15, metric_interval = 15, metric_warmup = 2):
-    setup(app)
-    image  = image_version(app)
+    task  = image_type(app)
+
+    (execution_ready, failure_msg) = task.does_task_pass_pre_execution_checks(app)
+
+    if not execution_ready:
+        app['logger'].critical(failure_msg)
+        return
+
+    task.before_container_hook(app)
+    image = image_version(app)
 
     app['logger'].info("Creating Docker container from image {}".format(image))
     biobox = create_container(app)
@@ -73,7 +79,7 @@ def execute_image(app, docker_timeout = 15, metric_interval = 15, metric_warmup 
     copy_output_files(app)
 
 
-def run(task, args):
-    app = util.application_state(task)
+def run(task_id, args):
+    app = util.application_state(task_id)
     interval = int(args['--polling'])
     execute_image(app, docker_timeout = interval, metric_interval = interval)

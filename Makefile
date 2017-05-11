@@ -208,7 +208,6 @@ bootstrap: \
 	Gemfile.lock \
 	.api_container \
 	.deploy_image \
-	tmp/data/assembly_metrics.tsv \
 	tmp/data/fixtures.sql
 	@docker pull bioboxes/crash-test-biobox 2>&1 > /dev/null
 

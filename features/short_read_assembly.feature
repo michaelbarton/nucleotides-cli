@@ -6,27 +6,30 @@ Feature: Processing a short read assembly benchmark
     And I set the environment variables to:
       | variable           | value                             |
       | NUCLEOTIDES_S3_URL | s3://nucleotides-testing/uploads/ |
-    And I copy the file "../../example_data/tasks/short_read_assembler.json" to "nucleotides/5/metadata.json"
+    And I copy the file "../../example_data/tasks/short_read_assembler.json" to "nucleotides/4/metadata.json"
 
 
   Scenario: Executing a short read assembler docker image
-    Given I copy the file "../../example_data/generated_files/reads.fq.gz" to "nucleotides/5/inputs/short_read_fastq/11948b41d4.fq.gz"
-    When I run `nucleotides --polling=1 run-image 5`
+    Given I copy the example data files to their SHA256 named versions:
+      | generated_files/reads.fq.gz | nucleotides/4/inputs/short_read_fastq/ |
+    When I run `nucleotides --polling=1 run-image 4`
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
-    And the file "nucleotides/5/outputs/contig_fasta/01eb7cec61" should exist
-    And the file "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz" should exist
-    And the file "nucleotides/5/outputs/container_log/1099992390" should exist
-    And the file "nucleotides/5/benchmark.log" should exist
+    And the file "nucleotides/4/outputs/contig_fasta/01eb7cec61" should exist
+    And the file "nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz" should exist
+    And the file "nucleotides/4/outputs/container_log/1099992390" should exist
+    And the file "nucleotides/4/benchmark.log" should exist
 
 
   Scenario: Posting a successful benchmark
-    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/5/outputs/container_log/log.txt"
-    And I copy the file "../../example_data/generated_files/contigs.fa" to "nucleotides/5/outputs/contig_fasta/de3d9f6d31"
-    When I run `nucleotides post-data 5`
-    And I get the url "/tasks/5"
+    Given I copy the example data files:
+      | generated_files/cgroup_metrics.json.gz | nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt    | nucleotides/4/outputs/container_log/ |
+      | generated_files/contigs.fa | nucleotides/4/outputs/contig_fasta/  |
+    When I run `nucleotides post-data 4`
+    And I get the url "/tasks/4"
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
@@ -48,14 +51,16 @@ Feature: Processing a short read assembly benchmark
       | events/0/files/0/type                                     | "container_log"             |
       | events/0/files/1/type                                     | "container_runtime_metrics" |
       | events/0/files/2/type                                     | "contig_fasta"              |
-    And the file "nucleotides/5/benchmark.log" should exist
+    And the file "nucleotides/4/benchmark.log" should exist
 
 
   Scenario: Posting a failed benchmark
-    Given I copy the file "../../example_data/generated_files/cgroup_metrics.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/5/outputs/container_log/log.txt"
-    When I run `nucleotides post-data 5`
-    And I get the url "/tasks/5"
+    Given I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt                | nucleotides/4/outputs/container_log/             |
+    And I copy the example data files:
+      | generated_files/cgroup_metrics.json.gz | nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz |
+    When I run `nucleotides post-data 4`
+    And I get the url "/tasks/4"
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
@@ -66,15 +71,17 @@ Feature: Processing a short read assembly benchmark
       | complete                                                  | true                        |
       | events/0/files/0/type                                     | "container_log"             |
       | events/0/files/1/type                                     | "container_runtime_metrics" |
-    And the file "nucleotides/5/benchmark.log" should exist
+    And the file "nucleotides/4/benchmark.log" should exist
 
 
   Scenario: Posting a benchmark with missing cgroup data
-    Given I copy the file "../../example_data/generated_files/cgroup_metrics_incomplete.json.gz" to "nucleotides/5/outputs/container_runtime_metrics/metrics.json.gz"
-    And I copy the file "../../example_data/generated_files/log.txt" to "nucleotides/5/outputs/container_log/log.txt"
-    And I copy the file "../../example_data/generated_files/contigs.fa" to "nucleotides/5/outputs/contig_fasta/de3d9f6d31"
-    When I run `nucleotides post-data 5`
-    And I get the url "/tasks/5"
+    Given I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt                           | nucleotides/4/outputs/container_log/             |
+      | generated_files/contigs.fa                        | nucleotides/4/outputs/contig_fasta/              |
+    And I copy the example data files:
+      | generated_files/cgroup_metrics_incomplete.json.gz | nucleotides/4/outputs/container_runtime_metrics/metrics.json.gz |
+    When I run `nucleotides post-data 4`
+    And I get the url "/tasks/4"
     Then the stderr should not contain anything
     And the stdout should not contain anything
     And the exit status should be 0
@@ -86,5 +93,5 @@ Feature: Processing a short read assembly benchmark
       | success                                     | true   |
       | complete                                    | true   |
       | events/0/metrics/total_cpu_usage_in_seconds | 53.546 |
-    And the JSON response should not have "events/0/metrics/total_rss_in_mibibytes"
-    And the file "nucleotides/5/benchmark.log" should exist
+      | events/0/metrics/total_rss_in_mibibytes     | 0.0    |
+    And the file "nucleotides/4/benchmark.log" should exist

@@ -14,9 +14,19 @@ def test_dir():
     fu.mkdir_p(path)
     return tempfile.mkdtemp(dir = path)
 
+
 def assert_is_dir(path):
     nose.assert_true(os.path.isdir(path), "Dir not found: {}".format(path))
 
+
 def assert_is_file(path):
-    nose.assert_true(os.path.isfile(path), "File not found: {}".format(path))
-    nose.assert_true(os.stat(path).st_size != 0, "File is empty: {}".format(path))
+    nose.assert_true(os.path.isfile(path), "File should exist: {}".format(path))
+    nose.assert_true(os.stat(path).st_size != 0, "File should not be empty: {}".format(path))
+
+
+def assert_is_not_file(path):
+    nose.assert_false(os.path.isfile(path), "File should not exist: {}".format(path))
+
+
+def assert_is_empty_directory(path):
+    nose.assert_equal(os.listdir(path), [])

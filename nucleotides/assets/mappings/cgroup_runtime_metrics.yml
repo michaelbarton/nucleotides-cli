@@ -1,0 +1,32 @@
+---
+- key: "total_memory_usage_in_mibibytes"
+  path: "[*].memory_stats.max_usage"
+  lift: [check_90_percent_real_values, max, byte_to_mibibyte, round_to_3]
+
+- key: "total_rss_in_mibibytes"
+  path: "[*].memory_stats.stats.total_rss"
+  lift: [check_90_percent_real_values, max, byte_to_mibibyte, round_to_3]
+
+- key: "total_cpu_usage_in_seconds"
+  path: "[*].cpu_stats.cpu_usage.total_usage"
+  lift: [check_90_percent_real_values, max, nanoseconds_to_seconds, round_to_3]
+
+- key: "total_cpu_usage_in_seconds_in_kernelmode"
+  path: "[*].cpu_stats.cpu_usage.usage_in_kernelmode"
+  lift: [check_90_percent_real_values, max, nanoseconds_to_seconds, round_to_3]
+
+- key: "total_cpu_usage_in_seconds_in_usermode"
+  path: "[*].cpu_stats.cpu_usage.usage_in_usermode"
+  lift: [check_90_percent_real_values, max, nanoseconds_to_seconds, round_to_3]
+
+- key: "total_read_io_in_mibibytes"
+  path: "[*].sum(blkio_stats.io_service_bytes_recursive[?op=='Read'].value)"
+  lift: [check_90_percent_real_values, max, byte_to_mibibyte, round_to_3]
+
+- key: "total_write_io_in_mibibytes"
+  path: "[*].sum(blkio_stats.io_service_bytes_recursive[?op=='Write'].value)"
+  lift: [check_90_percent_real_values, max, byte_to_mibibyte, round_to_3]
+
+- key: "total_wall_clock_time_in_seconds"
+  path: "[*].read"
+  lift: [time_diff]
