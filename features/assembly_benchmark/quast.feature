@@ -142,3 +142,28 @@ Feature: Running a QUAST-based reference assembly benchmark task
       """
       Error, unparsable value for nga50: unknown
       """
+
+
+  Scenario: Posting an error generating QUAST benchmark
+    Given I copy the example data files:
+      | tasks/quast.json  | nucleotides/6/metadata.json   |
+      | biobox/quast.yaml | nucleotides/6/tmp/biobox.yaml |
+      | generated_files/cgroup_metrics.json.gz | nucleotides/6/outputs/container_runtime_metrics/metrics.json.gz |
+    And I copy the example data files to their SHA256 named versions:
+      | generated_files/log.txt                               | nucleotides/6/outputs/container_log/    |
+      | generated_files/quast_metrics_missing_g75_metrics.tsv | nucleotides/6/outputs/assembly_metrics/ |
+    When I run `nucleotides post-data 6`
+    And I get the url "/tasks/6"
+    Then the stderr should not contain anything
+    And the stdout should not contain anything
+    And the exit status should be 0
+    And the JSON should have the following:
+      | complete                              | true                        |
+      | success                               | true                        |
+      | events/0/metrics/duplication_ratio    | 1.002                       |
+      | events/0/metrics/l50                  | 33.0                        |
+      | events/0/metrics/lga75                | 0.0                         |
+      | events/0/metrics/nga75                | 0.0                         |
+      | events/0/files/0/type                 | "assembly_metrics"          |
+      | events/0/files/1/type                 | "container_log"             |
+      | events/0/files/2/type                 | "container_runtime_metrics" |
