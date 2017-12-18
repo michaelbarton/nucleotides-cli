@@ -32,13 +32,18 @@ def parse_quast_value(x):
     return quast_mapping[x] if x in quast_mapping else x
 
 
-def get_expected_keys_from_mapping_file(name):
+def get_minimum_metric_set_keys_from_mapping_file(name):
     """
-    Returns the list of metrics that should be collected based on the metric file name
+    Returns the list of metrics that should be collected based from the container.
+    These metrics are defined in mapping files for each image name.
     """
     path = os.path.join('mappings', name + '.yml')
     mappings = yaml.safe_load(util.get_asset_file_contents(path))
-    return list(map(lambda x: x['key'], mappings))
+
+    is_mandatory_metric = lambda x: not funcy.get_in(x, 'optional', False)
+
+    return list(map(lambda x: x['key'],
+        funcy.filter(is_mandatory_metric, mappings)))
 
 
 def parse_metrics(app, metrics, mappings):
@@ -82,7 +87,7 @@ def parse_metrics(app, metrics, mappings):
     return create_key_value_dict(mappings)
 
 
-def are_metrics_complete(app, expected, collected):
+def is_minimum_metric_set(app, expected, collected):
     """
     Determine if the required metrics are found.
     """
@@ -100,6 +105,9 @@ def are_metrics_complete(app, expected, collected):
 def check_90_percent_real_values(x):
     """
     Given a list of values, if >= 10% of the values are None, returns None.
+
+    This is used to allow some missing values from the cgroup metrics as these can
+    sometimes be unreliable in their collection.
     """
     collection_threshold = 0.15
 

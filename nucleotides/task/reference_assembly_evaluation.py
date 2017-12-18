@@ -85,5 +85,5 @@ class ReferenceAssemblyEvaluationTask(TaskInterface):
 
 
     def are_generated_metrics_valid(self, app, metrics):
-        expected_metrics  = met.get_expected_keys_from_mapping_file(self.metric_mapping_file(app))
-        return met.are_metrics_complete(app, expected_metrics, metrics.keys())
+        minimum_metric_set  = met.get_minimum_metric_set_keys_from_mapping_file(self.metric_mapping_file(app))
+        return met.is_minimum_metric_set(app, minimum_metric_set, metrics.keys())
