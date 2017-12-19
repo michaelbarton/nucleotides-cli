@@ -75,6 +75,12 @@ def parse_metric(app, mapping, metric_tuple):
     function_list  = globals()
     key, raw_value = metric_tuple
 
+    # When metric is missing but optional
+    if (raw_value is None) and funcy.get_in(mapping, ['optional'], False):
+        msg = "Optional metric '{}' not found, replaced with 0 instead.".format(key)
+        app['logger'].warn(msg)
+        return (key, 0.0)
+
     if raw_value is None:
         msg = "Mandatory metric '{}' not found.".format(key)
         app['logger'].error(msg)
