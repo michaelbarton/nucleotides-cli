@@ -46,38 +46,66 @@ def get_minimum_metric_set_keys_from_mapping_file(name):
         funcy.filter(is_mandatory_metric, mappings)))
 
 
-def parse_metrics(app, metrics, mappings):
+def fetch_metric(metrics, mapping):
     """
-    Given a dictionary of metrics, and an array of mappings for those metrics,
-    convert the input dictionary of metrics using these mappings.
+    Given a dictionary of metrics and a single mapping, fetch the required metric
+    from the dictionary. Return a key-value tuple. Return None for the value if the
+    metric cannot be found.
+    """
+    import jmespath
+    key = mapping["key"]
+
+    if "path" in mapping:
+        raw_value = jmespath.compile(mapping['path']).search(metrics)
+    elif key in metrics:
+        raw_value = metrics[key]
+    else:
+        raw_value = None
+
+    return (key, raw_value)
+
+
+
+def parse_metric(app, mapping, metric_tuple):
+    """
+    Given a key-value metric tuple, and the corresponding metric mapping, parse the
+    metric as appropriate using data from the mapping. Return a key-value tuple.
+    Return None for the value if the metric cannot be parsed.
+    """
+    function_list  = globals()
+    key, raw_value = metric_tuple
+
+    if raw_value is None:
+        msg = "Mandatory metric '{}' not found.".format(key)
+        app['logger'].error(msg)
+        return (key, raw_value)
+
+    lift = [float]
+
+    if "lift" in mapping:
+        lift = map(lambda name: function_list[name], mapping["lift"]) + lift
+
+    try:
+        value = reduce(lambda x, f: f(x), lift, raw_value)
+    except ValueError:
+        msg = "Error, unparsable value for {}: {}".format(key, raw_value)
+        app['logger'].error(msg)
+        value = None
+
+    return (key, value)
+
+
+
+def process_raw_metrics(app, metrics, mappings):
+    """
+    Given a dictionary of raw metrics retrieved from a container output file, and an
+    array of mappings for those metrics, convert the input dictionary of metrics
+    using these mappings.
     """
     function_list = globals()
+
     def parse(mapping):
-        import jmespath
-        key   = mapping["key"]
-
-        if "path" in mapping:
-            raw_value = jmespath.compile(mapping['path']).search(metrics)
-        else:
-            raw_value = metrics[key]
-
-
-        if raw_value is None:
-            return (key, raw_value)
-
-        lift = [float]
-
-        if "lift" in mapping:
-            lift = map(lambda name: function_list[name], mapping["lift"]) + lift
-
-        try:
-            value = reduce(lambda x, f: f(x), lift, raw_value)
-        except ValueError:
-            msg = "Error, unparsable value for {}: {}".format(key, raw_value)
-            app['logger'].warn(msg)
-            value = None
-
-        return (key, value)
+        return parse_metric(app, mapping, fetch_metric(metrics, mapping))
 
     create_key_value_dict = funcy.rcompose(
             partial(map, parse),
