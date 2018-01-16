@@ -20,6 +20,6 @@
 - image_type: reference_assembly_evaluation
   name: bioboxes/gaet
   versions:
-    - sha256: e9bfe7622654dd63e2be184016f79ff809f6dbcf94c76adc049cf39420ecf282
+    - sha256: b59cc7031b90a80b65671501a4bfdafded4e296f4c34789459d0ee2d40a0c323
       tasks: ["default"]
       name: "gaet-0.3.0-final mash-1.1.1 dpred-0.1.0"
