@@ -32,47 +32,86 @@ def parse_quast_value(x):
     return quast_mapping[x] if x in quast_mapping else x
 
 
-def get_expected_keys_from_mapping_file(name):
+def get_minimum_metric_set_keys_from_mapping_file(name):
     """
-    Returns the list of metrics that should be collected based on the metric file name
+    Returns the list of metrics that should be collected based from the container.
+    These metrics are defined in mapping files for each image name.
     """
     path = os.path.join('mappings', name + '.yml')
     mappings = yaml.safe_load(util.get_asset_file_contents(path))
-    return list(map(lambda x: x['key'], mappings))
+
+    is_mandatory_metric = lambda x: not funcy.get_in(x, 'optional', False)
+
+    return list(map(lambda x: x['key'],
+        funcy.filter(is_mandatory_metric, mappings)))
 
 
-def parse_metrics(app, metrics, mappings):
+def fetch_metric(metrics, mapping):
     """
-    Given a dictionary of metrics, and an array of mappings for those metrics,
-    convert the input dictionary of metrics using these mappings.
+    Given a dictionary of metrics and a single mapping, fetch the required metric
+    from the dictionary. Return a key-value tuple. Return None for the value if the
+    metric cannot be found.
+    """
+    import jmespath
+    key = mapping["key"]
+
+    if "path" in mapping:
+        raw_value = jmespath.compile(mapping['path']).search(metrics)
+    elif key in metrics:
+        raw_value = metrics[key]
+    else:
+        raw_value = None
+
+    return (key, raw_value)
+
+
+
+def parse_metric(app, mapping, metric_tuple):
+    """
+    Given a key-value metric tuple, and the corresponding metric mapping, parse the
+    metric as appropriate using data from the mapping. Return a key-value tuple.
+    Return None for the value if the metric cannot be parsed.
+    """
+    function_list  = globals()
+    key, raw_value = metric_tuple
+
+    # When metric is missing but optional
+    if (raw_value is None) and funcy.get_in(mapping, ['optional'], False):
+        msg = "Optional metric '{}' not found, replaced with 0 instead.".format(key)
+        app['logger'].warn(msg)
+        return (key, 0.0)
+
+    if raw_value is None:
+        msg = "Mandatory metric '{}' not found.".format(key)
+        app['logger'].error(msg)
+        return (key, raw_value)
+
+    lift = [float]
+
+    if "lift" in mapping:
+        lift = map(lambda name: function_list[name], mapping["lift"]) + lift
+
+    try:
+        value = reduce(lambda x, f: f(x), lift, raw_value)
+    except ValueError:
+        msg = "Error, unparsable value for {}: {}".format(key, raw_value)
+        app['logger'].error(msg)
+        value = None
+
+    return (key, value)
+
+
+
+def process_raw_metrics(app, metrics, mappings):
+    """
+    Given a dictionary of raw metrics retrieved from a container output file, and an
+    array of mappings for those metrics, convert the input dictionary of metrics
+    using these mappings.
     """
     function_list = globals()
+
     def parse(mapping):
-        import jmespath
-        key   = mapping["key"]
-
-        if "path" in mapping:
-            raw_value = jmespath.compile(mapping['path']).search(metrics)
-        else:
-            raw_value = metrics[key]
-
-
-        if raw_value is None:
-            return (key, raw_value)
-
-        lift = [float]
-
-        if "lift" in mapping:
-            lift = map(lambda name: function_list[name], mapping["lift"]) + lift
-
-        try:
-            value = reduce(lambda x, f: f(x), lift, raw_value)
-        except ValueError:
-            msg = "Error, unparsable value for {}: {}".format(key, raw_value)
-            app['logger'].warn(msg)
-            value = None
-
-        return (key, value)
+        return parse_metric(app, mapping, fetch_metric(metrics, mapping))
 
     create_key_value_dict = funcy.rcompose(
             partial(map, parse),
@@ -82,7 +121,7 @@ def parse_metrics(app, metrics, mappings):
     return create_key_value_dict(mappings)
 
 
-def are_metrics_complete(app, expected, collected):
+def is_minimum_metric_set(app, expected, collected):
     """
     Determine if the required metrics are found.
     """
@@ -100,6 +139,9 @@ def are_metrics_complete(app, expected, collected):
 def check_90_percent_real_values(x):
     """
     Given a list of values, if >= 10% of the values are None, returns None.
+
+    This is used to allow some missing values from the cgroup metrics as these can
+    sometimes be unreliable in their collection.
     """
     collection_threshold = 0.15
 

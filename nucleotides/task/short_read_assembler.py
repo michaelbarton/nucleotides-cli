@@ -34,7 +34,7 @@ class ShortReadAssemblerTask(TaskInterface):
 
         mapping_file = os.path.join('mappings', self.metric_mapping_file(app) + '.yml')
         mapping      = yaml.safe_load(util.get_asset_file_contents(mapping_file))
-        return met.parse_metrics(app, raw_metrics, mapping)
+        return met.process_raw_metrics(app, raw_metrics, mapping)
 
 
     def successful_event_output_files(self):

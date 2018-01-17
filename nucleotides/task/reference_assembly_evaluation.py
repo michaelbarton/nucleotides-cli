@@ -77,7 +77,7 @@ class ReferenceAssemblyEvaluationTask(TaskInterface):
 
         mapping_file = os.path.join('mappings', self.metric_mapping_file(app) + '.yml')
         mapping      = yaml.safe_load(util.get_asset_file_contents(mapping_file))
-        return met.parse_metrics(app, dict(raw_metrics), mapping)
+        return met.process_raw_metrics(app, dict(raw_metrics), mapping)
 
 
     def successful_event_output_files(self):
@@ -85,5 +85,5 @@ class ReferenceAssemblyEvaluationTask(TaskInterface):
 
 
     def are_generated_metrics_valid(self, app, metrics):
-        expected_metrics  = met.get_expected_keys_from_mapping_file(self.metric_mapping_file(app))
-        return met.are_metrics_complete(app, expected_metrics, metrics.keys())
+        minimum_metric_set  = met.get_minimum_metric_set_keys_from_mapping_file(self.metric_mapping_file(app))
+        return met.is_minimum_metric_set(app, minimum_metric_set, metrics.keys())

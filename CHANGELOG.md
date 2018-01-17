@@ -3,7 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 0.6.0 - UNRELEASED
+## 0.7.0 - 2018-01-16
+
+### Added
+
+  * Allow for some optional metrics in the container metrics. If these optional
+    metrics are missing, the task is not considered failed. Instead a default
+    value of 0 is used instead. This handles the cases where some metrics
+    cannot be calculated with the available data, rather than because of a
+    container error. An example of this is NG50 when the total assembly is
+    smaller than 50% of the reference length.
+
+## 0.6.0 - 2017-05-11
 
 ### Added
 

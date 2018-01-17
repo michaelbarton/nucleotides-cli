@@ -1,3 +1,9 @@
+# The following metrics are optional:
+# NGA50, NGA75, NG50, NG75, LGA50, LGA75, LG50, LG75
+# The reason being that if the assembly is smaller enough these metrics are
+# undefined and cannot be calculated. An example being if the total assembly length
+# is less than half the reference length then it is impossible to calculate any of
+# the *G50 metrics.
 ---
 - path: '"# N''s per 100 kbp"'
   lift: ['parse_quast_value']
@@ -59,15 +65,19 @@
 - path: 'LG50'
   lift: ['parse_quast_value']
   key: 'lg50'
+  optional: true
 - path: 'LG75'
   lift: ['parse_quast_value']
   key: 'lg75'
+  optional: true
 - path: 'LGA50'
   lift: ['parse_quast_value']
   key: 'lga50'
+  optional: true
 - path: 'LGA75'
   lift: ['parse_quast_value']
   key: 'lga75'
+  optional: true
 - path: '"Largest alignment"'
   lift: ['parse_quast_value']
   key: 'largest_alignment'
@@ -92,15 +102,19 @@
 - path: 'NG50'
   lift: ['parse_quast_value']
   key: 'ng50'
+  optional: true
 - path: 'NG75'
   lift: ['parse_quast_value']
   key: 'ng75'
+  optional: true
 - path: 'NGA50'
   lift: ['parse_quast_value']
   key: 'nga50'
+  optional: true
 - path: 'NGA75'
   lift: ['parse_quast_value']
   key: 'nga75'
+  optional: true
 - path: '"Reference GC (%)"'
   lift: ['parse_quast_value']
   key: 'perc_ref_gc'

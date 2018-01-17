@@ -92,6 +92,15 @@ def test_create_event_request_with_missing_alignment_values():
     nose.assert_equal(event["success"], False)
     nose.assert_equal(event["metrics"], {})
 
+
+def test_create_event_request_with_missing_contiguity_metrics():
+    app = app_helper.setup_app_state('quast', 'missing_g75_values')
+    event = post.create_event_request(app, post.list_outputs(app))
+    nose.assert_equal(event["success"], True)
+    nose.assert_in("nga50", event["metrics"])
+    nose.assert_equal(event["metrics"]["nga50"], 17378.0)
+    nose.assert_equal(event["metrics"]["nga75"], 0.0)
+
 #################################################
 #
 # GAET specific tests

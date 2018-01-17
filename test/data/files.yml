@@ -106,6 +106,17 @@ quast:
       dst: outputs/container_log/e0e8af3790
     - src: example_data/generated_files/cgroup_metrics.json.gz
       dst: outputs/container_runtime_metrics/metrics.json.gz
+  missing_g75_values:
+    - src: example_data/biobox/quast.yaml
+      dst: tmp/biobox.yaml
+    - src: example_data/tasks/quast.json
+      dst: metadata.json
+    - src: example_data/generated_files/quast_metrics_missing_g75_metrics.tsv
+      dst: outputs/assembly_metrics/db13072886
+    - src: example_data/generated_files/log.txt
+      dst: outputs/container_log/e0e8af3790
+    - src: example_data/generated_files/cgroup_metrics.json.gz
+      dst: outputs/container_runtime_metrics/metrics.json.gz
 
 
 quast_short_contigs:
